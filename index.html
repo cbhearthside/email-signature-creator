@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coldwell Banker Hearthside — Email Signature Creator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #012169;
+    --navy-light: #e8edf7;
+    --border: #e2e5ea;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --bg: #f5f6f8;
+    --white: #ffffff;
+    --accent: #012169;
+    --success: #166534;
+    --success-bg: #dcfce7;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--navy);
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  header span {
+    color: rgba(255,255,255,0.45);
+    font-size: 1.1rem;
+  }
+
+  header p {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+    margin-top: 2px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 70px);
+  }
+
+  .sidebar {
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    padding: 28px 28px 40px;
+    overflow-y: auto;
+  }
+
+  .main {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin: 24px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label:first-child { margin-top: 0; }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 8px 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+
+  .field input:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(1,33,105,0.08);
+  }
+
+  .field input::placeholder { color: #b0b7c3; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .preview-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    overflow-x: auto;
+  }
+
+  .preview-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .html-card {
+    background: #1e1e2e;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .html-card-header {
+    background: #2a2a3e;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .html-card-header span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    font-family: monospace;
+  }
+
+  .html-output {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #a6e3a1;
+    padding: 16px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 180px;
+    overflow-y: auto;
+    line-height: 1.6;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 11px 20px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  }
+
+  .btn-primary {
+    background: var(--navy);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: #01307a; }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-secondary {
+    background: var(--white);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { background: var(--bg); }
+
+  .btn.copied {
+    background: var(--success-bg);
+    color: var(--success);
+  }
+
+  .hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  svg.icon { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+    header { padding: 14px 20px; }
+    .main { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Coldwell Banker Hearthside <span>·</span> Email Signature Creator</h1>
+    <p>Fill in your details below, preview your signature, then copy the HTML.</p>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+
+    <div class="section-label">Agent information</div>
+    <div class="field"><label>Full name</label><input id="f-name" placeholder="Laura Miller" oninput="render()" /></div>
+    <div class="field"><label>Title / designation</label><input id="f-title" placeholder="REALTOR" oninput="render()" /></div>
+    <div class="field"><label>Company name</label><input id="f-company" placeholder="COLDWELL BANKER HEARTHSIDE" oninput="render()" /></div>
+
+    <div class="section-label">Contact details</div>
+    <div class="field-row">
+      <div class="field"><label>Office phone</label><input id="f-office" placeholder="e.g. 215-555-0100" oninput="render()" /></div>
+      <div class="field"><label>Cell phone</label><input id="f-cell" placeholder="e.g. 410-555-0199" oninput="render()" /></div>
+    </div>
+    <div class="field"><label>Email address</label><input id="f-email" placeholder="name@CBHearthside.com" oninput="render()" /></div>
+    <div class="field"><label>Website</label><input id="f-web" placeholder="yourname.cbhre.com" oninput="render()" /></div>
+    <div class="field"><label>Office address</label><input id="f-addr" placeholder="Street, City, State ZIP" oninput="render()" /></div>
+
+    <div class="section-label">Social media</div>
+    <div class="field"><label>Facebook URL</label><input id="f-fb" placeholder="https://facebook.com/..." oninput="render()" /></div>
+    <div class="field"><label>LinkedIn URL</label><input id="f-li" placeholder="https://linkedin.com/in/..." oninput="render()" /></div>
+
+    <div class="section-label">Images</div>
+    <div class="field">
+      <label>Photo / logo URL</label>
+      <input id="f-photo" placeholder="https://..." oninput="render()" />
+      <p class="hint">Hosted image URL for your headshot or logo (125px wide)</p>
+    </div>
+    <div class="field">
+      <label>Banner image URL</label>
+      <input id="f-banner" placeholder="https://..." oninput="render()" />
+      <p class="hint">Optional banner shown below the signature (550px wide)</p>
+    </div>
+    <div class="field">
+      <label>Banner link URL</label>
+      <input id="f-bannerlink" placeholder="https://..." oninput="render()" />
+      <p class="hint">Where the banner links to when clicked</p>
+    </div>
+
+  </aside>
+
+  <main class="main">
+
+    <div class="preview-card">
+      <div class="preview-label">Live preview</div>
+      <div id="preview-box"></div>
+    </div>
+
+    <div class="html-card">
+      <div class="html-card-header">
+        <span>signature HTML output</span>
+        <span id="char-count">0 chars</span>
+      </div>
+      <div class="html-output" id="html-output"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="copy-btn" onclick="copyHTML()">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy HTML signature
+      </button>
+      <button class="btn btn-secondary" onclick="clearAll()">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18M19 6l-1 14H6L5 6M8 6V4h8v2"/></svg>
+        Clear all
+      </button>
+    </div>
+
+    <p class="hint" style="text-align:center;">To use in Gmail: Settings → See all settings → General → Signature → Create new → paste HTML in source/code view.</p>
+
+  </main>
+</div>
+
+<script>
+function v(id) { return (document.getElementById(id)||{}).value || ''; }
+
+function buildSig() {
+  const name       = v('f-name');
+  const title      = v('f-title');
+  const company    = v('f-company');
+  const office     = v('f-office');
+  const cell       = v('f-cell');
+  const email      = v('f-email');
+  const web        = v('f-web');
+  const addr       = v('f-addr');
+  const fb         = v('f-fb');
+  const li         = v('f-li');
+  const photo      = v('f-photo');
+  const banner     = v('f-banner');
+  const bannerlink = v('f-bannerlink');
+
+  if (!name && !title && !company && !email && !office) return '';
+
+  const webHref = web ? (web.startsWith('http') ? web : 'https://' + web) : '#';
+
+  const photoCell = photo
+    ? `<td style="vertical-align:top;padding:0 8px 5px 0"><img src="${photo}" style="display:block" width="125" alt="photo-logo"/></td>`
+    : '';
+
+  const phoneRow = (office || cell)
+    ? `<div style="white-space:nowrap !important">
+        ${office ? `<span style="color:#444444;font-size:.9em">O: </span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none">${office}</a> ` : ''}
+        ${cell   ? `<span style="color:#444444;font-size:.9em">C: </span><a href="tel:${cell}"   style="color:#000000;font-size:.9em;text-decoration:none">${cell}</a> ` : ''}
+       </div>` : '';
+
+  const addrRow = addr
+    ? `<div style="white-space:nowrap !important"><span style="color:#444444;font-size:.9em">A: </span><span style="color:#000000;font-size:.9em">${addr}</span></div>`
+    : '';
+
+  const webEmailRow = (web || email)
+    ? `<div style="white-space:nowrap !important">
+        ${web   ? `<span style="color:#444444;font-size:.9em">W: </span><a href="${webHref}" target="_blank" style="color:#000000;font-size:.9em;text-decoration:none !important">${web}</a> ` : ''}
+        ${email ? `<span style="color:#444444;font-size:.9em">E: </span><a href="mailto:${email}" target="_blank" style="color:#000000;font-size:.9em;text-decoration:none">${email}</a> ` : ''}
+       </div>` : '';
+
+  const socialRow = (fb || li)
+    ? `<table><tr>
+        ${fb ? `<td><a style="vertical-align:top" href="${fb}" target="_blank"><img src="https://img.newoldstamp.com/i/0/1/0/0/55.png?ReWqy" width="24" alt="facebook"/></a></td>` : ''}
+        ${li ? `<td><a style="vertical-align:top" href="${li}" target="_blank"><img src="https://img.newoldstamp.com/i/0/1/0/0/106.png?QxkcH" width="24" alt="linkedin"/></a></td>` : ''}
+       </tr></table>` : '';
+
+  const bannerSection = banner
+    ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px">
+        ${bannerlink ? `<a href="${bannerlink}" target="_blank">` : ''}
+        <img src="${banner}" width="550" style="vertical-align:middle;border:0" alt="banner"/>
+        ${bannerlink ? `</a>` : ''}
+       </td></tr></table>` : '';
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"></head>
+<body>
+<div style="min-width:600px;width:100%">
+<table style="font:90% Arial;font-size:initial;color:#000000">
+<tr>
+  ${photoCell}
+  <td style="vertical-align:top;color:#444444;font:90% Arial;border-left:3px solid #444444;padding:0 0 5px 8px">
+    <div style="color:#012169;font-size:1.3em;font-weight:bold">${name || 'Your Name'}</div>
+    ${title   ? `<span style="color:#000000;font-size:.9em">${title}</span> ` : ''}
+    ${company ? `<div style="color:#012169;font-size:1.0em;font-weight:bold">${company}</div>` : ''}
+    <div style="font-size:10px;line-height:10px">&nbsp;</div>
+    ${phoneRow}
+    ${addrRow}
+    ${webEmailRow}
+    <div style="font-size:10px;line-height:10px">&nbsp;</div>
+    ${socialRow}
+  </td>
+</tr>
+</table>
+${bannerSection}
+</div>
+</body>
+</html>`;
+}
+
+function render() {
+  const html = buildSig();
+  const preview = document.getElementById('preview-box');
+  const output  = document.getElementById('html-output');
+  const counter = document.getElementById('char-count');
+
+  if (!html) {
+    preview.innerHTML = '<p style="color:#b0b7c3;font-size:13px;">Start filling in your details to see a preview.</p>';
+    output.textContent = '';
+    counter.textContent = '0 chars';
+    return;
+  }
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  preview.innerHTML = doc.body ? doc.body.innerHTML : html;
+  output.textContent = html;
+  counter.textContent = html.length.toLocaleString() + ' chars';
+}
+
+function copyHTML() {
+  const html = buildSig();
+  if (!html) return;
+  navigator.clipboard.writeText(html).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy HTML signature`;
+    }, 2500);
+  });
+}
+
+function clearAll() {
+  ['f-name','f-title','f-company','f-office','f-cell','f-email','f-web','f-addr','f-fb','f-li','f-photo','f-banner','f-bannerlink']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
