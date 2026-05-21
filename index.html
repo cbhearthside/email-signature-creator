@@ -583,7 +583,7 @@ function buildSig() {
   const banner     = v('f-banner');
   const bannerlink = v('f-bannerlink');
 
-  if (!name && !title && !company && !email && !office) return '';
+  if (!name && !title && !company && !email && !office && !banner) return '';
 
   const webHref = web ? (web.startsWith('http') ? web : 'https://' + web) : '#';
 
