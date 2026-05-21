@@ -16,12 +16,13 @@
     --muted: #6b7280;
     --bg: #f5f6f8;
     --white: #ffffff;
-    --accent: #012169;
     --success: #166534;
     --success-bg: #dcfce7;
     --radius: 10px;
     --radius-sm: 6px;
   }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'DM Sans', sans-serif;
@@ -46,16 +47,8 @@
     letter-spacing: 0.01em;
   }
 
-  header span {
-    color: rgba(255,255,255,0.45);
-    font-size: 1.1rem;
-  }
-
-  header p {
-    color: rgba(255,255,255,0.6);
-    font-size: 0.8rem;
-    margin-top: 2px;
-  }
+  header span { color: rgba(255,255,255,0.45); font-size: 1.1rem; }
+  header p { color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 2px; }
 
   .layout {
     display: grid;
@@ -91,9 +84,7 @@
 
   .section-label:first-child { margin-top: 0; }
 
-  .field {
-    margin-bottom: 14px;
-  }
+  .field { margin-bottom: 14px; }
 
   .field label {
     display: block;
@@ -103,7 +94,7 @@
     margin-bottom: 5px;
   }
 
-  .field input {
+  .field input, .field select {
     width: 100%;
     padding: 8px 11px;
     border: 1px solid var(--border);
@@ -116,12 +107,32 @@
     outline: none;
   }
 
-  .field input:focus {
+  .field select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+
+  .field input:focus, .field select:focus {
     border-color: var(--navy);
     box-shadow: 0 0 0 3px rgba(1,33,105,0.08);
   }
 
   .field input::placeholder { color: #b0b7c3; }
+
+  .office-badge {
+    display: none;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--navy);
+    background: var(--navy-light);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    line-height: 1.5;
+  }
 
   .field-row {
     display: grid;
@@ -178,11 +189,7 @@
     line-height: 1.6;
   }
 
-  .btn-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 4px;
-  }
+  .btn-row { display: flex; gap: 10px; margin-top: 4px; }
 
   .btn {
     flex: 1;
@@ -200,32 +207,14 @@
     gap: 7px;
   }
 
-  .btn-primary {
-    background: var(--navy);
-    color: #fff;
-  }
-
+  .btn-primary { background: var(--navy); color: #fff; }
   .btn-primary:hover { background: #01307a; }
   .btn-primary:active { transform: scale(0.98); }
-
-  .btn-secondary {
-    background: var(--white);
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-
+  .btn-secondary { background: var(--white); color: var(--text); border: 1px solid var(--border); }
   .btn-secondary:hover { background: var(--bg); }
+  .btn.copied { background: var(--success-bg); color: var(--success); }
 
-  .btn.copied {
-    background: var(--success-bg);
-    color: var(--success);
-  }
-
-  .hint {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
+  .hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
   svg.icon { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -249,19 +238,37 @@
 <div class="layout">
   <aside class="sidebar">
 
+    <div class="section-label">Office location</div>
+    <div class="field">
+      <label>Select your office</label>
+      <select id="f-office-select" onchange="applyOffice()">
+        <option value="">— Select an office —</option>
+        <option value="allentown">Allentown</option>
+        <!-- Add more offices here as new folders are created:
+             <option value="doylestown">Doylestown</option>
+             <option value="newtown">Newtown</option>
+        -->
+      </select>
+      <div class="office-badge" id="office-badge"></div>
+    </div>
+
     <div class="section-label">Agent information</div>
-    <div class="field"><label>Full name</label><input id="f-name" placeholder="Laura Miller" oninput="render()" /></div>
-    <div class="field"><label>Title / designation</label><input id="f-title" placeholder="REALTOR" oninput="render()" /></div>
+    <div class="field"><label>Full name</label><input id="f-name" placeholder="e.g. Jane Smith" oninput="render()" /></div>
+    <div class="field"><label>Title / designation</label><input id="f-title" placeholder="e.g. REALTOR" oninput="render()" /></div>
     <div class="field"><label>Company name</label><input id="f-company" placeholder="COLDWELL BANKER HEARTHSIDE" oninput="render()" /></div>
 
     <div class="section-label">Contact details</div>
     <div class="field-row">
-      <div class="field"><label>Office phone</label><input id="f-office" placeholder="e.g. 215-555-0100" oninput="render()" /></div>
+      <div class="field"><label>Office phone</label><input id="f-office-phone" placeholder="e.g. 215-555-0100" oninput="render()" /></div>
       <div class="field"><label>Cell phone</label><input id="f-cell" placeholder="e.g. 410-555-0199" oninput="render()" /></div>
     </div>
     <div class="field"><label>Email address</label><input id="f-email" placeholder="name@CBHearthside.com" oninput="render()" /></div>
     <div class="field"><label>Website</label><input id="f-web" placeholder="yourname.cbhre.com" oninput="render()" /></div>
-    <div class="field"><label>Office address</label><input id="f-addr" placeholder="Street, City, State ZIP" oninput="render()" /></div>
+    <div class="field">
+      <label>Office address</label>
+      <input id="f-addr" placeholder="Street, City, State ZIP" oninput="render()" />
+      <p class="hint">Auto-filled when you select an office above</p>
+    </div>
 
     <div class="section-label">Social media</div>
     <div class="field"><label>Facebook URL</label><input id="f-fb" placeholder="https://facebook.com/..." oninput="render()" /></div>
@@ -271,7 +278,7 @@
     <div class="field">
       <label>Photo / logo URL</label>
       <input id="f-photo" placeholder="https://..." oninput="render()" />
-      <p class="hint">Hosted image URL for your headshot or logo (125px wide)</p>
+      <p class="hint">Tip: upload your headshot to the GitHub headshots/<em id="office-folder-hint">office</em>/ folder and paste the raw URL here</p>
     </div>
     <div class="field">
       <label>Banner image URL</label>
@@ -318,13 +325,55 @@
 </div>
 
 <script>
+// ─── OFFICE DATA ───────────────────────────────────────────────
+// To add a new office:
+// 1. Add a new entry here
+// 2. Add a matching <option> in the select dropdown above
+const OFFICES = {
+  allentown: {
+    label: 'Allentown',
+    address: '968 Postal Rd. STE 210, Allentown, PA 18109',
+    phone: '610-465-5600',
+    folder: 'allentown'
+  }
+  // Add more offices below as you create their folders, e.g.:
+  // doylestown: {
+  //   label: 'Doylestown',
+  //   address: '123 Main St, Doylestown, PA 18901',
+  //   phone: '215-555-0100',
+  //   folder: 'doylestown'
+  // }
+};
+// ───────────────────────────────────────────────────────────────
+
 function v(id) { return (document.getElementById(id)||{}).value || ''; }
+
+function applyOffice() {
+  const key = document.getElementById('f-office-select').value;
+  const badge = document.getElementById('office-badge');
+  const folderHint = document.getElementById('office-folder-hint');
+
+  if (!key || !OFFICES[key]) {
+    badge.style.display = 'none';
+    folderHint.textContent = 'office';
+    render();
+    return;
+  }
+
+  const office = OFFICES[key];
+  document.getElementById('f-addr').value = office.address;
+  if (office.phone) document.getElementById('f-office-phone').value = office.phone;
+  badge.style.display = 'block';
+  badge.innerHTML = '<strong>' + office.label + '</strong> — ' + office.address;
+  folderHint.textContent = office.folder;
+  render();
+}
 
 function buildSig() {
   const name       = v('f-name');
   const title      = v('f-title');
   const company    = v('f-company');
-  const office     = v('f-office');
+  const office     = v('f-office-phone');
   const cell       = v('f-cell');
   const email      = v('f-email');
   const web        = v('f-web');
@@ -434,8 +483,11 @@ function copyHTML() {
 }
 
 function clearAll() {
-  ['f-name','f-title','f-company','f-office','f-cell','f-email','f-web','f-addr','f-fb','f-li','f-photo','f-banner','f-bannerlink']
+  ['f-name','f-title','f-company','f-office-phone','f-cell','f-email','f-web','f-addr','f-fb','f-li','f-photo','f-banner','f-bannerlink']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('f-office-select').value = '';
+  document.getElementById('office-badge').style.display = 'none';
+  document.getElementById('office-folder-hint').textContent = 'office';
   render();
 }
 
