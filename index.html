@@ -525,7 +525,9 @@ function v(id) { return (document.getElementById(id)||{}).value || ''; }
 const GITHUB_BASE = 'https://raw.githubusercontent.com/cbhearthside/cbagentheadshots/main';
 
 function nameToSlug(name) {
-  return name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return name.trim().split(/\s+/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('-');
 }
 
 function autoFillPhoto() {
