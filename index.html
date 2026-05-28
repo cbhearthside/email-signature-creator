@@ -560,11 +560,17 @@ function autoFillPhoto() {
   render();
 }
 
+const COMPANY_BANNERS = {
+  'COLDWELL BANKER HEARTHSIDE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg',
+  'SKY SETTLEMENT SERVICE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/sky.jpg'
+};
+
 function onCompanyChange() {
   const company = document.getElementById('f-company').value;
   const officeSection = document.getElementById('office-location-section');
   const addrField = document.getElementById('f-addr');
   const officePhone = document.getElementById('f-office-phone');
+  const bannerInput = document.getElementById('f-banner');
 
   if (company === 'COLDWELL BANKER HEARTHSIDE') {
     officeSection.style.display = 'block';
@@ -576,6 +582,10 @@ function onCompanyChange() {
     addrField.value = '';
     officePhone.value = '';
   }
+
+  // Auto-swap banner based on company
+  bannerInput.value = COMPANY_BANNERS[company] || '';
+
   autoFillPhoto();
   render();
 }
