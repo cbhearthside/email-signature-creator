@@ -683,9 +683,9 @@ function buildSig() {
 
   const selectedCompany = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
   const bannerSection = (banner && selectedCompany)
-    ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px">
+    ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;">
         ${bannerlink ? `<a href="${bannerlink}" target="_blank">` : ''}
-        <img src="${banner}" width="350" style="vertical-align:middle;border:0" alt="banner"/>
+        <img src="${banner}" width="350" style="vertical-align:middle;border:0;background:#ffffff;" alt="banner"/>
         ${bannerlink ? `</a>` : ''}
        </td></tr></table>` : '';
 
