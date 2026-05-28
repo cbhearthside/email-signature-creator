@@ -391,32 +391,34 @@
 <div class="layout">
   <aside class="sidebar">
 
-    <div class="section-label">Office location</div>
-    <div class="field">
-      <label>Select your office</label>
-      <select id="f-office-select" onchange="applyOffice()">
-        <option value="">— Select an office —</option>
-        <option value="allentown">Allentown</option>
-        <!-- Add more offices here as new folders are created:
-             <option value="doylestown">Doylestown</option>
-             <option value="newtown">Newtown</option>
-        -->
-      </select>
-      <div class="office-badge" id="office-badge"></div>
-    </div>
-
     <div class="section-label">Agent information</div>
     <div class="field"><label>Full name</label><input id="f-name" placeholder="e.g. Jane Smith" oninput="autoFillPhoto(); render()" /></div>
     <div class="field"><label>Title / designation</label><input id="f-title" placeholder="e.g. REALTOR" oninput="render()" /></div>
     <div class="field">
       <label>Company name</label>
-      <select id="f-company" onchange="render()">
+      <select id="f-company" onchange="onCompanyChange()">
         <option value="">— Select a company —</option>
         <option value="COLDWELL BANKER HEARTHSIDE">Coldwell Banker Hearthside</option>
         <option value="SKY SETTLEMENT SERVICE">Sky Settlement Service</option>
         <option value="CONNECT CLOSING">Connect Closing</option>
         <option value="BLUE SKY HOME FINANCE">Blue Sky Home Finance</option>
       </select>
+    </div>
+
+    <div id="office-location-section">
+      <div class="section-label">Office location</div>
+      <div class="field">
+        <label>Select your office</label>
+        <select id="f-office-select" onchange="applyOffice()">
+          <option value="">— Select an office —</option>
+          <option value="allentown">Allentown</option>
+          <!-- Add more offices here as new folders are created:
+               <option value="doylestown">Doylestown</option>
+               <option value="newtown">Newtown</option>
+          -->
+        </select>
+        <div class="office-badge" id="office-badge"></div>
+      </div>
     </div>
 
     <div class="section-label">Contact details</div>
@@ -557,6 +559,26 @@ function autoFillPhoto() {
   render();
 }
 
+function onCompanyChange() {
+  const company = document.getElementById('f-company').value;
+  const officeSection = document.getElementById('office-location-section');
+  const addrField = document.getElementById('f-addr');
+  const officePhone = document.getElementById('f-office-phone');
+
+  if (company === 'COLDWELL BANKER HEARTHSIDE') {
+    officeSection.style.display = 'block';
+  } else {
+    officeSection.style.display = 'none';
+    // Clear office-specific fields
+    document.getElementById('f-office-select').value = '';
+    document.getElementById('office-badge').style.display = 'none';
+    addrField.value = '';
+    officePhone.value = '';
+  }
+  autoFillPhoto();
+  render();
+}
+
 function applyOffice() {
   const key = document.getElementById('f-office-select').value;
   const badge = document.getElementById('office-badge');
@@ -627,7 +649,7 @@ function buildSig() {
   const bannerSection = banner
     ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px">
         ${bannerlink ? `<a href="${bannerlink}" target="_blank">` : ''}
-        <img src="${banner}" width="550" style="vertical-align:middle;border:0" alt="banner"/>
+        <img src="${banner}" width="450" style="vertical-align:middle;border:0" alt="banner"/>
         ${bannerlink ? `</a>` : ''}
        </td></tr></table>` : '';
 
@@ -771,6 +793,7 @@ function clearAll() {
   ['f-name','f-title','f-office-phone','f-cell','f-email','f-web','f-addr','f-fb','f-li','f-photo','f-banner','f-bannerlink']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.getElementById('f-company').value = '';
+  document.getElementById('office-location-section').style.display = 'none';
   document.getElementById('f-office-select').value = '';
   document.getElementById('office-badge').style.display = 'none';
   document.getElementById('office-folder-hint').textContent = 'office';
@@ -778,6 +801,7 @@ function clearAll() {
   render();
 }
 
+onCompanyChange();
 render();
 </script>
 </body>
