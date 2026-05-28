@@ -565,6 +565,13 @@ const COMPANY_BANNERS = {
   'SKY SETTLEMENT SERVICE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/sky.jpg'
 };
 
+const COMPANY_SETTINGS = {
+  'COLDWELL BANKER HEARTHSIDE': { nameColor: '#012169', companyColor: '#012169', website: '' },
+  'SKY SETTLEMENT SERVICE':     { nameColor: '#000000', companyColor: '#000000', website: 'skyclosings.com' },
+  'CONNECT CLOSING':            { nameColor: '#000000', companyColor: '#000000', website: 'connectclosing.com' },
+  'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '' }
+};
+
 function onCompanyChange() {
   const company = document.getElementById('f-company').value;
   const officeSection = document.getElementById('office-location-section');
@@ -585,6 +592,21 @@ function onCompanyChange() {
 
   // Auto-swap banner based on company
   bannerInput.value = COMPANY_BANNERS[company] || '';
+
+  // Auto-fill hardcoded website
+  const settings = COMPANY_SETTINGS[company] || {};
+  const webInput = document.getElementById('f-web');
+  if (settings.website) {
+    webInput.value = settings.website;
+    webInput.readOnly = true;
+    webInput.style.background = '#f5f6f8';
+    webInput.style.color = '#999';
+  } else {
+    webInput.value = '';
+    webInput.readOnly = false;
+    webInput.style.background = '';
+    webInput.style.color = '';
+  }
 
   autoFillPhoto();
   render();
@@ -674,9 +696,9 @@ function buildSig() {
 <tr>
   ${photoCell}
   <td style="vertical-align:top;color:#444444;font:90% Arial;border-left:3px solid #444444;padding:0 0 5px 8px">
-    <div style="color:#012169;font-size:1.3em;font-weight:bold">${name || 'Your Name'}</div>
+    <div style="color:${(COMPANY_SETTINGS[company] || {}).nameColor || '#012169'};font-size:1.3em;font-weight:bold">${name || 'Your Name'}</div>
     ${title   ? `<span style="color:#000000;font-size:.9em">${title}</span> ` : ''}
-    ${company ? `<div style="color:#012169;font-size:1.0em;font-weight:bold">${company}</div>` : ''}
+    ${company ? `<div style="color:${(COMPANY_SETTINGS[company] || {}).companyColor || '#012169'};font-size:1.0em;font-weight:bold">${company}</div>` : ''}
     <div style="font-size:10px;line-height:10px">&nbsp;</div>
     ${phoneRow}
     ${addrRow}
@@ -803,7 +825,7 @@ function copyHTML() { copyRich(); }
 
 function clearAll() {
   ['f-name','f-title','f-office-phone','f-cell','f-email','f-web','f-addr','f-fb','f-li','f-photo','f-banner','f-bannerlink']
-    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
   document.getElementById('f-office-select').value = '';
