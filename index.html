@@ -410,10 +410,19 @@
         <select id="f-office-select" onchange="applyOffice()">
           <option value="">— Select an office —</option>
           <option value="allentown">Allentown</option>
-          <!-- Add more offices here as new folders are created:
-               <option value="doylestown">Doylestown</option>
-               <option value="newtown">Newtown</option>
-          -->
+          <option value="bethlehem">Bethlehem</option>
+          <option value="collegeville">Collegeville</option>
+          <option value="doylestown">Doylestown</option>
+          <option value="easton">Easton</option>
+          <option value="frenchtown">Frenchtown</option>
+          <option value="huntingdonvalley">Huntingdon Valley</option>
+          <option value="lahaska">Lahaska</option>
+          <option value="lansdale">Lansdale</option>
+          <option value="macungie">Macungie</option>
+          <option value="newtown">Newtown</option>
+          <option value="ottsville">Ottsville</option>
+          <option value="pocono">Pocono</option>
+          <option value="windgap">Wind Gap</option>
         </select>
         <div class="office-badge" id="office-badge"></div>
       </div>
@@ -515,19 +524,21 @@
 // 1. Add a new entry here
 // 2. Add a matching <option> in the select dropdown above
 const OFFICES = {
-  allentown: {
-    label: 'Allentown',
-    address: '968 Postal Rd. STE 210, Allentown, PA 18109',
-    phone: '610-465-5600',
-    folder: 'Allentown'
-  }
-  // Add more offices below as you create their folders, e.g.:
-  // doylestown: {
-  //   label: 'Doylestown',
-  //   address: '123 Main St, Doylestown, PA 18901',
-  //   phone: '215-555-0100',
-  //   folder: 'doylestown'
-  // }
+  allentown:        { label: 'Allentown',         address: '968 Postal Rd. STE 210, Allentown, PA 18109',       phone: '610-465-5600',  folder: 'Allentown' },
+  bethlehem:        { label: 'Bethlehem',          address: '622 Linden St, Bethlehem, PA 18018',                phone: '610-936-9953',  folder: 'Bethlehem' },
+  collegeville:     { label: 'Collegeville',       address: '100 Springhouse Drive Suite 100, Collegeville, PA', phone: '610-936-9953',  folder: 'Collegeville' },
+  doylestown:       { label: 'Doylestown',         address: '212 N Main Street, Doylestown, PA',                 phone: '267-350-5555',  folder: 'Doylestown' },
+  easton:           { label: 'Easton',             address: '60 North 4th Street, Easton, PA 18042',             phone: '484-838-1004',  folder: 'Easton' },
+  frenchtown:       { label: 'Frenchtown',         address: '57 Bridge Street, Frenchtown, NJ',                  phone: '610-936-9953',  folder: 'Frenchtown' },
+  huntingdonvalley: { label: 'Huntingdon Valley',  address: '2600 Philmont Ave Suite 100, Huntingdon Valley, PA',phone: '267-350-5555',  folder: 'Huntingdon Valley' },
+  lahaska:          { label: 'Lahaska',            address: '5895 Lower York Road, Lahaska, PA 18931',           phone: '215-794-1070',  folder: 'Lahaska' },
+  lansdale:         { label: 'Lansdale',           address: '600 E. Main Street, Lansdale, PA',                  phone: '267-350-5555',  folder: 'Lansdale' },
+  newtown:          { label: 'Newtown',            address: '100 Brandywine Blvd Suite 302, Newtown, PA',        phone: '267-350-5555',  folder: 'Newtown' },
+  ottsville:        { label: 'Ottsville',          address: '7531 Easton Road, Ottsville, PA',                   phone: '610-936-9953',  folder: 'Ottsville' },
+  pocono:           { label: 'Pocono',             address: '1656 US-209, Brodheadsville, PA 18322',             phone: '610-936-9953',  folder: 'Pocono' },
+  windgap:          { label: 'Wind Gap',           address: 'Wind Gap, PA',                                      phone: '610-936-9953',  folder: 'Wind Gap' },
+  macungie:         { label: 'Macungie',           address: 'Macungie, PA',                                      phone: '610-465-5600',  folder: 'Macungie' },
+  collegeville:     { label: 'Collegeville',       address: '100 Springhouse Drive Suite 100, Collegeville, PA', phone: '610-936-9953',  folder: 'Collegeville' },
 };
 // ───────────────────────────────────────────────────────────────
 
