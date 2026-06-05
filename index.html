@@ -464,6 +464,13 @@
       <p class="hint">Where the banner links to when clicked</p>
     </div>
 
+      <div class="section-label">Save to GitHub</div>
+    <div class="field">
+      <label>GitHub Personal Access Token</label>
+      <input type="password" id="f-token" placeholder="ghp_xxxxxxxxxxxx" />
+      <p class="hint">Required to save signature to GitHub. <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--navy);">Get a token</a></p>
+    </div>
+
   </aside>
 
   <main class="main">
@@ -513,6 +520,21 @@
     <div class="instructions-box" id="instructions-box" style="display:none;">
       <div class="instructions-title" id="instructions-title"></div>
       <ol class="instructions-list" id="instructions-list"></ol>
+    </div>
+
+    <div class="platform-section">
+      <div class="platform-label">Save your signature</div>
+      <div class="platform-btns">
+        <button class="platform-btn" id="btn-download" onclick="downloadSig()">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download .html
+        </button>
+        <button class="platform-btn" id="btn-github-save" onclick="saveToGitHub()">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Save to GitHub
+        </button>
+      </div>
+      <div id="save-status" style="margin-top:10px;font-size:12px;display:none;padding:8px 12px;border-radius:6px;"></div>
     </div>
 
   </main>
@@ -849,6 +871,93 @@ function clearAll() {
 }
 
 onCompanyChange();
+
+function getFileName() {
+  const name = v('f-name').trim();
+  const slug = name ? name.toLowerCase().replace(/\s+/g, '-') : 'signature';
+  return slug + '-signature.html';
+}
+
+function downloadSig() {
+  const html = buildSig();
+  if (!html) { alert('Please fill in your details first.'); return; }
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = getFileName();
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function saveToGitHub() {
+  const html = buildSig();
+  if (!html) { alert('Please fill in your details first.'); return; }
+
+  const token = document.getElementById('f-token').value.trim();
+  if (!token) { alert('Please enter your GitHub Personal Access Token in the sidebar.'); return; }
+
+  const officeKey = document.getElementById('f-office-select').value;
+  const office = OFFICES[officeKey];
+  if (!office) { alert('Please select an office first.'); return; }
+
+  const name = v('f-name').trim();
+  if (!name) { alert('Please enter your name first.'); return; }
+
+  const fileName = getFileName();
+  const folder = office.folder;
+  const path = `${folder}/${fileName}`;
+  const repo = 'cbhearthside/cbagentheadshots';
+
+  const status = document.getElementById('save-status');
+  status.style.display = 'block';
+  status.style.background = 'var(--navy-light)';
+  status.style.color = 'var(--navy)';
+  status.textContent = 'Saving to GitHub...';
+
+  const btn = document.getElementById('btn-github-save');
+  btn.disabled = true;
+
+  try {
+    // Check if file already exists to get its SHA
+    let sha = null;
+    const checkRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (checkRes.ok) {
+      const existing = await checkRes.json();
+      sha = existing.sha;
+    }
+
+    // Save/update file
+    const body = { message: `Add signature for ${name}`, content: btoa(unescape(encodeURIComponent(html))) };
+    if (sha) body.sha = sha;
+
+    const saveRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (saveRes.ok) {
+      status.style.background = 'var(--success-bg)';
+      status.style.color = 'var(--success)';
+      status.textContent = `✔ Saved successfully to ${folder}/${fileName}`;
+    } else {
+      const err = await saveRes.json();
+      status.style.background = '#fee2e2';
+      status.style.color = '#991b1b';
+      status.textContent = `✘ Error: ${err.message}`;
+    }
+  } catch(e) {
+    status.style.background = '#fee2e2';
+    status.style.color = '#991b1b';
+    status.textContent = `✘ Network error: ${e.message}`;
+  }
+
+  btn.disabled = false;
+}
+
 render();
 </script>
 </body>
