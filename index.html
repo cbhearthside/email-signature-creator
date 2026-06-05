@@ -503,6 +503,10 @@
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><rect x="5" y="2" width="14" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
           iOS Mail
         </button>
+        <button class="platform-btn" id="btn-android" onclick="showInstructions('android')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8z"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><line x1="9" y1="3" x2="7" y2="1"/><line x1="15" y1="3" x2="17" y2="1"/></svg>
+          Android
+        </button>
         <button class="btn btn-secondary" onclick="clearAll()" style="flex:0;padding:10px 16px;">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18M19 6l-1 14H6L5 6M8 6V4h8v2"/></svg>
           Clear
@@ -568,12 +572,17 @@ function nameToSlug(name) {
 function autoFillPhoto() {
   const name = document.getElementById('f-name').value.trim();
   const key  = document.getElementById('f-office-select').value;
+  const company = document.getElementById('f-company').value;
   const photoInput = document.getElementById('f-photo');
   const badge = document.getElementById('photo-auto-badge');
 
-  if (name && key && OFFICES[key]) {
+  const companySettings = COMPANY_SETTINGS[company] || {};
+  const officeFolder = key && OFFICES[key] ? OFFICES[key].folder : null;
+  const companyFolder = companySettings.folder || null;
+  const folder = officeFolder || companyFolder;
+
+  if (name && folder) {
     const slug = nameToSlug(name);
-    const folder = OFFICES[key].folder;
     photoInput.value = GITHUB_BASE + '/' + folder + '/' + slug + '.jpg';
     badge.style.display = 'inline';
   } else {
@@ -591,10 +600,10 @@ const COMPANY_BANNERS = {
 };
 
 const COMPANY_SETTINGS = {
-  'COLDWELL BANKER HEARTHSIDE': { nameColor: '#012169', companyColor: '#012169', website: '' },
-  'SKY SETTLEMENT SERVICE':     { nameColor: '#000000', companyColor: '#000000', website: 'skyclosings.com' },
-  'CONNECT CLOSING':            { nameColor: '#000000', companyColor: '#000000', website: 'connectclosing.com' },
-  'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '' }
+  'COLDWELL BANKER HEARTHSIDE': { nameColor: '#012169', companyColor: '#012169', website: '', folder: '' },
+  'SKY SETTLEMENT SERVICE':     { nameColor: '#000000', companyColor: '#000000', website: 'skyclosings.com', folder: 'sky-settlement' },
+  'CONNECT CLOSING':            { nameColor: '#000000', companyColor: '#000000', website: 'connectclosing.com', folder: 'connect-closing' },
+  'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'blue-sky-home-finance' }
 };
 
 function onCompanyChange() {
@@ -790,6 +799,19 @@ const PLATFORM_INSTRUCTIONS = {
       'Tap and hold then choose <strong>Paste</strong> to paste your signature',
       'Your signature will appear in all new emails — you\'re done! ✅',
       '<em>Note: Images may not show on iOS Mail — for best results use Gmail or Outlook on mobile</em>'
+    ]
+  },
+  android: {
+    title: '🤖 How to add your signature in Android Gmail',
+    steps: [
+      'Click <strong>Select & Copy</strong> above to copy your signature',
+      'Open the <strong>Gmail app</strong> on your Android phone',
+      'Tap the <strong>three lines (☰)</strong> in the top left → scroll down and tap <strong>Settings</strong>',
+      'Tap your <strong>email address</strong>',
+      'Tap <strong>Mobile Signature</strong>',
+      'Select all existing text, delete it, then tap and hold and choose <strong>Paste</strong>',
+      'Tap <strong>OK</strong> to save — you\'re done! ✅',
+      '<em>Note: For rich HTML signatures on Android, the <strong>Gmail web browser version</strong> on desktop gives the best results</em>'
     ]
   }
 };
