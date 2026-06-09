@@ -745,9 +745,9 @@ function buildSig() {
 <tr>
   ${photoCell}
   <td style="vertical-align:top;color:#444444;font:90% Arial;border-left:3px solid #444444;padding:0 0 5px 8px">
-    <div style="color:${(COMPANY_SETTINGS[company] || {}).nameColor || '#012169'};font-size:1.3em;font-weight:bold">${name || 'Your Name'}</div>
+    <div style="color:${(COMPANY_SETTINGS[company] || {}).nameColor || '#012169'};font-size:1.1em;font-weight:bold">${name || 'Your Name'}</div>
     ${title   ? `<span style="color:#000000;font-size:.9em">${title}</span> ` : ''}
-    ${company ? `<div style="color:${(COMPANY_SETTINGS[company] || {}).companyColor || '#012169'};font-size:1.0em;font-weight:bold">${company}</div>` : ''}
+    ${company ? `<div style="color:${(COMPANY_SETTINGS[company] || {}).companyColor || '#012169'};font-size:1.3em;font-weight:bold">${company}</div>` : ''}
     <div style="font-size:10px;line-height:10px">&nbsp;</div>
     ${phoneRow}
     ${addrRow}
