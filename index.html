@@ -601,9 +601,9 @@ const COMPANY_BANNERS = {
 
 const COMPANY_SETTINGS = {
   'COLDWELL BANKER HEARTHSIDE': { nameColor: '#012169', companyColor: '#012169', website: '', folder: '' },
-  'SKY SETTLEMENT SERVICE':     { nameColor: '#000000', companyColor: '#000000', website: 'skyclosings.com', folder: 'sky-settlement' },
-  'CONNECT CLOSING':            { nameColor: '#000000', companyColor: '#000000', website: 'connectclosing.com', folder: 'connect-closing' },
-  'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'blue-sky-home-finance' }
+  'SKY SETTLEMENT SERVICE':     { nameColor: '#000000', companyColor: '#000000', website: 'skyclosings.com', folder: 'sky-settlement', phone: '267-352-9121' },
+  'CONNECT CLOSING':            { nameColor: '#000000', companyColor: '#000000', website: 'connectclosing.com', folder: 'connect-closing', phone: '484-284-9270' },
+  'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'blue-sky-home-finance', phone: '610-234-3840' }
 };
 
 function onCompanyChange() {
@@ -627,7 +627,7 @@ function onCompanyChange() {
   // Auto-swap banner based on company
   bannerInput.value = COMPANY_BANNERS[company] || '';
 
-  // Auto-fill hardcoded website
+  // Auto-fill hardcoded website and phone
   const settings = COMPANY_SETTINGS[company] || {};
   const webInput = document.getElementById('f-web');
   if (settings.website) {
@@ -640,6 +640,19 @@ function onCompanyChange() {
     webInput.readOnly = false;
     webInput.style.background = '';
     webInput.style.color = '';
+  }
+
+  const phoneInput = document.getElementById('f-office-phone');
+  if (settings.phone) {
+    phoneInput.value = settings.phone;
+    phoneInput.readOnly = true;
+    phoneInput.style.background = '#f5f6f8';
+    phoneInput.style.color = '#999';
+  } else {
+    phoneInput.value = '';
+    phoneInput.readOnly = false;
+    phoneInput.style.background = '';
+    phoneInput.style.color = '';
   }
 
   autoFillPhoto();
