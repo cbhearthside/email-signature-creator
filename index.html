@@ -701,7 +701,7 @@ function buildSig() {
   const webHref = web ? (web.startsWith('http') ? web : 'https://' + web) : '#';
 
   const photoCell = photo
-    ? `<td style="vertical-align:top;padding:0 8px 5px 0"><img src="${photo}" style="display:block" width="125" alt="photo-logo"/></td>`
+    ? `<td style="vertical-align:top;padding:0 8px 5px 0"><img src="${photo}" style="display:block" width="125" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/></td>`
     : '';
 
   const phoneRow = (office || cell)
