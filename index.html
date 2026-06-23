@@ -447,6 +447,9 @@
     <div class="section-label">Social media</div>
     <div class="field"><label>Facebook URL</label><input id="f-fb" placeholder="https://facebook.com/..." oninput="render()" /></div>
     <div class="field"><label>LinkedIn URL</label><input id="f-li" placeholder="https://linkedin.com/in/..." oninput="render()" /></div>
+    <div class="field"><label>X (Twitter) URL</label><input id="f-x" placeholder="https://x.com/..." oninput="render()" /></div>
+    <div class="field"><label>Instagram URL</label><input id="f-ig" placeholder="https://instagram.com/..." oninput="render()" /></div>
+    <div class="field"><label>YouTube URL</label><input id="f-yt" placeholder="https://youtube.com/..." oninput="render()" /></div>
 
     <div class="section-label">Images</div>
     <div class="field">
@@ -507,6 +510,10 @@
         <button class="platform-btn" id="btn-android" onclick="showInstructions('android')">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8z"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><line x1="9" y1="3" x2="7" y2="1"/><line x1="15" y1="3" x2="17" y2="1"/></svg>
           Android
+        </button>
+        <button class="platform-btn" id="btn-brightmls" onclick="showInstructions('brightmls')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18"/><path d="M12 8h5"/><path d="M12 12h5"/><path d="M12 16h5"/></svg>
+          Bright MLS
         </button>
         <button class="btn btn-secondary" onclick="clearAll()" style="flex:0;padding:10px 16px;">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18M19 6l-1 14H6L5 6M8 6V4h8v2"/></svg>
@@ -694,6 +701,9 @@ function buildSig() {
   const addr       = v('f-addr');
   const fb         = v('f-fb');
   const li         = v('f-li');
+  const x          = v('f-x');
+  const ig         = v('f-ig');
+  const yt         = v('f-yt');
   const photo      = v('f-photo');
   const banner     = v('f-banner');
   const bannerlink = v('f-bannerlink');
@@ -722,11 +732,25 @@ function buildSig() {
         ${email ? `<span style="color:#444444;font-size:.9em">E: </span><a href="mailto:${email}" target="_blank" style="color:#000000;font-size:.9em;text-decoration:none">${email}</a> ` : ''}
        </div>` : '';
 
-  const socialRow = (fb || li)
-    ? `<table><tr>
-        ${fb ? `<td><a style="vertical-align:top" href="${fb}" target="_blank"><img src="https://img.newoldstamp.com/i/0/1/0/0/55.png?ReWqy" width="24" alt="facebook"/></a></td>` : ''}
-        ${li ? `<td><a style="vertical-align:top" href="${li}" target="_blank"><img src="https://img.newoldstamp.com/i/0/1/0/0/106.png?QxkcH" width="24" alt="linkedin"/></a></td>` : ''}
-       </tr></table>` : '';
+  const socialIcons = {
+    fb: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg',
+    li: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg',
+    x:  'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg',
+    ig: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg',
+    yt: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg',
+  };
+  const socialLinks = [
+    { url: fb, icon: 'https://img.newoldstamp.com/i/0/1/0/0/55.png?ReWqy', alt: 'facebook' },
+    { url: li, icon: 'https://img.newoldstamp.com/i/0/1/0/0/106.png?QxkcH', alt: 'linkedin' },
+    { url: x,  icon: 'https://img.newoldstamp.com/i/0/1/0/0/110.png', alt: 'X' },
+    { url: ig, icon: 'https://img.newoldstamp.com/i/0/1/0/0/90.png', alt: 'instagram' },
+    { url: yt, icon: 'https://img.newoldstamp.com/i/0/1/0/0/111.png', alt: 'youtube' },
+  ];
+  const socialCells = socialLinks
+    .filter(s => s.url)
+    .map(s => `<td style="padding-right:4px;"><a style="vertical-align:top" href="${s.url}" target="_blank"><img src="${s.icon}" width="24" height="24" alt="${s.alt}" style="display:block;"/></a></td>`)
+    .join('');
+  const socialRow = socialCells ? `<table><tr>${socialCells}</tr></table>` : '';
 
   const selectedCompany = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
   const bannerWidths = { 'CONNECT CLOSING': 150 };
@@ -828,6 +852,18 @@ const PLATFORM_INSTRUCTIONS = {
       'Tap <strong>OK</strong> to save — you\'re done! ✅',
       '<em>Note: For rich HTML signatures on Android, the <strong>Gmail web browser version</strong> on desktop gives the best results</em>'
     ]
+  },
+  brightmls: {
+    title: '🏠 How to add your signature in Bright MLS',
+    steps: [
+      'Click <strong>Select & Copy</strong> above to copy your signature',
+      'Log into Bright MLS and click your <strong>name</strong> at the top right-hand corner of the screen',
+      'Click <strong>Account & Settings</strong>',
+      'Click <strong>MLS Settings</strong>',
+      'Click <strong>My Information</strong>, then click the <strong>Email Signature</strong> tab',
+      'Click inside the <strong>Signature</strong> window and press <strong>Ctrl+V</strong> (Windows) or <strong>Cmd+V</strong> (Mac) to paste',
+      'Click <strong>Save</strong> — you\'re done! ✅'
+    ]
   }
 };
 
@@ -888,7 +924,7 @@ function copyRich() {
 function copyHTML() { copyRich(); }
 
 function clearAll() {
-  ['f-name','f-title','f-office-phone','f-cell','f-email','f-web','f-addr','f-fb','f-li','f-photo','f-banner','f-bannerlink']
+  ['f-name','f-title','f-office-phone','f-cell','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-photo','f-banner','f-bannerlink']
     .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
