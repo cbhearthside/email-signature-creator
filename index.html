@@ -400,6 +400,7 @@
         <option value="SKY SETTLEMENT SERVICE">Sky Settlement Service</option>
         <option value="CONNECT CLOSING">Connect Closing</option>
         <option value="BLUE SKY HOME FINANCE">Blue Sky Home Finance</option>
+        <option value="ADDISON WOLFE REAL ESTATE">Addison Wolfe Real Estate</option>
       </select>
     </div>
 
@@ -593,11 +594,18 @@ function autoFillPhoto() {
   if (name && folder) {
     const slug = nameToSlug(name);
     photoInput.value = GITHUB_BASE + '/' + folder + '/' + slug + '.jpg';
+    photoInput.readOnly = false;
+    photoInput.style.background = '';
+    photoInput.style.color = '';
     badge.style.display = 'inline';
+  } else if (!folder) {
+    // keep existing value if no folder yet
+    badge.style.display = 'none';
   } else {
     photoInput.value = '';
     badge.style.display = 'none';
   }
+  render();
   render();
 }
 
@@ -605,14 +613,16 @@ const COMPANY_BANNERS = {
   'COLDWELL BANKER HEARTHSIDE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg',
   'SKY SETTLEMENT SERVICE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/sky.jpg',
   'CONNECT CLOSING': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/connect.jpg',
-  'BLUE SKY HOME FINANCE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg'
+  'BLUE SKY HOME FINANCE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg',
+  'ADDISON WOLFE REAL ESTATE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/AW-Logo.jpg'
 };
 
 const COMPANY_SETTINGS = {
   'COLDWELL BANKER HEARTHSIDE': { nameColor: '#012169', companyColor: '#012169', website: '', folder: '' },
   'SKY SETTLEMENT SERVICE':     { nameColor: '#000000', companyColor: '#000000', website: 'skyclosings.com', folder: 'sky-settlement', phone: '267-352-9121' },
   'CONNECT CLOSING':            { nameColor: '#000000', companyColor: '#000000', website: 'connectclosing.com', folder: 'connect-closing', phone: '484-284-9270' },
-  'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'blue-sky-home-finance', phone: '610-234-3840' }
+  'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'blue-sky-home-finance', phone: '610-234-3840' },
+  'ADDISON WOLFE REAL ESTATE':  { nameColor: '#000000', companyColor: '#000000', website: 'addisonwolfe.com', website_readonly: true, folder: 'addison-wolfe', phone: '215-862-5500', phone_readonly: true }
 };
 
 function onCompanyChange() {
