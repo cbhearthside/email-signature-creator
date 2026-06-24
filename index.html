@@ -780,7 +780,7 @@ function buildSig() {
   const socialRow = socialCells ? `<table><tr>${socialCells}</tr></table>` : '';
 
   const selectedCompany = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
-  const bannerWidths = { 'CONNECT CLOSING': 150 };
+  const bannerWidths = { 'CONNECT CLOSING': 150, 'ADDISON WOLFE REAL ESTATE': 200 };
   const bannerWidth = bannerWidths[selectedCompany] || 350;
   const bannerSection = (banner && selectedCompany)
     ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;">
