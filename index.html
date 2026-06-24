@@ -438,7 +438,7 @@
       <div class="field"><label>Cell phone</label><input id="f-cell" placeholder="e.g. 410-555-0199" oninput="render()" /></div>
     </div>
     <div class="field"><label>Email address</label><input id="f-email" placeholder="name@CBHearthside.com" oninput="render()" /></div>
-    <div class="field"><label>Website</label><input id="f-web" placeholder="yourname.cbhre.com" oninput="render()" /></div>
+    <div class="field"><label>Website</label><input id="f-web" placeholder="yourname.cbhre.com" oninput="updateBannerLink(); render()" /></div>
     <div class="field">
       <label>Office address</label>
       <input id="f-addr" placeholder="Street, City, State ZIP" oninput="render()" />
@@ -622,8 +622,17 @@ const COMPANY_SETTINGS = {
   'SKY SETTLEMENT SERVICE':     { nameColor: '#000000', companyColor: '#000000', website: 'skyclosings.com', folder: 'sky-settlement', phone: '267-352-9121' },
   'CONNECT CLOSING':            { nameColor: '#000000', companyColor: '#000000', website: 'connectclosing.com', folder: 'connect-closing', phone: '484-284-9270' },
   'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'blue-sky-home-finance', phone: '610-234-3840' },
-  'ADDISON WOLFE REAL ESTATE':  { nameColor: '#000000', companyColor: '#000000', website: 'addisonwolfe.com', website_readonly: true, folder: 'addison-wolfe', phone: '215-862-5500', phone_readonly: true }
+  'ADDISON WOLFE REAL ESTATE':  { nameColor: '#000000', companyColor: '#000000', website: '', folder: 'addison-wolfe', phone: '215-862-5500' }
 };
+
+function updateBannerLink() {
+  const company = document.getElementById('f-company').value;
+  if (company === 'ADDISON WOLFE REAL ESTATE') {
+    const web = document.getElementById('f-web').value.trim();
+    const webUrl = web ? (web.startsWith('http') ? web : 'https://' + web) : '';
+    document.getElementById('f-bannerlink').value = webUrl;
+  }
+}
 
 function onCompanyChange() {
   const company = document.getElementById('f-company').value;
@@ -645,6 +654,16 @@ function onCompanyChange() {
 
   // Auto-swap banner based on company
   bannerInput.value = COMPANY_BANNERS[company] || '';
+
+  // Auto-fill banner link with website for Addison Wolfe
+  const bannerLinkInput = document.getElementById('f-bannerlink');
+  if (company === 'ADDISON WOLFE REAL ESTATE') {
+    const web = document.getElementById('f-web').value.trim();
+    const webUrl = web ? (web.startsWith('http') ? web : 'https://' + web) : 'https://addisonwolfe.com';
+    bannerLinkInput.value = webUrl;
+  } else {
+    bannerLinkInput.value = '';
+  }
 
   // Auto-fill hardcoded website and phone
   const settings = COMPANY_SETTINGS[company] || {};
