@@ -626,12 +626,9 @@ const COMPANY_SETTINGS = {
 };
 
 function updateBannerLink() {
-  const company = document.getElementById('f-company').value;
-  if (company === 'ADDISON WOLFE REAL ESTATE') {
-    const web = document.getElementById('f-web').value.trim();
-    const webUrl = web ? (web.startsWith('http') ? web : 'https://' + web) : '';
-    document.getElementById('f-bannerlink').value = webUrl;
-  }
+  const web = document.getElementById('f-web').value.trim();
+  const webUrl = web ? (web.startsWith('http') ? web : 'https://' + web) : '';
+  document.getElementById('f-bannerlink').value = webUrl;
 }
 
 function onCompanyChange() {
@@ -716,6 +713,7 @@ function applyOffice() {
   badge.innerHTML = '<strong>' + office.label + '</strong> — ' + office.address;
   folderHint.textContent = office.folder;
   autoFillPhoto();
+  updateBannerLink();
   render();
 }
 
