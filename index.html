@@ -622,11 +622,13 @@ const COMPANY_SETTINGS = {
   'SKY SETTLEMENT SERVICE':     { nameColor: '#000000', companyColor: '#000000', website: 'skyclosings.com', folder: 'sky-settlement', phone: '267-352-9121' },
   'CONNECT CLOSING':            { nameColor: '#000000', companyColor: '#000000', website: 'connectclosing.com', folder: 'connect-closing', phone: '484-284-9270' },
   'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'blue-sky-home-finance', phone: '610-234-3840' },
-  'ADDISON WOLFE REAL ESTATE':  { nameColor: '#000000', companyColor: '#000000', website: '', folder: 'addison-wolfe', phone: '215-862-5500' }
+  'ADDISON WOLFE REAL ESTATE':  { nameColor: '#000000', companyColor: '#000000', website: 'addisonwolfe.com', defaultWebsite: 'addisonwolfe.com', folder: 'addison-wolfe', phone: '215-862-5500' }
 };
 
 function updateBannerLink() {
-  const web = document.getElementById('f-web').value.trim();
+  const company = document.getElementById('f-company').value;
+  let web = document.getElementById('f-web').value.trim();
+  if (!web && company === 'ADDISON WOLFE REAL ESTATE') web = 'addisonwolfe.com';
   const webUrl = web ? (web.startsWith('http') ? web : 'https://' + web) : '';
   document.getElementById('f-bannerlink').value = webUrl;
 }
@@ -665,7 +667,13 @@ function onCompanyChange() {
   // Auto-fill hardcoded website and phone
   const settings = COMPANY_SETTINGS[company] || {};
   const webInput = document.getElementById('f-web');
-  if (settings.website) {
+  if (company === 'ADDISON WOLFE REAL ESTATE') {
+    // Pre-fill but keep editable
+    if (!webInput.value) webInput.value = 'addisonwolfe.com';
+    webInput.readOnly = false;
+    webInput.style.background = '';
+    webInput.style.color = '';
+  } else if (settings.website) {
     webInput.value = settings.website;
     webInput.readOnly = true;
     webInput.style.background = '#f5f6f8';
