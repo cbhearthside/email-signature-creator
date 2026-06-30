@@ -455,8 +455,8 @@
     <div class="field">
       <label>Photo shape</label>
       <select id="f-photo-shape" onchange="render()">
-        <option value="square">Square</option>
         <option value="circle">Circle</option>
+        <option value="square">Square</option>
         <option value="oval">Oval</option>
         <option value="wide-square">Wide Square</option>
         <option value="wide-circle">Wide Circle</option>
@@ -786,7 +786,7 @@ function buildSig() {
 
   const webHref = web ? (web.startsWith('http') ? web : 'https://' + web) : '#';
 
-  const photoShape = (document.getElementById('f-photo-shape') || {}).value || 'square';
+  const photoShape = (document.getElementById('f-photo-shape') || {}).value || 'circle';
   const photoPositionField = document.getElementById('photo-position-field');
   if (photoPositionField) photoPositionField.style.display = 'none';
 
