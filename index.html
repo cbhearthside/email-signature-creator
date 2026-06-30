@@ -797,25 +797,25 @@ function buildSig() {
     if (photoShape === 'rectangle') {
       // Original — no cropping, natural size
       photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
-        <img src="${photo}" width="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
+        <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
       </td>`;
     } else if (photoShape === 'square') {
       // Square — fixed 125x125, no border-radius
       photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
-        <img src="${photo}" width="125" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
+        <img src="${photo}" width="100" height="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
       </td>`;
     } else if (photoShape === 'circle') {
       // Circle — use border-radius on a fixed-size table cell with overflow hidden
       photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
-        <div style="width:125px;height:125px;border-radius:50%;overflow:hidden;display:block;">
-          <img src="${photo}" width="125" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+        <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;display:block;">
+          <img src="${photo}" width="100" height="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
         </div>
       </td>`;
     } else if (photoShape === 'oval') {
       // Oval — taller than wide
       photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
-        <div style="width:125px;height:155px;border-radius:50%;overflow:hidden;display:block;">
-          <img src="${photo}" width="125" height="155" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+        <div style="width:100px;height:130px;border-radius:50%;overflow:hidden;display:block;">
+          <img src="${photo}" width="100" height="130" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
         </div>
       </td>`;
     } else if (photoShape === 'wide-square') {
