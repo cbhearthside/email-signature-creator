@@ -428,6 +428,20 @@
         </select>
         <div class="office-badge" id="office-badge"></div>
       </div>
+
+      <div class="field">
+        <label>Team (optional)</label>
+        <select id="f-team" onchange="render()">
+          <option value="">— No team —</option>
+          <option value="Cliff Lewis Experience">Cliff Lewis Experience</option>
+          <option value="Sean LaSalle Team">Sean LaSalle Team</option>
+          <option value="Eric Leadbetter Team">Eric Leadbetter Team</option>
+          <option value="Chris Lawlor Team">Chris Lawlor Team</option>
+          <option value="Curt Gasper Team">Curt Gasper Team</option>
+          <option value="Mark Reale Team">Mark Reale Team</option>
+          <option value="Chris George Team">Chris George Team</option>
+        </select>
+      </div>
     </div>
 
     <div class="field"><label>Full name</label><input id="f-name" placeholder="e.g. Jane Smith" oninput="autoFillPhoto(); render()" /></div>
@@ -647,6 +661,7 @@ function onCompanyChange() {
     // Clear office-specific fields
     document.getElementById('f-office-select').value = '';
     document.getElementById('office-badge').style.display = 'none';
+    document.getElementById('f-team').value = '';
     addrField.value = '';
     officePhone.value = '';
   }
@@ -963,6 +978,7 @@ function clearAll() {
     .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
+  document.getElementById('f-team').value = '';
   document.getElementById('f-office-select').value = '';
   document.getElementById('office-badge').style.display = 'none';
   document.getElementById('office-folder-hint').textContent = 'office';
