@@ -473,6 +473,14 @@
       <p class="hint">Upload headshot to GitHub as <code style="font-size:10px;background:#f0f0f0;padding:1px 4px;border-radius:3px;">headshots/<em id="office-folder-hint">office</em>/firstname-lastname.jpg</code></p>
     </div>
     <div class="field">
+      <label>Photo shape</label>
+      <select id="f-photo-shape" onchange="render()">
+        <option value="square">Square</option>
+        <option value="circle">Circle</option>
+        <option value="oval">Oval</option>
+      </select>
+    </div>
+    <div class="field">
       <label>Banner image URL</label>
       <input id="f-banner" value="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg" oninput="render()" />
       <p class="hint">Optional banner shown below the signature (550px wide)</p>
@@ -762,8 +770,16 @@ function buildSig() {
 
   const webHref = web ? (web.startsWith('http') ? web : 'https://' + web) : '#';
 
+  const photoShape = (document.getElementById('f-photo-shape') || {}).value || 'square';
+  const photoShapeStyles = {
+    square: 'border-radius:0;width:125px;height:125px;object-fit:cover;',
+    circle: 'border-radius:50%;width:125px;height:125px;object-fit:cover;',
+    oval:   'border-radius:50%;width:125px;height:160px;object-fit:cover;'
+  };
+  const photoStyle = photoShapeStyles[photoShape] || photoShapeStyles.square;
+
   const photoCell = photo
-    ? `<td style="vertical-align:top;padding:0 8px 5px 0"><img src="${photo}" style="display:block" width="125" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/></td>`
+    ? `<td style="vertical-align:top;padding:0 8px 5px 0"><img src="${photo}" style="display:block;${photoStyle}" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/></td>`
     : '';
 
   const phoneRow = (office || cell)
