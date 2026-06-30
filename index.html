@@ -520,7 +520,7 @@
       <div class="copy-rich-header">
         <div>
           <div class="copy-rich-title">Your signature — ready to copy</div>
-          <div class="copy-rich-subtitle">Click the button to select it, then paste directly into Gmail, Outlook, or iOS Mail settings</div>
+          <div class="copy-rich-subtitle">Click the button to copy, then paste directly into Gmail, Outlook, or iOS Mail settings. If prompted, press Ctrl+C to copy.</div>
         </div>
         <button class="copy-rich-btn" id="copy-rich-btn" onclick="copyRich()">
           <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -1003,7 +1003,7 @@ function copyRich() {
   const btn = document.getElementById('copy-rich-btn');
   if (!box.innerHTML.trim()) return;
 
-  // Select the content visually
+  // Use execCommand approach which preserves rich text better in email clients
   const range = document.createRange();
   range.selectNodeContents(box);
   const sel = window.getSelection();
@@ -1011,12 +1011,10 @@ function copyRich() {
   sel.addRange(range);
   box.classList.add('copy-selected');
 
-  // Copy as rich text
   try {
-    const blob = new Blob([box.innerHTML], { type: 'text/html' });
-    const plainBlob = new Blob([box.innerText], { type: 'text/plain' });
-    const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
-    navigator.clipboard.write([item]).then(() => {
+    // Try execCommand first - best compatibility with email clients
+    const success = document.execCommand('copy');
+    if (success) {
       btn.classList.add('copied');
       btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
       setTimeout(() => {
@@ -1025,14 +1023,33 @@ function copyRich() {
         box.classList.remove('copy-selected');
         sel.removeAllRanges();
       }, 2500);
-    });
+    } else {
+      throw new Error('execCommand failed');
+    }
   } catch(e) {
-    // Fallback: just select so user can manually copy
-    btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Selected! Now press Ctrl+C';
-    setTimeout(() => {
-      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-      box.classList.remove('copy-selected');
-    }, 3000);
+    // Fallback: try ClipboardItem API
+    try {
+      const blob = new Blob([box.innerHTML], { type: 'text/html' });
+      const plainBlob = new Blob([box.innerText], { type: 'text/plain' });
+      const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
+      navigator.clipboard.write([item]).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+          box.classList.remove('copy-selected');
+          sel.removeAllRanges();
+        }, 2500);
+      });
+    } catch(e2) {
+      // Last resort: signature is already selected, prompt manual copy
+      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Selected! Press Ctrl+C to copy';
+      setTimeout(() => {
+        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+        box.classList.remove('copy-selected');
+      }, 4000);
+    }
   }
 }
 
