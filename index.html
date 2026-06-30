@@ -787,25 +787,49 @@ function buildSig() {
   const webHref = web ? (web.startsWith('http') ? web : 'https://' + web) : '#';
 
   const photoShape = (document.getElementById('f-photo-shape') || {}).value || 'square';
-  const posX = (document.getElementById('f-photo-pos-x') || {}).value || 50;
-  const posY = (document.getElementById('f-photo-pos-y') || {}).value || 0;
-  const objectPosition = `${posX}% ${posY}%`;
-  const photoShapeStyles = {
-    square:      `border-radius:0;width:125px;height:125px;object-fit:cover;object-position:${objectPosition};`,
-    circle:      `border-radius:50%;width:125px;height:125px;object-fit:cover;object-position:${objectPosition};`,
-    oval:        `border-radius:50%;width:125px;height:160px;object-fit:cover;object-position:${objectPosition};`,
-    'wide-square': `border-radius:0;width:180px;height:125px;object-fit:cover;object-position:${objectPosition};`,
-    'wide-circle': `border-radius:50%;width:180px;height:125px;object-fit:cover;object-position:${objectPosition};`,
-    rectangle:   'display:block;width:125px;'
-  };
-  const photoStyle = photoShapeStyles[photoShape] || photoShapeStyles.square;
-
   const photoPositionField = document.getElementById('photo-position-field');
-  if (photoPositionField) photoPositionField.style.display = (photoShape === 'rectangle') ? 'none' : 'block';
+  if (photoPositionField) photoPositionField.style.display = 'none';
 
-  const photoCell = photo
-    ? `<td style="vertical-align:top;padding:0 8px 5px 0"><img src="${photo}" style="${photoStyle}" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/></td>`
-    : '';
+  // Email-safe shape rendering using table/div wrappers with overflow:hidden
+  // All shapes assume the source image is already square or rectangle
+  let photoCell = '';
+  if (photo) {
+    if (photoShape === 'rectangle') {
+      // Original — no cropping, natural size
+      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
+        <img src="${photo}" width="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
+      </td>`;
+    } else if (photoShape === 'square') {
+      // Square — fixed 125x125, no border-radius
+      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
+        <img src="${photo}" width="125" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
+      </td>`;
+    } else if (photoShape === 'circle') {
+      // Circle — use border-radius on a fixed-size table cell with overflow hidden
+      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
+        <div style="width:125px;height:125px;border-radius:50%;overflow:hidden;display:block;">
+          <img src="${photo}" width="125" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+        </div>
+      </td>`;
+    } else if (photoShape === 'oval') {
+      // Oval — taller than wide
+      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
+        <div style="width:125px;height:155px;border-radius:50%;overflow:hidden;display:block;">
+          <img src="${photo}" width="125" height="155" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+        </div>
+      </td>`;
+    } else if (photoShape === 'wide-square') {
+      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
+        <img src="${photo}" width="160" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
+      </td>`;
+    } else if (photoShape === 'wide-circle') {
+      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
+        <div style="width:160px;height:125px;border-radius:50%;overflow:hidden;display:block;">
+          <img src="${photo}" width="160" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+        </div>
+      </td>`;
+    }
+  }
 
   const phoneRow = (office || cell)
     ? `<div style="white-space:nowrap !important">
