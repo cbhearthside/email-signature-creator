@@ -461,6 +461,18 @@
         <option value="rectangle">Rectangle (original)</option>
       </select>
     </div>
+    <div class="field" id="photo-position-field">
+      <label>Photo position (within frame)</label>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;color:var(--muted);width:55px;">Horizontal</span>
+        <input type="range" id="f-photo-pos-x" min="0" max="100" value="50" oninput="render()" style="flex:1;" />
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="font-size:11px;color:var(--muted);width:55px;">Vertical</span>
+        <input type="range" id="f-photo-pos-y" min="0" max="100" value="0" oninput="render()" style="flex:1;" />
+      </div>
+      <p class="hint">Adjust how the photo is cropped within its frame</p>
+    </div>
     <div class="section-label">Contact details</div>
     <div class="field-row">
       <div class="field"><label>Office phone</label><input id="f-office-phone" placeholder="e.g. 215-555-0100" oninput="render()" /></div>
@@ -773,13 +785,19 @@ function buildSig() {
   const webHref = web ? (web.startsWith('http') ? web : 'https://' + web) : '#';
 
   const photoShape = (document.getElementById('f-photo-shape') || {}).value || 'square';
+  const posX = (document.getElementById('f-photo-pos-x') || {}).value || 50;
+  const posY = (document.getElementById('f-photo-pos-y') || {}).value || 0;
+  const objectPosition = `${posX}% ${posY}%`;
   const photoShapeStyles = {
-    square:    'border-radius:0;width:125px;height:125px;object-fit:cover;object-position:center top;',
-    circle:    'border-radius:50%;width:125px;height:125px;object-fit:cover;object-position:center top;',
-    oval:      'border-radius:50%;width:125px;height:160px;object-fit:cover;object-position:center top;',
+    square:    `border-radius:0;width:125px;height:125px;object-fit:cover;object-position:${objectPosition};`,
+    circle:    `border-radius:50%;width:125px;height:125px;object-fit:cover;object-position:${objectPosition};`,
+    oval:      `border-radius:50%;width:125px;height:160px;object-fit:cover;object-position:${objectPosition};`,
     rectangle: 'display:block;width:125px;'
   };
   const photoStyle = photoShapeStyles[photoShape] || photoShapeStyles.square;
+
+  const photoPositionField = document.getElementById('photo-position-field');
+  if (photoPositionField) photoPositionField.style.display = (photoShape === 'rectangle') ? 'none' : 'block';
 
   const photoCell = photo
     ? `<td style="vertical-align:top;padding:0 8px 5px 0"><img src="${photo}" style="${photoStyle}" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/></td>`
