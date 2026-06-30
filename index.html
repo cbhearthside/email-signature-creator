@@ -458,6 +458,8 @@
         <option value="square">Square</option>
         <option value="circle">Circle</option>
         <option value="oval">Oval</option>
+        <option value="wide-square">Wide Square</option>
+        <option value="wide-circle">Wide Circle</option>
         <option value="rectangle">Rectangle (original)</option>
       </select>
     </div>
@@ -789,10 +791,12 @@ function buildSig() {
   const posY = (document.getElementById('f-photo-pos-y') || {}).value || 0;
   const objectPosition = `${posX}% ${posY}%`;
   const photoShapeStyles = {
-    square:    `border-radius:0;width:125px;height:125px;object-fit:cover;object-position:${objectPosition};`,
-    circle:    `border-radius:50%;width:125px;height:125px;object-fit:cover;object-position:${objectPosition};`,
-    oval:      `border-radius:50%;width:125px;height:160px;object-fit:cover;object-position:${objectPosition};`,
-    rectangle: 'display:block;width:125px;'
+    square:      `border-radius:0;width:125px;height:125px;object-fit:cover;object-position:${objectPosition};`,
+    circle:      `border-radius:50%;width:125px;height:125px;object-fit:cover;object-position:${objectPosition};`,
+    oval:        `border-radius:50%;width:125px;height:160px;object-fit:cover;object-position:${objectPosition};`,
+    'wide-square': `border-radius:0;width:180px;height:125px;object-fit:cover;object-position:${objectPosition};`,
+    'wide-circle': `border-radius:50%;width:180px;height:125px;object-fit:cover;object-position:${objectPosition};`,
+    rectangle:   'display:block;width:125px;'
   };
   const photoStyle = photoShapeStyles[photoShape] || photoShapeStyles.square;
 
