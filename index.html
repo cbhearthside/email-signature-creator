@@ -467,6 +467,10 @@
 
     <div class="field">
       <label>Photo / logo URL <span id="photo-auto-badge" style="display:none;font-size:10px;font-weight:600;background:#e8edf7;color:#012169;padding:2px 7px;border-radius:99px;margin-left:4px;">auto-filled</span></label>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <input type="checkbox" id="f-no-photo" onchange="togglePhoto()" style="width:auto;cursor:pointer;" />
+        <label for="f-no-photo" style="margin:0;font-size:12px;cursor:pointer;color:var(--muted);">No photo</label>
+      </div>
       <input id="f-photo" placeholder="Auto-filled from name + office" oninput="render()" />
       <p class="hint">Upload headshot to GitHub as <code style="font-size:10px;background:#f0f0f0;padding:1px 4px;border-radius:3px;">headshots/<em id="office-folder-hint">office</em>/firstname-lastname.jpg</code></p>
     </div>
@@ -641,7 +645,31 @@ function nameToSlug(name) {
     .join('-');
 }
 
+function togglePhoto() {
+  const noPhoto = document.getElementById('f-no-photo').checked;
+  const photoInput = document.getElementById('f-photo');
+  const badge = document.getElementById('photo-auto-badge');
+  const shapeField = document.getElementById('photo-position-field');
+  const shapeSelect = document.getElementById('f-photo-shape');
+  if (noPhoto) {
+    photoInput.value = '';
+    photoInput.readOnly = true;
+    photoInput.style.background = '#f5f6f8';
+    photoInput.style.color = '#999';
+    badge.style.display = 'none';
+    if (shapeSelect) shapeSelect.parentElement.style.display = 'none';
+  } else {
+    photoInput.readOnly = false;
+    photoInput.style.background = '';
+    photoInput.style.color = '';
+    if (shapeSelect) shapeSelect.parentElement.style.display = 'block';
+    autoFillPhoto();
+  }
+  render();
+}
+
 function autoFillPhoto() {
+  if (document.getElementById('f-no-photo') && document.getElementById('f-no-photo').checked) return;
   const name = document.getElementById('f-name').value.trim();
   const key  = document.getElementById('f-office-select').value;
   const company = document.getElementById('f-company').value;
@@ -1149,6 +1177,8 @@ function clearAll() {
   document.getElementById('office-badge').style.display = 'none';
   document.getElementById('office-folder-hint').textContent = 'office';
   document.getElementById('photo-auto-badge').style.display = 'none';
+  const noPhotoCheck = document.getElementById('f-no-photo');
+  if (noPhotoCheck) { noPhotoCheck.checked = false; togglePhoto(); }
   render();
 }
 
