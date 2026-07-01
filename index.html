@@ -916,19 +916,19 @@ function buildSig() {
   const faxLabel = isAW ? 'Fax: ' : 'F: ';
   const phoneRow = (office || cell || fax)
     ? `<div style="white-space:nowrap !important">
-        ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold">${officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none">${office}</a> ` : ''}
-        ${cell   ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold">${cellLabel}</span><a href="tel:${cell}"   style="color:#000000;font-size:.9em;text-decoration:none">${cell}</a> ` : ''}
-        ${fax ? `<span style="color:${labelColor};font-size:.9em">F: </span><span style="color:#000000;font-size:.9em">${fax}</span> ` : ''}
+        ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${office}</a> ` : ''}
+        ${cell   ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
+        ${fax ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">F: </span><span style="color:#000000;font-size:.9em;font-family:${font};">${fax}</span> ` : ''}
        </div>` : '';
 
   const addrRow = addr
-    ? `<div style="white-space:nowrap !important"><span style="color:${labelColor};font-size:.9em">${addrLabel}</span><span style="color:#000000;font-size:.9em">${addr}</span></div>`
+    ? `<div style="white-space:nowrap !important"><span style="color:${labelColor};font-size:.9em;font-family:${font};">${addrLabel}</span><span style="color:#000000;font-size:.9em;font-family:${font};">${addr}</span></div>`
     : '';
 
   const webEmailRow = (web || email)
     ? `<div style="white-space:nowrap !important">
-        ${web   ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold">${webLabel}</span><a href="${webHref}" target="_blank" style="color:#000000;font-size:.9em;text-decoration:none !important">${web}</a> ` : ''}
-        ${email ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold">${emailLabel}</span><a href="mailto:${email}" target="_blank" style="color:#000000;font-size:.9em;text-decoration:none">${email}</a> ` : ''}
+        ${web   ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${webLabel}</span><a href="${webHref}" target="_blank" style="color:#000000;font-size:.9em;text-decoration:none !important;font-family:${font};">${web}</a> ` : ''}
+        ${email ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${emailLabel}</span><a href="mailto:${email}" target="_blank" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${email}</a> ` : ''}
        </div>` : '';
 
   const socialIcons = {
@@ -971,7 +971,7 @@ function buildSig() {
   ${photoCell}
   <td style="vertical-align:top;color:#444444;font:90% Arial;border-left:3px solid ${isAW ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
     <div style="color:${(COMPANY_SETTINGS[company] || {}).nameColor || '#012169'};font-size:1.1em;font-weight:bold;font-family:${font};">${name || 'Your Name'}</div>
-    ${title   ? `<span style="color:#000000;font-size:.9em">${title}</span> ` : ''}
+    ${title   ? `<span style="color:#000000;font-size:.9em;font-family:${font};">${title}</span> ` : ''}
     ${company ? `<div style="color:${(COMPANY_SETTINGS[company] || {}).companyColor || '#012169'};font-size:1.3em;font-weight:bold;font-family:${font};">${company}</div>` : ''}
     <div style="font-size:10px;line-height:10px">&nbsp;</div>
     ${phoneRow}
