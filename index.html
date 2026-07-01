@@ -479,6 +479,7 @@
     <div class="field-row">
       <div class="field"><label>Office phone</label><input id="f-office-phone" placeholder="e.g. 215-555-0100" oninput="render()" /></div>
       <div class="field"><label>Cell phone</label><input id="f-cell" placeholder="e.g. 410-555-0199" oninput="render()" /></div>
+      <div class="field" id="fax-field" style="display:none;"><label>Fax</label><input id="f-fax" placeholder="e.g. 484-555-0199" oninput="render()" /></div>
     </div>
     <div class="field"><label>Email address</label><input id="f-email" placeholder="name@CBHearthside.com" oninput="render()" /></div>
     <div class="field"><label>Website</label><input id="f-web" placeholder="yourname.cbhre.com" oninput="updateBannerLink(); render()" /></div>
@@ -706,6 +707,10 @@ function onCompanyChange() {
   // Auto-fill hardcoded website and phone
   const settings = COMPANY_SETTINGS[company] || {};
   const webInput = document.getElementById('f-web');
+  const faxField = document.getElementById('fax-field');
+  if (faxField) faxField.style.display = (company === 'CONNECT CLOSING' || company === 'SKY SETTLEMENT SERVICE') ? 'block' : 'none';
+  if (company !== 'CONNECT CLOSING' && company !== 'SKY SETTLEMENT SERVICE') { document.getElementById('f-fax').value = ''; }
+
   if (company === 'ADDISON WOLFE REAL ESTATE') {
     // Pre-fill but keep editable
     if (!webInput.value) webInput.value = 'addisonwolfe.com';
@@ -770,6 +775,7 @@ function buildSig() {
   const company    = v('f-company');
   const office     = v('f-office-phone');
   const cell       = v('f-cell');
+  const fax        = v('f-fax');
   const email      = v('f-email');
   const web        = v('f-web');
   const addr       = v('f-addr');
@@ -842,11 +848,12 @@ function buildSig() {
   const webLabel    = isAW ? 'Website: ': 'W: ';
   const emailLabel  = isAW ? 'Email: '  : 'E: ';
 
-  const phoneRow = (office || cell)
+  const faxLabel = isAW ? 'Fax: ' : 'F: ';
+  const phoneRow = (office || cell || fax)
     ? `<div style="white-space:nowrap !important">
         ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold">${officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none">${office}</a> ` : ''}
         ${cell   ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold">${cellLabel}</span><a href="tel:${cell}"   style="color:#000000;font-size:.9em;text-decoration:none">${cell}</a> ` : ''}
-       </div>` : '';
+       </div>${fax ? `<div style="white-space:nowrap !important"><span style="color:${labelColor};font-size:.9em${isAW ? ';font-weight:bold' : ''}">Fax: </span><span style="color:#000000;font-size:.9em">${fax}</span></div>` : ''}` : '';
 
   const addrRow = addr
     ? `<div style="white-space:nowrap !important"><span style="color:${labelColor};font-size:.9em">${addrLabel}</span><span style="color:#000000;font-size:.9em">${addr}</span></div>`
@@ -1067,7 +1074,7 @@ function copyRich() {
 function copyHTML() { copyRich(); }
 
 function clearAll() {
-  ['f-name','f-title','f-office-phone','f-cell','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-photo','f-banner','f-bannerlink']
+  ['f-name','f-title','f-office-phone','f-cell','f-fax','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-photo','f-banner','f-bannerlink']
     .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
