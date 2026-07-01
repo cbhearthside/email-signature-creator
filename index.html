@@ -402,6 +402,7 @@
         <option value="BLUE SKY HOME FINANCE">Blue Sky Home Finance</option>
         <option value="ADDISON WOLFE REAL ESTATE">Addison Wolfe Real Estate</option>
         <option value="MANAGEMENT">Management</option>
+        <option value="BLUE EDGE">Blue Edge</option>
       </select>
     </div>
     <div class="field" id="company-name-field" style="display:none;">
@@ -513,9 +514,9 @@
       <p class="hint">Where the banner links to when clicked</p>
     </div>
     <div class="field" id="banner-size-field" style="display:none;">
-      <label>Banner size: <span id="banner-size-value">200</span>px</label>
-      <input type="range" id="f-banner-size" min="100" max="500" value="200" oninput="document.getElementById('banner-size-value').textContent=this.value; render()" style="width:100%;" />
-      <p class="hint">Drag to resize the Addison Wolfe logo</p>
+      <label>Banner size: <span id="banner-size-value">350</span>px</label>
+      <input type="range" id="f-banner-size" min="100" max="600" value="350" oninput="document.getElementById('banner-size-value').textContent=this.value; render()" style="width:100%;" />
+      <p class="hint">Drag to resize the banner/logo</p>
     </div>
 
   </aside>
@@ -664,7 +665,8 @@ const COMPANY_BANNERS = {
   'CONNECT CLOSING': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/connect.jpg',
   'BLUE SKY HOME FINANCE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg',
   'ADDISON WOLFE REAL ESTATE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/refs/heads/main/AW-Logo.jpg',
-  'MANAGEMENT': ''
+  'MANAGEMENT': '',
+  'BLUE EDGE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Blue-Edge.jpg'
 };
 
 const COMPANY_SETTINGS = {
@@ -723,7 +725,22 @@ function onCompanyChange() {
   if (company !== 'MANAGEMENT') document.getElementById('f-company-name').value = '';
 
   const bannerSizeField = document.getElementById('banner-size-field');
-  if (bannerSizeField) bannerSizeField.style.display = (company === 'ADDISON WOLFE REAL ESTATE') ? 'block' : 'none';
+  if (bannerSizeField) bannerSizeField.style.display = 'block';
+
+  // Auto-fill address for companies that have one
+  const addrInput = document.getElementById('f-addr');
+  const settingsForAddr = COMPANY_SETTINGS[company] || {};
+  if (settingsForAddr.address && company !== 'COLDWELL BANKER HEARTHSIDE') {
+    addrInput.value = settingsForAddr.address;
+    addrInput.readOnly = true;
+    addrInput.style.background = '#f5f6f8';
+    addrInput.style.color = '#999';
+  } else if (company !== 'COLDWELL BANKER HEARTHSIDE') {
+    addrInput.value = '';
+    addrInput.readOnly = false;
+    addrInput.style.background = '';
+    addrInput.style.color = '';
+  }
 
   const faxField = document.getElementById('fax-field');
   if (faxField) faxField.style.display = (company === 'CONNECT CLOSING' || company === 'SKY SETTLEMENT SERVICE') ? 'block' : 'none';
@@ -906,9 +923,8 @@ function buildSig() {
   const socialRow = socialCells ? `<table><tr>${socialCells}</tr></table>` : '';
 
   const selectedCompany = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
-  const awBannerSize = parseInt((document.getElementById('f-banner-size') || {}).value || 200);
-  const bannerWidths = { 'CONNECT CLOSING': 150, 'ADDISON WOLFE REAL ESTATE': awBannerSize };
-  const bannerWidth = bannerWidths[selectedCompany] || 350;
+  const sliderSize = parseInt((document.getElementById('f-banner-size') || {}).value || 350);
+  const bannerWidth = selectedCompany === 'CONNECT CLOSING' ? Math.min(sliderSize, 300) : sliderSize;
   const bannerSection = (banner && selectedCompany)
     ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;">
         ${bannerlink ? `<a href="${bannerlink}" target="_blank">` : ''}
