@@ -401,7 +401,12 @@
         <option value="CONNECT CLOSING">Connect Closing</option>
         <option value="BLUE SKY HOME FINANCE">Blue Sky Home Finance</option>
         <option value="ADDISON WOLFE REAL ESTATE">Addison Wolfe Real Estate</option>
+        <option value="MANAGEMENT">Management</option>
       </select>
+    </div>
+    <div class="field" id="company-name-field" style="display:none;">
+      <label>Company name (editable)</label>
+      <input id="f-company-name" placeholder="Enter company name..." oninput="render()" />
     </div>
 
     <div id="office-location-section" style="display:none;">
@@ -653,7 +658,8 @@ const COMPANY_BANNERS = {
   'SKY SETTLEMENT SERVICE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/sky.jpg',
   'CONNECT CLOSING': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/connect.jpg',
   'BLUE SKY HOME FINANCE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg',
-  'ADDISON WOLFE REAL ESTATE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/refs/heads/main/AW-Logo.jpg'
+  'ADDISON WOLFE REAL ESTATE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/refs/heads/main/AW-Logo.jpg',
+  'MANAGEMENT': ''
 };
 
 const COMPANY_SETTINGS = {
@@ -707,6 +713,10 @@ function onCompanyChange() {
   // Auto-fill hardcoded website and phone
   const settings = COMPANY_SETTINGS[company] || {};
   const webInput = document.getElementById('f-web');
+  const companyNameField = document.getElementById('company-name-field');
+  if (companyNameField) companyNameField.style.display = (company === 'MANAGEMENT') ? 'block' : 'none';
+  if (company !== 'MANAGEMENT') document.getElementById('f-company-name').value = '';
+
   const faxField = document.getElementById('fax-field');
   if (faxField) faxField.style.display = (company === 'CONNECT CLOSING' || company === 'SKY SETTLEMENT SERVICE') ? 'block' : 'none';
   if (company !== 'CONNECT CLOSING' && company !== 'SKY SETTLEMENT SERVICE') { document.getElementById('f-fax').value = ''; }
@@ -772,7 +782,8 @@ function applyOffice() {
 function buildSig() {
   const name       = v('f-name');
   const title      = v('f-title');
-  const company    = v('f-company');
+  const companySelect = v('f-company');
+  const company = companySelect === 'MANAGEMENT' ? (v('f-company-name') || 'Management') : companySelect;
   const office     = v('f-office-phone');
   const cell       = v('f-cell');
   const fax        = v('f-fax');
@@ -840,7 +851,7 @@ function buildSig() {
     }
   }
 
-  const isAW = company === 'ADDISON WOLFE REAL ESTATE';
+  const isAW = companySelect === 'ADDISON WOLFE REAL ESTATE';
   const labelColor = isAW ? '#CC0000' : '#444444';
   const officeLabel = isAW ? 'Office: ' : 'O: ';
   const cellLabel   = isAW ? 'Cell: '   : 'C: ';
@@ -1075,7 +1086,7 @@ function copyRich() {
 function copyHTML() { copyRich(); }
 
 function clearAll() {
-  ['f-name','f-title','f-office-phone','f-cell','f-fax','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-photo','f-banner','f-bannerlink']
+  ['f-name','f-title','f-company-name','f-office-phone','f-cell','f-fax','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-photo','f-banner','f-bannerlink']
     .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
