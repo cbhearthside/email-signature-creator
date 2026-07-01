@@ -512,6 +512,11 @@
       <input id="f-bannerlink" placeholder="https://..." oninput="render()" />
       <p class="hint">Where the banner links to when clicked</p>
     </div>
+    <div class="field" id="banner-size-field" style="display:none;">
+      <label>Banner size: <span id="banner-size-value">200</span>px</label>
+      <input type="range" id="f-banner-size" min="100" max="500" value="200" oninput="document.getElementById('banner-size-value').textContent=this.value; render()" style="width:100%;" />
+      <p class="hint">Drag to resize the Addison Wolfe logo</p>
+    </div>
 
   </aside>
 
@@ -717,6 +722,9 @@ function onCompanyChange() {
   if (companyNameField) companyNameField.style.display = (company === 'MANAGEMENT') ? 'block' : 'none';
   if (company !== 'MANAGEMENT') document.getElementById('f-company-name').value = '';
 
+  const bannerSizeField = document.getElementById('banner-size-field');
+  if (bannerSizeField) bannerSizeField.style.display = (company === 'ADDISON WOLFE REAL ESTATE') ? 'block' : 'none';
+
   const faxField = document.getElementById('fax-field');
   if (faxField) faxField.style.display = (company === 'CONNECT CLOSING' || company === 'SKY SETTLEMENT SERVICE') ? 'block' : 'none';
   if (company !== 'CONNECT CLOSING' && company !== 'SKY SETTLEMENT SERVICE') { document.getElementById('f-fax').value = ''; }
@@ -898,7 +906,8 @@ function buildSig() {
   const socialRow = socialCells ? `<table><tr>${socialCells}</tr></table>` : '';
 
   const selectedCompany = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
-  const bannerWidths = { 'CONNECT CLOSING': 150, 'ADDISON WOLFE REAL ESTATE': 200 };
+  const awBannerSize = parseInt((document.getElementById('f-banner-size') || {}).value || 200);
+  const bannerWidths = { 'CONNECT CLOSING': 150, 'ADDISON WOLFE REAL ESTATE': awBannerSize };
   const bannerWidth = bannerWidths[selectedCompany] || 350;
   const bannerSection = (banner && selectedCompany)
     ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;">
