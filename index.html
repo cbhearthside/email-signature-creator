@@ -514,13 +514,28 @@
       <p class="hint">Drag to resize the banner/logo</p>
     </div>
 
+    <div id="bluesky-office-section" style="display:none;">
+      <div class="section-label">Blue Sky Office</div>
+      <div class="field">
+        <label>Select office</label>
+        <select id="f-bluesky-office" onchange="applyBlueSkyOffice()">
+          <option value="">— Select an office —</option>
+          <option value="bluebell">Blue Bell</option>
+          <option value="allentown">Allentown</option>
+        </select>
+      </div>
+    </div>
+
     <div class="section-label">Contact details</div>
     <div class="field-row">
       <div class="field"><label>Office phone</label><input id="f-office-phone" placeholder="e.g. 215-555-0100" oninput="render()" /></div>
+      <div class="field" id="direct-field" style="display:none;"><label>Direct #</label><input id="f-direct" placeholder="e.g. 610-234-3842" oninput="render()" /></div>
       <div class="field"><label>Cell phone</label><input id="f-cell" placeholder="e.g. 410-555-0199" oninput="render()" /></div>
       <div class="field" id="fax-field" style="display:none;"><label>Fax</label><input id="f-fax" placeholder="e.g. 484-555-0199" oninput="render()" /></div>
     </div>
     <div class="field"><label>Email address</label><input id="f-email" placeholder="name@CBHearthside.com" oninput="render()" /></div>
+    <div class="field" id="nmls-field" style="display:none;"><label>NMLS #</label><input id="f-nmls" placeholder="e.g. 917602" oninput="render()" /></div>
+    <div class="field" id="apply-link-field" style="display:none;"><label>Apply Now URL</label><input id="f-apply-link" placeholder="https://blueskyhomefinance.com/yourname" oninput="render()" /></div>
     <div class="field"><label>Website</label><input id="f-web" placeholder="yourname.cbhre.com" oninput="updateBannerLink(); render()" /></div>
     <div class="field">
       <label>Office address</label>
@@ -699,6 +714,20 @@ function autoFillPhoto() {
   render();
 }
 
+const BLUESKY_OFFICES = {
+  bluebell:  { label: 'Blue Bell',  address: '488 Norristown Road, Suite 241, Blue Bell, PA 19422',     phone: '610-234-3840' },
+  allentown: { label: 'Allentown',  address: '968 Postal Road, Suite 200, Allentown, PA 18109',          phone: '610-234-3840' }
+};
+
+function applyBlueSkyOffice() {
+  const key = document.getElementById('f-bluesky-office').value;
+  if (!key || !BLUESKY_OFFICES[key]) { render(); return; }
+  const office = BLUESKY_OFFICES[key];
+  document.getElementById('f-addr').value = office.address;
+  document.getElementById('f-office-phone').value = office.phone;
+  render();
+}
+
 const COMPANY_BANNERS = {
   'COLDWELL BANKER HEARTHSIDE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg',
   'SKY SETTLEMENT SERVICE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/sky.jpg',
@@ -713,7 +742,7 @@ const COMPANY_SETTINGS = {
   'COLDWELL BANKER HEARTHSIDE': { nameColor: '#012169', companyColor: '#012169', website: '', folder: '' },
   'SKY SETTLEMENT SERVICE':     { nameColor: '#000000', companyColor: '#000000', website: 'skyclosings.com', folder: 'sky-settlement', phone: '267-352-9121' },
   'CONNECT CLOSING':            { nameColor: '#000000', companyColor: '#000000', website: 'connectclosing.com', folder: 'connect-closing', phone: '484-284-9270' },
-  'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'blue-sky-home-finance', phone: '610-234-3840' },
+  'BLUE SKY HOME FINANCE':      { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'blue-sky-home-finance', phone: '610-234-3840', fax: '610-862-6484' },
   'ADDISON WOLFE REAL ESTATE':  { nameColor: '#000000', companyColor: '#000000', website: 'addisonwolfe.com', defaultWebsite: 'addisonwolfe.com', folder: 'addison-wolfe', phone: '215-862-5500' },
   'BLUE EDGE':                  { nameColor: '#012169', companyColor: '#012169', website: 'blueedgeteam.com', folder: 'blue-edge', phone: '267-352-9120', address: '212 N. Main Street, Doylestown, PA 18901' },
   'MANAGEMENT':                 { nameColor: '#000000', companyColor: '#000000', website: '', folder: 'management', phone: '' }
@@ -785,8 +814,28 @@ function onCompanyChange() {
   }
 
   const faxField = document.getElementById('fax-field');
-  if (faxField) faxField.style.display = (company === 'CONNECT CLOSING' || company === 'SKY SETTLEMENT SERVICE') ? 'block' : 'none';
-  if (company !== 'CONNECT CLOSING' && company !== 'SKY SETTLEMENT SERVICE') { document.getElementById('f-fax').value = ''; }
+  const directField = document.getElementById('direct-field');
+  const nmlsField = document.getElementById('nmls-field');
+  const applyLinkField = document.getElementById('apply-link-field');
+  const bsOfficeSection = document.getElementById('bluesky-office-section');
+  const isBlueSky = company === 'BLUE SKY HOME FINANCE';
+
+  if (faxField) faxField.style.display = (company === 'CONNECT CLOSING' || company === 'SKY SETTLEMENT SERVICE' || isBlueSky) ? 'block' : 'none';
+  if (directField) directField.style.display = isBlueSky ? 'block' : 'none';
+  if (nmlsField) nmlsField.style.display = isBlueSky ? 'block' : 'none';
+  if (applyLinkField) applyLinkField.style.display = isBlueSky ? 'block' : 'none';
+  if (bsOfficeSection) bsOfficeSection.style.display = isBlueSky ? 'block' : 'none';
+
+  if (!isBlueSky) {
+    document.getElementById('f-direct').value = '';
+    document.getElementById('f-nmls').value = '';
+    document.getElementById('f-apply-link').value = '';
+    document.getElementById('f-bluesky-office').value = '';
+  }
+  if (isBlueSky && document.getElementById('f-fax')) {
+    document.getElementById('f-fax').value = '610-862-6484';
+  }
+  if (company !== 'CONNECT CLOSING' && company !== 'SKY SETTLEMENT SERVICE' && !isBlueSky) { document.getElementById('f-fax').value = ''; }
 
   if (company === 'ADDISON WOLFE REAL ESTATE') {
     // Pre-fill but keep editable
@@ -869,6 +918,10 @@ function buildSig() {
   const office     = v('f-office-phone');
   const cell       = v('f-cell');
   const fax        = v('f-fax');
+  const direct     = v('f-direct');
+  const nmls       = v('f-nmls');
+  const applyLink  = v('f-apply-link');
+  const isBlueSky  = companySelect === 'BLUE SKY HOME FINANCE';
   const email      = v('f-email');
   const web        = v('f-web');
   const addr       = v('f-addr');
@@ -942,11 +995,12 @@ function buildSig() {
   const emailLabel  = isAW ? 'Email: '  : 'E: ';
 
   const faxLabel = isAW ? 'Fax: ' : 'F: ';
-  const phoneRow = (office || cell || fax)
+  const phoneRow = (office || cell || fax || direct)
     ? `<div style="white-space:nowrap !important">
-        ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${office}</a> ` : ''}
+        ${direct && isBlueSky ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">Direct # </span><span style="color:#000000;font-size:.9em;font-family:${font};">${direct}</span> | ` : ''}
+        ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${isBlueSky ? 'Office # ' : officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${office}</a>${fax && isBlueSky ? ' | ' : ' '}` : ''}
         ${cell   ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
-        ${fax ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">F: </span><span style="color:#000000;font-size:.9em;font-family:${font};">${fax}</span> ` : ''}
+        ${fax ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">${isBlueSky ? 'Fax # ' : 'F: '}</span><span style="color:#000000;font-size:.9em;font-family:${font};">${fax}</span> ` : ''}
        </div>` : '';
 
   const addrRow = addr
@@ -982,6 +1036,9 @@ function buildSig() {
   const selectedCompany = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
   const sliderSize = parseInt((document.getElementById('f-banner-size') || {}).value || 350);
   const bannerWidth = selectedCompany === 'CONNECT CLOSING' ? Math.min(sliderSize, 300) : sliderSize;
+  const disclosureText = 'The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.';
+  const disclosureSection = isBlueSky ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">${disclosureText}</div>` : '';
+
   const bannerSection = (banner && selectedCompany)
     ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;">
         ${bannerlink ? `<a href="${bannerlink}" target="_blank">` : ''}
@@ -1005,11 +1062,16 @@ function buildSig() {
     ${phoneRow}
     ${addrRow}
     ${webEmailRow}
+    ${isBlueSky && nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">NMLS # ${nmls}, Company NMLS # 894392</span></div>` : ''}
+    ${isBlueSky && !nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">Company NMLS # 894392</span></div>` : ''}
+    ${isBlueSky ? `<div style="font-size:10px;line-height:10px">&nbsp;</div><div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">Blue Sky Home Finance is a division of Northeast Equitable Mortgage, LLC</span></div>` : ''}
+    ${isBlueSky && applyLink ? `<div style="margin-top:6px;"><a href="${applyLink}" target="_blank" style="background:#012169;color:#ffffff;padding:6px 14px;text-decoration:none;font-size:.9em;font-weight:bold;font-family:${font};border-radius:3px;">CLICK HERE TO APPLY NOW</a></div>` : ''}
     <div style="font-size:10px;line-height:10px">&nbsp;</div>
     ${socialRow}
   </td>
 </tr>
 </table>
+${disclosureSection}
 ${bannerSection}
 </div>
 </body>
@@ -1168,7 +1230,7 @@ function copyRich() {
 function copyHTML() { copyRich(); }
 
 function clearAll() {
-  ['f-name','f-title','f-company-name','f-office-phone','f-cell','f-fax','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-photo','f-banner','f-bannerlink']
+  ['f-name','f-title','f-company-name','f-office-phone','f-direct','f-cell','f-fax','f-nmls','f-apply-link','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-photo','f-banner','f-bannerlink']
     .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
