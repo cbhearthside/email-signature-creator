@@ -493,6 +493,23 @@
       </div>
       <p class="hint">Adjust how the photo is cropped within its frame</p>
     </div>
+    <div class="section-label">Images</div>
+    <div class="field">
+      <label>Banner image URL</label>
+      <input id="f-banner" value="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg" oninput="render()" />
+      <p class="hint">Optional banner shown below the signature (550px wide)</p>
+    </div>
+    <div class="field">
+      <label>Banner link URL</label>
+      <input id="f-bannerlink" placeholder="https://..." oninput="render()" />
+      <p class="hint">Where the banner links to when clicked</p>
+    </div>
+    <div class="field" id="banner-size-field" style="display:none;">
+      <label>Banner size: <span id="banner-size-value">350</span>px</label>
+      <input type="range" id="f-banner-size" min="100" max="600" value="350" oninput="document.getElementById('banner-size-value').textContent=this.value; render()" style="width:100%;" />
+      <p class="hint">Drag to resize the banner/logo</p>
+    </div>
+
     <div class="section-label">Contact details</div>
     <div class="field-row">
       <div class="field"><label>Office phone</label><input id="f-office-phone" placeholder="e.g. 215-555-0100" oninput="render()" /></div>
@@ -513,23 +530,6 @@
     <div class="field"><label>X (Twitter) URL</label><input id="f-x" placeholder="https://x.com/..." oninput="render()" /></div>
     <div class="field"><label>Instagram URL</label><input id="f-ig" placeholder="https://instagram.com/..." oninput="render()" /></div>
     <div class="field"><label>YouTube URL</label><input id="f-yt" placeholder="https://youtube.com/..." oninput="render()" /></div>
-
-    <div class="section-label">Images</div>
-    <div class="field">
-      <label>Banner image URL</label>
-      <input id="f-banner" value="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg" oninput="render()" />
-      <p class="hint">Optional banner shown below the signature (550px wide)</p>
-    </div>
-    <div class="field">
-      <label>Banner link URL</label>
-      <input id="f-bannerlink" placeholder="https://..." oninput="render()" />
-      <p class="hint">Where the banner links to when clicked</p>
-    </div>
-    <div class="field" id="banner-size-field" style="display:none;">
-      <label>Banner size: <span id="banner-size-value">350</span>px</label>
-      <input type="range" id="f-banner-size" min="100" max="600" value="350" oninput="document.getElementById('banner-size-value').textContent=this.value; render()" style="width:100%;" />
-      <p class="hint">Drag to resize the banner/logo</p>
-    </div>
 
   </aside>
 
