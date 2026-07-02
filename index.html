@@ -436,7 +436,7 @@
 
       <div class="field">
         <label>Team (optional)</label>
-        <select id="f-team" onchange="render()">
+        <select id="f-team" onchange="applyTeam(); render();">
           <option value="">— No team —</option>
           <option value="Cliff Lewis Experience">Cliff Lewis Experience</option>
           <option value="Sean LaSalle Team">Sean LaSalle Team</option>
@@ -445,6 +445,7 @@
           <option value="Curt Gasper Team">Curt Gasper Team</option>
           <option value="Mark Reale Team">Mark Reale Team</option>
           <option value="Chris George Team">Chris George Team</option>
+          <option value="Zito Brehm">Zito Brehm Real Estate Group</option>
         </select>
       </div>
     </div>
@@ -726,6 +727,16 @@ function applyBlueSkyOffice() {
   render();
 }
 
+const TEAM_SETTINGS = {
+  'Zito Brehm': {
+    companyName: 'The Zito Brehm Real Estate Group',
+    banner: 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Zito-Brehm.jpg',
+    office: 'allentown'
+  }
+  // Add more teams here as banners become available:
+  // 'Cliff Lewis Experience': { companyName: 'Cliff Lewis Experience', banner: '', office: '' },
+};
+
 const COMPANY_BANNERS = {
   'COLDWELL BANKER HEARTHSIDE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg',
   'SKY SETTLEMENT SERVICE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/sky.jpg',
@@ -752,6 +763,24 @@ function updateBannerLink() {
   if (!web && company === 'ADDISON WOLFE REAL ESTATE') web = 'addisonwolfe.com';
   const webUrl = web ? (web.startsWith('http') ? web : 'https://' + web) : '';
   document.getElementById('f-bannerlink').value = webUrl;
+}
+
+function applyTeam() {
+  const teamKey = document.getElementById('f-team').value;
+  const team = TEAM_SETTINGS[teamKey];
+  if (!team) { render(); return; }
+
+  // Auto-fill office if team has one
+  if (team.office && OFFICES[team.office]) {
+    const office = OFFICES[team.office];
+    document.getElementById('f-office-select').value = team.office;
+    document.getElementById('f-addr').value = office.address;
+    document.getElementById('f-office-phone').value = office.phone;
+    document.getElementById('office-badge').style.display = 'block';
+    document.getElementById('office-badge').innerHTML = '<strong>' + office.label + '</strong> — ' + office.address;
+  }
+  autoFillPhoto();
+  render();
 }
 
 function onCompanyChange() {
@@ -912,7 +941,9 @@ function buildSig() {
   const name       = v('f-name');
   const title      = v('f-title');
   const companySelect = v('f-company');
-  const company = companySelect === 'MANAGEMENT' ? (v('f-company-name') || 'Management') : companySelect;
+  const teamSelect = (document.getElementById('f-team') || {}).value || '';
+  const teamSettings = TEAM_SETTINGS[teamSelect] || null;
+  const company = companySelect === 'MANAGEMENT' ? (v('f-company-name') || 'Management') : (teamSettings ? teamSettings.companyName : companySelect);
   const office     = v('f-office-phone');
   const cell       = v('f-cell');
   const fax        = v('f-fax');
@@ -1034,13 +1065,14 @@ function buildSig() {
   const selectedCompany = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
   const sliderSize = parseInt((document.getElementById('f-banner-size') || {}).value || 350);
   const bannerWidth = selectedCompany === 'CONNECT CLOSING' ? Math.min(sliderSize, 300) : sliderSize;
+  const effectiveBanner = teamSettings && teamSettings.banner ? teamSettings.banner : banner;
   const disclosureText = 'The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.';
   const disclosureSection = isBlueSky ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">${disclosureText}</div>` : '';
 
-  const bannerSection = (banner && selectedCompany)
+  const bannerSection = (effectiveBanner && selectedCompany)
     ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;">
         ${bannerlink ? `<a href="${bannerlink}" target="_blank">` : ''}
-        <img src="${banner}" width="${bannerWidth}" style="vertical-align:middle;border:0;background:#ffffff;" alt="banner"/>
+        <img src="${effectiveBanner}" width="${bannerWidth}" style="vertical-align:middle;border:0;background:#ffffff;" alt="banner"/>
         ${bannerlink ? `</a>` : ''}
        </td></tr></table>` : '';
 
