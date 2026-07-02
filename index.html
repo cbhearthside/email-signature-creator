@@ -434,6 +434,14 @@
         <div class="office-badge" id="office-badge"></div>
       </div>
 
+      <div class="field" style="margin-top:10px;padding:10px;background:var(--navy-light);border-radius:var(--radius-sm);">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="checkbox" id="f-bluesky-lo" onchange="toggleBlueSkyLO()" style="width:auto;cursor:pointer;" />
+          <label for="f-bluesky-lo" style="margin:0;font-size:13px;font-weight:500;cursor:pointer;color:var(--navy);">Loan Officer with Blue Sky Home Finance</label>
+        </div>
+        <p class="hint" style="margin-top:4px;">Adds Blue Sky info to your CBH signature</p>
+      </div>
+
       <div class="field">
         <label>Team (optional)</label>
         <select id="f-team" onchange="applyTeam(); render();">
@@ -512,6 +520,22 @@
       <label>Banner size: <span id="banner-size-value">350</span>px</label>
       <input type="range" id="f-banner-size" min="100" max="600" value="350" oninput="document.getElementById('banner-size-value').textContent=this.value; render()" style="width:100%;" />
       <p class="hint">Drag to resize the banner/logo</p>
+    </div>
+
+    <div id="bluesky-lo-section" style="display:none;">
+      <div class="section-label">Blue Sky Home Finance</div>
+      <div class="field">
+        <label>Blue Sky Office</label>
+        <select id="f-bluesky-lo-office" onchange="applyBlueSkyLOOffice()">
+          <option value="">— Select an office —</option>
+          <option value="bluebell">Blue Bell</option>
+          <option value="allentown">Allentown</option>
+        </select>
+      </div>
+      <div class="field"><label>Direct #</label><input id="f-bs-direct" placeholder="e.g. 610-234-3842" oninput="render()" /></div>
+      <div class="field"><label>Fax #</label><input id="f-bs-fax" placeholder="e.g. 610-862-6484" oninput="render()" /></div>
+      <div class="field"><label>NMLS #</label><input id="f-bs-nmls" placeholder="e.g. 917602" oninput="render()" /></div>
+      <div class="field"><label>Apply Now URL</label><input id="f-bs-apply-link" placeholder="https://blueskyhomefinance.com/yourname" oninput="render()" /></div>
     </div>
 
     <div id="bluesky-office-section" style="display:none;">
@@ -765,6 +789,27 @@ function updateBannerLink() {
   document.getElementById('f-bannerlink').value = webUrl;
 }
 
+function toggleBlueSkyLO() {
+  const checked = document.getElementById('f-bluesky-lo').checked;
+  const section = document.getElementById('bluesky-lo-section');
+  if (section) section.style.display = checked ? 'block' : 'none';
+  if (!checked) {
+    ['f-bs-direct','f-bs-fax','f-bs-nmls','f-bs-apply-link'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.getElementById('f-bluesky-lo-office').value = '';
+  }
+  render();
+}
+
+function applyBlueSkyLOOffice() {
+  const key = document.getElementById('f-bluesky-lo-office').value;
+  if (!key || !BLUESKY_OFFICES[key]) { render(); return; }
+  const office = BLUESKY_OFFICES[key];
+  document.getElementById('f-bs-fax').value = '610-862-6484';
+  render();
+}
+
 function applyTeam() {
   const teamKey = document.getElementById('f-team').value;
   const team = TEAM_SETTINGS[teamKey];
@@ -798,6 +843,7 @@ function onCompanyChange() {
     document.getElementById('f-office-select').value = '';
     document.getElementById('office-badge').style.display = 'none';
     document.getElementById('f-team').value = '';
+  const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
     addrField.value = '';
     officePhone.value = '';
   }
@@ -951,6 +997,11 @@ function buildSig() {
   const nmls       = v('f-nmls');
   const applyLink  = v('f-apply-link');
   const isBlueSky  = companySelect === 'BLUE SKY HOME FINANCE';
+  const isBlueSkyLO = document.getElementById('f-bluesky-lo') ? document.getElementById('f-bluesky-lo').checked : false;
+  const bsDirect   = isBlueSkyLO ? ((document.getElementById('f-bs-direct') || {}).value || '') : '';
+  const bsFax      = isBlueSkyLO ? ((document.getElementById('f-bs-fax') || {}).value || '') : '';
+  const bsNmls     = isBlueSkyLO ? ((document.getElementById('f-bs-nmls') || {}).value || '') : '';
+  const bsApply    = isBlueSkyLO ? ((document.getElementById('f-bs-apply-link') || {}).value || '') : '';
   const email      = v('f-email');
   const web        = v('f-web');
   const addr       = v('f-addr');
@@ -1092,6 +1143,17 @@ function buildSig() {
     ${phoneRow}
     ${addrRow}
     ${webEmailRow}
+    ${isBlueSkyLO ? `
+    <tr><td colspan="2" style="padding-top:10px;">
+      <div style="border-top:1px solid #cccccc;padding-top:8px;">
+        <div style="color:#012169;font-size:1.1em;font-weight:bold;font-family:${font};">BLUE SKY HOME FINANCE</div>
+        <div style="color:#012169;font-size:.85em;font-family:${font};">A division of Northeast Equitable Mortgage, LLC</div>
+        <div style="font-size:10px;line-height:10px;">&nbsp;</div>
+        ${bsDirect ? `<div style="white-space:nowrap !important"><span style="color:#444444;font-size:.9em;font-family:${font};">Direct # </span><span style="color:#000000;font-size:.9em;font-family:${font};">${bsDirect}</span>${bsFax ? ` | <span style="color:#444444;font-size:.9em;font-family:${font};">Fax # </span><span style="color:#000000;font-size:.9em;font-family:${font};">${bsFax}</span>` : ''}</div>` : ''}
+        ${bsNmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">NMLS # ${bsNmls}, Company NMLS # 894392</span></div>` : `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">Company NMLS # 894392</span></div>`}
+        ${bsApply ? `<div style="margin-top:6px;"><a href="${bsApply}" target="_blank" style="background:#012169;color:#ffffff;padding:6px 14px;text-decoration:none;font-size:.9em;font-weight:bold;font-family:${font};border-radius:3px;">CLICK HERE TO APPLY NOW</a></div>` : ''}
+      </div>
+    </td></tr>` : ''}
     ${isBlueSky && nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">NMLS # ${nmls}, Company NMLS # 894392</span></div>` : ''}
     ${isBlueSky && !nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">Company NMLS # 894392</span></div>` : ''}
     ${isBlueSky ? `<div style="font-size:10px;line-height:10px">&nbsp;</div><div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">Blue Sky Home Finance is a division of Northeast Equitable Mortgage, LLC</span></div>` : ''}
@@ -1102,6 +1164,8 @@ function buildSig() {
 </tr>
 </table>
 ${bannerSection}
+${isBlueSkyLO ? `<table cellpadding="0" style="border-collapse:collapse;margin-top:4px;"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;"><img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg" width="${bannerWidth}" style="vertical-align:middle;border:0;background:#ffffff;" alt="Blue Sky banner"/></td></tr></table>` : ''}
+${isBlueSkyLO ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.</div>` : ''}
 ${disclosureSection}
 </div>
 </body>
@@ -1265,6 +1329,7 @@ function clearAll() {
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
   document.getElementById('f-team').value = '';
+  const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
   document.getElementById('f-office-select').value = '';
   document.getElementById('office-badge').style.display = 'none';
   document.getElementById('office-folder-hint').textContent = 'office';
