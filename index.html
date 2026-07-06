@@ -516,6 +516,12 @@
       <input id="f-bannerlink" placeholder="https://..." oninput="render()" />
       <p class="hint">Where the banner links to when clicked</p>
     </div>
+    <div class="field" id="aw-red-toggle-field" style="display:none;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="f-aw-no-red" onchange="render()" style="width:auto;cursor:pointer;" />
+        <label for="f-aw-no-red" style="margin:0;font-size:13px;cursor:pointer;color:var(--muted);">Remove red font (use black instead)</label>
+      </div>
+    </div>
     <div class="field" id="banner-size-field" style="display:none;">
       <label>Banner size: <span id="banner-size-value">350</span>px</label>
       <input type="range" id="f-banner-size" min="100" max="600" value="350" oninput="document.getElementById('banner-size-value').textContent=this.value; render()" style="width:100%;" />
@@ -846,6 +852,7 @@ function onCompanyChange() {
     document.getElementById('office-badge').style.display = 'none';
     document.getElementById('f-team').value = '';
   const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
+  const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
     addrField.value = '';
     officePhone.value = '';
   }
@@ -872,6 +879,9 @@ function onCompanyChange() {
 
   const bannerSizeField = document.getElementById('banner-size-field');
   if (bannerSizeField) bannerSizeField.style.display = 'block';
+  const awRedToggle = document.getElementById('aw-red-toggle-field');
+  if (awRedToggle) awRedToggle.style.display = (company === 'ADDISON WOLFE REAL ESTATE') ? 'block' : 'none';
+  if (company !== 'ADDISON WOLFE REAL ESTATE') { const cb = document.getElementById('f-aw-no-red'); if (cb) cb.checked = false; }
 
   // Auto-fill address for companies that have one
   const addrInput = document.getElementById('f-addr');
@@ -1070,7 +1080,8 @@ function buildSig() {
   }
 
   const isAW = companySelect === 'ADDISON WOLFE REAL ESTATE';
-  const labelColor = isAW ? '#CC0000' : '#444444';
+  const awNoRed = isAW && document.getElementById('f-aw-no-red') && document.getElementById('f-aw-no-red').checked;
+  const labelColor = isAW && !awNoRed ? '#CC0000' : '#444444';
   const officeLabel = isAW ? 'Office: ' : 'O: ';
   const cellLabel   = isAW ? 'Cell: '   : 'C: ';
   const addrLabel   = isAW ? 'Address: ': 'A: ';
@@ -1081,8 +1092,9 @@ function buildSig() {
   const phoneRow = (office || cell || fax || direct)
     ? `<div style="white-space:nowrap !important">
         ${direct && isBlueSky ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">Direct # </span><span style="color:#000000;font-size:.9em;font-family:${font};">${direct}</span> | ` : ''}
+        ${isAW && cell ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
         ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${isBlueSky ? 'Office # ' : officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${office}</a>${fax && isBlueSky ? ' | ' : ' '}` : ''}
-        ${cell   ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
+        ${!isAW && cell ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
         ${fax ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">${isBlueSky ? 'Fax # ' : 'F: '}</span><span style="color:#000000;font-size:.9em;font-family:${font};">${fax}</span> ` : ''}
        </div>` : '';
 
@@ -1138,7 +1150,7 @@ function buildSig() {
 <table style="font-family:${font};font-size:90%;color:#000000">
 <tr>
   ${photoCell}
-  <td style="vertical-align:top;color:#444444;font:90% Arial;border-left:3px solid ${isAW ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
+  <td style="vertical-align:top;color:#444444;font:90% Arial;border-left:3px solid ${isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
     <div style="color:${(COMPANY_SETTINGS[company] || {}).nameColor || '#012169'};font-size:1.1em;font-weight:bold;font-family:${font};">${name || 'Your Name'}</div>
     ${title   ? `<span style="color:#000000;font-size:.9em;font-family:${font};">${title}</span> ` : ''}
     ${company ? `<div style="color:${(COMPANY_SETTINGS[company] || {}).companyColor || '#012169'};font-size:1.3em;font-weight:bold;font-family:${font};">${company}</div>` : ''}
@@ -1334,6 +1346,7 @@ function clearAll() {
   document.getElementById('office-location-section').style.display = 'none';
   document.getElementById('f-team').value = '';
   const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
+  const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
   document.getElementById('f-office-select').value = '';
   document.getElementById('office-badge').style.display = 'none';
   document.getElementById('office-folder-hint').textContent = 'office';
