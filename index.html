@@ -532,6 +532,7 @@
           <option value="allentown">Allentown</option>
         </select>
       </div>
+      <input type="hidden" id="f-bs-addr" value="" />
       <div class="field"><label>Direct #</label><input id="f-bs-direct" placeholder="e.g. 610-234-3842" oninput="render()" /></div>
       <div class="field"><label>Fax #</label><input id="f-bs-fax" placeholder="e.g. 610-862-6484" oninput="render()" /></div>
       <div class="field"><label>NMLS #</label><input id="f-bs-nmls" placeholder="e.g. 917602" oninput="render()" /></div>
@@ -794,7 +795,7 @@ function toggleBlueSkyLO() {
   const section = document.getElementById('bluesky-lo-section');
   if (section) section.style.display = checked ? 'block' : 'none';
   if (!checked) {
-    ['f-bs-direct','f-bs-fax','f-bs-nmls','f-bs-apply-link'].forEach(id => {
+    ['f-bs-direct','f-bs-fax','f-bs-nmls','f-bs-apply-link','f-bs-addr'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
     document.getElementById('f-bluesky-lo-office').value = '';
@@ -807,6 +808,7 @@ function applyBlueSkyLOOffice() {
   if (!key || !BLUESKY_OFFICES[key]) { render(); return; }
   const office = BLUESKY_OFFICES[key];
   document.getElementById('f-bs-fax').value = '610-862-6484';
+  document.getElementById('f-bs-addr').value = office.address;
   render();
 }
 
@@ -1002,6 +1004,7 @@ function buildSig() {
   const bsFax      = isBlueSkyLO ? ((document.getElementById('f-bs-fax') || {}).value || '') : '';
   const bsNmls     = isBlueSkyLO ? ((document.getElementById('f-bs-nmls') || {}).value || '') : '';
   const bsApply    = isBlueSkyLO ? ((document.getElementById('f-bs-apply-link') || {}).value || '') : '';
+  const bsAddr     = isBlueSkyLO ? ((document.getElementById('f-bs-addr') || {}).value || '') : '';
   const email      = v('f-email');
   const web        = v('f-web');
   const addr       = v('f-addr');
@@ -1148,6 +1151,7 @@ function buildSig() {
       <div style="border-top:1px solid #cccccc;padding-top:8px;">
         <div style="color:#012169;font-size:1.1em;font-weight:bold;font-family:${font};">BLUE SKY HOME FINANCE</div>
         <div style="color:#012169;font-size:.85em;font-family:${font};">A division of Northeast Equitable Mortgage, LLC</div>
+        ${bsAddr ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">${bsAddr}</span></div>` : ''}
         <div style="font-size:10px;line-height:10px;">&nbsp;</div>
         ${bsDirect ? `<div style="white-space:nowrap !important"><span style="color:#444444;font-size:.9em;font-family:${font};">Direct # </span><span style="color:#000000;font-size:.9em;font-family:${font};">${bsDirect}</span>${bsFax ? ` | <span style="color:#444444;font-size:.9em;font-family:${font};">Fax # </span><span style="color:#000000;font-size:.9em;font-family:${font};">${bsFax}</span>` : ''}</div>` : ''}
         ${bsNmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">NMLS # ${bsNmls}, Company NMLS # 894392</span></div>` : `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:.9em;font-family:${font};">Company NMLS # 894392</span></div>`}
