@@ -702,12 +702,12 @@ function togglePhoto() {
     photoInput.style.background = '#f5f6f8';
     photoInput.style.color = '#999';
     badge.style.display = 'none';
-    if (shapeSelect) shapeSelect.parentElement.style.display = 'none';
+
   } else {
     photoInput.readOnly = false;
     photoInput.style.background = '';
     photoInput.style.color = '';
-    if (shapeSelect) shapeSelect.parentElement.style.display = 'block';
+
     autoFillPhoto();
   }
   render();
@@ -1031,7 +1031,7 @@ function buildSig() {
 
   const webHref = web ? (web.startsWith('http') ? web : 'https://' + web) : '#';
 
-  const photoShape = (document.getElementById('f-photo-shape') || {}).value || 'circle';
+  const photoShape = 'circle';
   const photoPositionField = document.getElementById('photo-position-field');
   if (photoPositionField) photoPositionField.style.display = 'none';
 
@@ -1099,7 +1099,7 @@ function buildSig() {
        </div>` : '';
 
   const addrRow = addr
-    ? `<div style="white-space:nowrap !important"><span style="color:${labelColor};font-size:.9em;font-family:${font};">${addrLabel}</span><span style="color:#000000;font-size:.9em;font-family:${font};">${addr}</span></div>`
+    ? `<div style="white-space:nowrap !important"><span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${addrLabel}</span><span style="color:#000000;font-size:.9em;font-family:${font};">${addr}</span></div>`
     : '';
 
   const webEmailRow = (web || email)
