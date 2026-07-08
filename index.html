@@ -1084,11 +1084,11 @@ function buildSig() {
   const isAW = companySelect === 'ADDISON WOLFE REAL ESTATE';
   const awNoRed = isAW && document.getElementById('f-aw-no-red') && document.getElementById('f-aw-no-red').checked;
   const labelColor = isAW && !awNoRed ? '#CC0000' : '#444444';
-  const officeLabel = isAW ? 'Office: ' : 'O: ';
-  const cellLabel   = isAW ? 'Cell: '   : 'C: ';
-  const addrLabel   = isAW ? 'Address: ': 'A: ';
-  const webLabel    = isAW ? 'Website: ': 'W: ';
-  const emailLabel  = isAW ? 'Email: '  : 'E: ';
+  const officeLabel = 'Office: ';
+  const cellLabel   = 'Cell: ';
+  const addrLabel   = 'Address: ';
+  const webLabel    = 'Website: ';
+  const emailLabel  = 'Email: ';
 
   const faxLabel = isAW ? 'Fax: ' : 'F: ';
   const phoneRow = (office || cell || fax || direct)
