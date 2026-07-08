@@ -1091,14 +1091,26 @@ function buildSig() {
   const emailLabel  = 'Email: ';
 
   const faxLabel = isAW ? 'Fax: ' : 'F: ';
+  const sep = `<span style="color:#444444;font-size:.9em;font-family:${font};"> | </span>`;
+
   const phoneRow = (office || cell || fax || direct)
-    ? `<div style="white-space:nowrap !important">
-        ${direct && isBlueSky ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">Direct # </span><span style="color:#000000;font-size:.9em;font-family:${font};">${direct}</span> | ` : ''}
-        ${isAW && cell ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
-        ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${isBlueSky ? 'Office: ' : officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${office}</a>${fax && isBlueSky ? ' | ' : ' '}` : ''}
-        ${!isAW && cell ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
-        ${fax ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">${isBlueSky ? 'Fax: ' : 'F: '}</span><span style="color:#000000;font-size:.9em;font-family:${font};">${fax}</span> ` : ''}
-       </div>` : '';
+    ? isBlueSky
+      ? `<div style="white-space:nowrap !important">
+          ${direct ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">Direct: </span><a href="tel:${direct}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${direct}</a>` : ''}
+          ${direct && office ? sep : ''}
+          ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">Office: </span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${office}</a>` : ''}
+          ${(direct || office) && cell ? sep : ''}
+          ${cell ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">Cell: </span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a>` : ''}
+          ${(direct || office || cell) && fax ? sep : ''}
+          ${fax ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">Fax: </span><span style="color:#000000;font-size:.9em;font-family:${font};">${fax}</span>` : ''}
+         </div>`
+      : `<div style="white-space:nowrap !important">
+          ${isAW && cell ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
+          ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${office}</a> ` : ''}
+          ${!isAW && cell ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
+          ${fax ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">Fax: </span><span style="color:#000000;font-size:.9em;font-family:${font};">${fax}</span> ` : ''}
+         </div>`
+    : '';
 
   const addrRow = addr
     ? `<div style="white-space:nowrap !important"><span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${addrLabel}</span><span style="color:#000000;font-size:.9em;font-family:${font};">${addr}</span></div>`
