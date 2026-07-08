@@ -860,9 +860,11 @@ function onCompanyChange() {
   // Auto-swap banner based on company
   bannerInput.value = COMPANY_BANNERS[company] || '';
 
-  // Auto-fill banner link with website for Addison Wolfe
+  // Auto-fill banner link
   const bannerLinkInput = document.getElementById('f-bannerlink');
-  if (company === 'ADDISON WOLFE REAL ESTATE') {
+  if (company === 'BLUE SKY HOME FINANCE') {
+    bannerLinkInput.value = 'https://blueskyhomefinance.com';
+  } else if (company === 'ADDISON WOLFE REAL ESTATE') {
     const web = document.getElementById('f-web').value.trim();
     const webUrl = web ? (web.startsWith('http') ? web : 'https://' + web) : 'https://addisonwolfe.com';
     bannerLinkInput.value = webUrl;
@@ -1093,9 +1095,9 @@ function buildSig() {
     ? `<div style="white-space:nowrap !important">
         ${direct && isBlueSky ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">Direct # </span><span style="color:#000000;font-size:.9em;font-family:${font};">${direct}</span> | ` : ''}
         ${isAW && cell ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
-        ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${isBlueSky ? 'Office # ' : officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${office}</a>${fax && isBlueSky ? ' | ' : ' '}` : ''}
+        ${office ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${isBlueSky ? 'Office: ' : officeLabel}</span><a href="tel:${office}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${office}</a>${fax && isBlueSky ? ' | ' : ' '}` : ''}
         ${!isAW && cell ? `<span style="color:${labelColor};font-size:.9em;font-weight:bold;font-family:${font};">${cellLabel}</span><a href="tel:${cell}" style="color:#000000;font-size:.9em;text-decoration:none;font-family:${font};">${cell}</a> ` : ''}
-        ${fax ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">${isBlueSky ? 'Fax # ' : 'F: '}</span><span style="color:#000000;font-size:.9em;font-family:${font};">${fax}</span> ` : ''}
+        ${fax ? `<span style="color:${labelColor};font-size:.9em;font-family:${font};">${isBlueSky ? 'Fax: ' : 'F: '}</span><span style="color:#000000;font-size:.9em;font-family:${font};">${fax}</span> ` : ''}
        </div>` : '';
 
   const addrRow = addr
