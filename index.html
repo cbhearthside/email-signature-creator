@@ -485,7 +485,11 @@
     <div class="field" id="photo-position-field" style="display:block;">
       <label>Photo size: <span id="zoom-value">100</span>%</label>
       <input type="range" id="f-photo-zoom" min="60" max="140" value="100" oninput="document.getElementById('zoom-value').textContent=this.value; render()" style="width:100%;margin-top:6px;" />
-      <p class="hint">Drag left to make smaller, right to make larger</p>
+      <label style="margin-top:10px;display:block;">Vertical position: <span id="vpos-value">0</span>%</label>
+      <input type="range" id="f-photo-vpos" min="-50" max="50" value="0" oninput="document.getElementById('vpos-value').textContent=this.value; render()" style="width:100%;margin-top:6px;" />
+      <label style="margin-top:10px;display:block;">Horizontal position: <span id="hpos-value">0</span>%</label>
+      <input type="range" id="f-photo-hpos" min="-50" max="50" value="0" oninput="document.getElementById('hpos-value').textContent=this.value; render()" style="width:100%;margin-top:6px;" />
+      <p class="hint">Adjust size and position within the circle</p>
     </div>
     <div class="section-label">Images</div>
     <div class="field">
@@ -1037,13 +1041,16 @@ function buildSig() {
       </td>`;
     } else if (photoShape === 'circle') {
       const zoom = parseInt((document.getElementById('f-photo-zoom') || {}).value || 100);
+      const vpos = parseInt((document.getElementById('f-photo-vpos') || {}).value || 0);
+      const hpos = parseInt((document.getElementById('f-photo-hpos') || {}).value || 0);
       const imgSize = Math.round(100 * zoom / 100);
-      const offset = Math.round((imgSize - 100) / 2);
+      const offsetX = Math.round((imgSize - 100) / 2) - hpos;
+      const offsetY = Math.round((imgSize - 100) / 2) - vpos;
       photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
         <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:100pt;height:100pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${photo}"/></v:roundrect><![endif]-->
         <!--[if !mso]><!-->
         <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
-          <img src="${photo}" width="${imgSize}" style="display:block;border:0;margin:-${offset}px 0 0 -${offset}px;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+          <img src="${photo}" width="${imgSize}" style="display:block;border:0;margin:-${offsetY}px 0 0 -${offsetX}px;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
         </div>
         <!--<![endif]-->
       </td>`;
