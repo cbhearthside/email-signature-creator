@@ -493,17 +493,10 @@
         <option value="rectangle">Rectangle (original)</option>
       </select>
     </div>
-    <div class="field" id="photo-position-field" style="display:block;">
-      <label>Photo position (within frame)</label>
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
-        <span style="font-size:11px;color:var(--muted);width:55px;">Horizontal</span>
-        <input type="range" id="f-photo-pos-x" min="0" max="100" value="50" oninput="render()" style="flex:1;" />
-      </div>
-      <div style="display:flex;gap:10px;align-items:center;">
-        <span style="font-size:11px;color:var(--muted);width:55px;">Vertical</span>
-        <input type="range" id="f-photo-pos-y" min="0" max="100" value="0" oninput="render()" style="flex:1;" />
-      </div>
-      <p class="hint">Adjust how the photo is cropped within its frame</p>
+    <div class="field" id="photo-position-field">
+      <label>Photo zoom: <span id="zoom-value">100</span>%</label>
+      <input type="range" id="f-photo-zoom" min="80" max="150" value="100" oninput="document.getElementById('zoom-value').textContent=this.value; render()" style="width:100%;" />
+      <p class="hint">Zoom in to fill the circle, zoom out if photo looks stretched</p>
     </div>
     <div class="section-label">Images</div>
     <div class="field">
@@ -1053,14 +1046,14 @@ function buildSig() {
         <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
       </td>`;
     } else if (photoShape === 'circle') {
-      // Circle — VML for Outlook + CSS for Gmail/iOS with position sliders
-      const posX = (document.getElementById('f-photo-pos-x') || {}).value || 50;
-      const posY = (document.getElementById('f-photo-pos-y') || {}).value || 0;
+      const zoom = parseInt((document.getElementById('f-photo-zoom') || {}).value || 100);
+      const imgSize = Math.round(100 * zoom / 100);
+      const offset = Math.round((imgSize - 100) / 2);
       photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
         <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:100pt;height:100pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${photo}"/></v:roundrect><![endif]-->
         <!--[if !mso]><!-->
         <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
-          <img src="${photo}" width="100" style="display:block;border:0;position:relative;left:${posX - 50}%;top:${posY}%;transform:translateX(-${posX - 50}%);" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+          <img src="${photo}" width="${imgSize}" height="${imgSize}" style="display:block;border:0;margin:-${offset}px 0 0 -${offset}px;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
         </div>
         <!--<![endif]-->
       </td>`;
