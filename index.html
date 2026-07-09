@@ -482,21 +482,10 @@
       <input id="f-photo" placeholder="Auto-filled from name + office" oninput="render()" />
       <p class="hint">Upload headshot to GitHub as <code style="font-size:10px;background:#f0f0f0;padding:1px 4px;border-radius:3px;">headshots/<em id="office-folder-hint">office</em>/firstname-lastname.jpg</code></p>
     </div>
-    <div class="field">
-      <label>Photo shape</label>
-      <select id="f-photo-shape" onchange="render()">
-        <option value="circle">Circle</option>
-        <option value="square">Square</option>
-        <option value="oval">Oval</option>
-        <option value="wide-square">Wide Square</option>
-        <option value="wide-circle">Wide Circle</option>
-        <option value="rectangle">Rectangle (original)</option>
-      </select>
-    </div>
-    <div class="field" id="photo-position-field">
-      <label>Photo zoom: <span id="zoom-value">100</span>%</label>
-      <input type="range" id="f-photo-zoom" min="80" max="150" value="100" oninput="document.getElementById('zoom-value').textContent=this.value; render()" style="width:100%;" />
-      <p class="hint">Zoom in to fill the circle, zoom out if photo looks stretched</p>
+    <div class="field" id="photo-position-field" style="display:block;">
+      <label>Photo size: <span id="zoom-value">100</span>%</label>
+      <input type="range" id="f-photo-zoom" min="60" max="140" value="100" oninput="document.getElementById('zoom-value').textContent=this.value; render()" style="width:100%;margin-top:6px;" />
+      <p class="hint">Drag left to make smaller, right to make larger</p>
     </div>
     <div class="section-label">Images</div>
     <div class="field">
@@ -1029,7 +1018,8 @@ function buildSig() {
 
   const photoShape = 'circle';
   const photoPositionField = document.getElementById('photo-position-field');
-  if (photoPositionField) photoPositionField.style.display = 'none';
+  const noPhotoChecked = document.getElementById('f-no-photo') && document.getElementById('f-no-photo').checked;
+  if (photoPositionField) photoPositionField.style.display = noPhotoChecked ? 'none' : 'block';
 
   // Email-safe shape rendering using table/div wrappers with overflow:hidden
   // All shapes assume the source image is already square or rectangle
@@ -1053,7 +1043,7 @@ function buildSig() {
         <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:100pt;height:100pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${photo}"/></v:roundrect><![endif]-->
         <!--[if !mso]><!-->
         <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
-          <img src="${photo}" width="${imgSize}" height="${imgSize}" style="display:block;border:0;margin:-${offset}px 0 0 -${offset}px;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+          <img src="${photo}" width="${imgSize}" style="display:block;border:0;margin:-${offset}px 0 0 -${offset}px;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
         </div>
         <!--<![endif]-->
       </td>`;
