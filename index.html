@@ -702,12 +702,12 @@ function togglePhoto() {
     photoInput.style.background = '#f5f6f8';
     photoInput.style.color = '#999';
     badge.style.display = 'none';
-
+    if (shapeField) shapeField.style.display = 'none';
   } else {
     photoInput.readOnly = false;
     photoInput.style.background = '';
     photoInput.style.color = '';
-
+    if (shapeField) shapeField.style.display = 'block';
     autoFillPhoto();
   }
   render();
