@@ -483,7 +483,9 @@
       <p class="hint">Upload headshot to GitHub as <code style="font-size:10px;background:#f0f0f0;padding:1px 4px;border-radius:3px;">headshots/<em id="office-folder-hint">office</em>/firstname-lastname.jpg</code></p>
     </div>
     <div class="field" id="photo-position-field" style="display:block;">
-      <label>Photo size: <span id="zoom-value">100</span>%</label>
+      <label>Circle size: <span id="circle-size-value">100</span>px</label>
+      <input type="range" id="f-circle-size" min="60" max="200" value="100" oninput="document.getElementById('circle-size-value').textContent=this.value; render()" style="width:100%;margin-top:6px;" />
+      <label style="margin-top:10px;display:block;">Photo zoom: <span id="zoom-value">100</span>%</label>
       <input type="range" id="f-photo-zoom" min="60" max="140" value="100" oninput="document.getElementById('zoom-value').textContent=this.value; render()" style="width:100%;margin-top:6px;" />
       <label style="margin-top:10px;display:block;">Vertical position: <span id="vpos-value">0</span>%</label>
       <input type="range" id="f-photo-vpos" min="-50" max="50" value="0" oninput="document.getElementById('vpos-value').textContent=this.value; render()" style="width:100%;margin-top:6px;" />
@@ -1040,17 +1042,18 @@ function buildSig() {
         <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
       </td>`;
     } else if (photoShape === 'circle') {
+      const circleSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
       const zoom = parseInt((document.getElementById('f-photo-zoom') || {}).value || 100);
       const vpos = parseInt((document.getElementById('f-photo-vpos') || {}).value || 0);
       const hpos = parseInt((document.getElementById('f-photo-hpos') || {}).value || 0);
-      const imgSize = Math.round(100 * zoom / 100);
-      // translateX/Y moves the image freely regardless of zoom level
+      const imgSize = Math.round(circleSize * zoom / 100);
       const translateX = hpos;
       const translateY = vpos;
+      const circlePt = Math.round(circleSize * 0.75); // convert px to pt for VML
       photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
-        <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:100pt;height:100pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${photo}"/></v:roundrect><![endif]-->
+        <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:${circlePt}pt;height:${circlePt}pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${photo}"/></v:roundrect><![endif]-->
         <!--[if !mso]><!-->
-        <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
+        <div style="width:${circleSize}px;height:${circleSize}px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
           <img src="${photo}" width="${imgSize}" style="display:block;border:0;transform:translate(${translateX}px, ${translateY}px);margin:auto;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
         </div>
         <!--<![endif]-->
