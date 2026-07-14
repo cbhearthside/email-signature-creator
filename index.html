@@ -535,6 +535,14 @@
       <div class="field"><label>Fax #</label><input id="f-bs-fax" placeholder="e.g. 610-862-6484" oninput="render()" /></div>
       <div class="field"><label>NMLS #</label><input id="f-bs-nmls" placeholder="e.g. 917602" oninput="render()" /></div>
       <div class="field"><label>Apply Now URL</label><input id="f-bs-apply-link" placeholder="https://blueskyhomefinance.com/yourname" oninput="render()" /></div>
+      <div class="field" style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="f-bs-hide-banner" onchange="render()" style="width:auto;cursor:pointer;" />
+        <label for="f-bs-hide-banner" style="margin:0;font-size:12px;cursor:pointer;color:var(--muted);">Hide Blue Sky banner</label>
+      </div>
+      <div class="field" style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="f-bs-hide-disclosure" onchange="render()" style="width:auto;cursor:pointer;" />
+        <label for="f-bs-hide-disclosure" style="margin:0;font-size:12px;cursor:pointer;color:var(--muted);">Remove Blue Sky disclosure</label>
+      </div>
     </div>
 
     <div id="bluesky-office-section" style="display:none;">
@@ -808,6 +816,8 @@ function toggleBlueSkyLO() {
       const el = document.getElementById(id); if (el) el.value = '';
     });
     document.getElementById('f-bluesky-lo-office').value = '';
+    const bsHideBannerCb = document.getElementById('f-bs-hide-banner'); if (bsHideBannerCb) bsHideBannerCb.checked = false;
+    const bsHideDiscCb = document.getElementById('f-bs-hide-disclosure'); if (bsHideDiscCb) bsHideDiscCb.checked = false;
   }
   render();
 }
@@ -1025,7 +1035,9 @@ function buildSig() {
   const bsFax      = isBlueSkyLO ? ((document.getElementById('f-bs-fax') || {}).value || '') : '';
   const bsNmls     = isBlueSkyLO ? ((document.getElementById('f-bs-nmls') || {}).value || '') : '';
   const bsApply    = isBlueSkyLO ? ((document.getElementById('f-bs-apply-link') || {}).value || '') : '';
-  const bsAddr     = isBlueSkyLO ? ((document.getElementById('f-bs-addr') || {}).value || '') : '';
+  const bsAddr          = isBlueSkyLO ? ((document.getElementById('f-bs-addr') || {}).value || '') : '';
+  const bsHideBanner    = isBlueSkyLO && document.getElementById('f-bs-hide-banner') && document.getElementById('f-bs-hide-banner').checked;
+  const bsHideDisclosure = isBlueSkyLO && document.getElementById('f-bs-hide-disclosure') && document.getElementById('f-bs-hide-disclosure').checked;
   const email      = v('f-email');
   const web        = v('f-web');
   const addr       = v('f-addr');
@@ -1207,7 +1219,7 @@ ${testimonials ? `<div style="margin:8px 0;font-family:${font};font-size:.9em;">
 ${other ? `<div style="margin:8px 0;font-family:${font};font-size:.9em;color:#000000;">${other}</div>` : ''}
 ${bannerSection}
 ${isBlueSkyLO ? `<table cellpadding="0" style="border-collapse:collapse;margin-top:4px;"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;"><img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg" width="${bannerWidth}" style="vertical-align:middle;border:0;background:#ffffff;" alt="Blue Sky banner"/></td></tr></table>` : ''}
-${isBlueSkyLO ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.</div>` : ''}
+${isBlueSkyLO && !bsHideDisclosure ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.</div>` : ''}
 ${disclosureSection}
 </div>
 </body>
