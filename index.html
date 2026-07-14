@@ -1191,18 +1191,7 @@ function buildSig() {
     ${phoneRow}
     ${addrRow}
     ${webEmailRow}
-    ${isBlueSkyLO ? `
-    <tr><td colspan="2" style="padding-top:10px;">
-      <div style="border-top:1px solid #cccccc;padding-top:8px;">
-        <div style="color:#012169;font-size:1.1em;font-weight:bold;font-family:${font};">BLUE SKY HOME FINANCE</div>
-        <div style="color:#012169;font-size:.85em;font-family:${font};">A division of Northeast Equitable Mortgage, LLC</div>
-        ${bsAddr ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">${bsAddr}</span></div>` : ''}
-        <div style="font-size:10px;line-height:10px;">&nbsp;</div>
-        ${bsDirect ? `<div style="white-space:nowrap !important"><span style="color:#444444;font-size:${fs};font-family:${font};">Direct # </span><span style="color:#000000;font-size:${fs};font-family:${font};">${bsDirect}</span>${bsFax ? ` | <span style="color:#444444;font-size:${fs};font-family:${font};">Fax # </span><span style="color:#000000;font-size:${fs};font-family:${font};">${bsFax}</span>` : ''}</div>` : ''}
-        ${bsNmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">NMLS # ${bsNmls}, Company NMLS # 894392</span></div>` : `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">Company NMLS # 894392</span></div>`}
-        ${bsApply ? `<div style="margin-top:6px;"><a href="${bsApply}" target="_blank" style="background:#012169;color:#ffffff;padding:6px 14px;text-decoration:none;font-size:.9em;font-weight:bold;font-family:${font};border-radius:3px;">CLICK HERE TO APPLY NOW</a></div>` : ''}
-      </div>
-    </td></tr>` : ''}
+
     ${isBlueSky && nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">NMLS # ${nmls}, Company NMLS # 894392</span></div>` : ''}
     ${isBlueSky && !nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">Company NMLS # 894392</span></div>` : ''}
     ${isBlueSky ? `<div style="font-size:10px;line-height:10px">&nbsp;</div><div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">Blue Sky Home Finance is a division of Northeast Equitable Mortgage, LLC</span></div>` : ''}
