@@ -593,6 +593,10 @@
       <label>Other (free text)</label>
       <textarea id="f-other" placeholder="Type anything you'd like to add above the banner..." oninput="render()" style="width:100%;box-sizing:border-box;padding:8px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;min-height:70px;outline:none;"></textarea>
     </div>
+    <div class="field">
+      <label>Other link URL (optional)</label>
+      <input id="f-other-link" placeholder="https://... (makes the text above a link)" oninput="render()" />
+    </div>
 
   </aside>
 
@@ -1058,6 +1062,7 @@ function buildSig() {
   const yt           = v('f-yt');
   const testimonials = v('f-testimonials');
   const other        = v('f-other');
+  const otherLink    = v('f-other-link');
   const photo      = v('f-photo');
   const banner     = v('f-banner');
   const bannerlink = v('f-bannerlink');
@@ -1241,7 +1246,7 @@ ${isBlueSkyLO ? `<table cellpadding="0" cellspacing="0" style="margin-top:10px;b
 </table>` : ''}
 
 ${testimonials ? `<div style="margin:8px 0;font-family:${font};font-size:.9em;"><a href="${testimonials}" target="_blank" style="color:#012169;text-decoration:none;font-weight:bold;">⭐ Client Testimonials</a></div>` : ''}
-${other ? `<div style="margin:8px 0;font-family:${font};font-size:.9em;color:#000000;">${other}</div>` : ''}
+${other ? `<div style="margin:8px 0;font-family:${font};font-size:${fs};">${otherLink ? `<a href="${otherLink}" target="_blank" style="color:#012169;text-decoration:none;font-weight:bold;font-family:${font};font-size:${fs};">${other}</a>` : `<span style="color:#000000;font-family:${font};font-size:${fs};">${other}</span>`}</div>` : ''}
 ${bannerSection}
 ${isBlueSkyLO ? `<table cellpadding="0" style="border-collapse:collapse;margin-top:4px;"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;"><img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg" width="${bannerWidth}" style="vertical-align:middle;border:0;background:#ffffff;" alt="Blue Sky banner"/></td></tr></table>` : ''}
 ${isBlueSkyLO && !bsHideDisclosure ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.</div>` : ''}
@@ -1403,7 +1408,7 @@ function copyRich() {
 function copyHTML() { copyRich(); }
 
 function clearAll() {
-  ['f-name','f-title','f-company-name','f-office-phone','f-direct','f-ext','f-cell','f-fax','f-nmls','f-apply-link','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-testimonials','f-other','f-photo','f-banner','f-bannerlink']
+  ['f-name','f-title','f-company-name','f-office-phone','f-direct','f-ext','f-cell','f-fax','f-nmls','f-apply-link','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-testimonials','f-other','f-other-link','f-photo','f-banner','f-bannerlink']
     .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
