@@ -445,7 +445,7 @@
 
       <div class="field">
         <label>Team (optional)</label>
-        <select id="f-team" onchange="applyTeam(); render();">
+        <select id="f-team" onchange="applyTeam(); autoFillBanner(); render();">
           <option value="">— No team —</option>
           <option value="Cliff Lewis Experience">Cliff Lewis Experience</option>
           <option value="Sean LaSalle Team">Sean LaSalle Team</option>
@@ -459,7 +459,7 @@
       </div>
     </div>
 
-    <div class="field"><label>Full name</label><input id="f-name" placeholder="e.g. Jane Smith" oninput="autoFillPhoto(); render()" /></div>
+    <div class="field"><label>Full name</label><input id="f-name" placeholder="e.g. Jane Smith" oninput="autoFillPhoto(); autoFillBanner(); render()" /></div>
     <div class="field"><label>Title / designation</label><input id="f-title" placeholder="e.g. REALTOR" oninput="render()" /></div>
     <div class="field">
       <label>Font</label>
@@ -728,6 +728,29 @@ function togglePhoto() {
     autoFillPhoto();
   }
   render();
+}
+
+const LOGOS_BANNERS_BASE = 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main';
+
+function autoFillBanner() {
+  const companySelect = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
+  if (companySelect !== 'COLDWELL BANKER HEARTHSIDE') return;
+
+  // Only auto-fill if no team banner
+  const teamSelect = (document.getElementById('f-team') || {}).value || '';
+  const teamSettings = TEAM_SETTINGS[teamSelect] || null;
+  if (teamSettings && teamSettings.banner) return;
+
+  const name = document.getElementById('f-name').value.trim();
+  const bannerInput = document.getElementById('f-banner');
+  if (!bannerInput) return;
+
+  if (name) {
+    const slug = name.trim().split(/\s+/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('-');
+    bannerInput.value = LOGOS_BANNERS_BASE + '/' + slug + '.jpg';
+  }
 }
 
 function autoFillPhoto() {
@@ -1017,6 +1040,7 @@ function applyOffice() {
   if (fontSelect && companyFonts[company]) fontSelect.value = companyFonts[company];
 
   autoFillPhoto();
+  autoFillBanner();
   updateBannerLink();
   render();
 }
