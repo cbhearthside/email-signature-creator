@@ -403,6 +403,7 @@
         <option value="ADDISON WOLFE REAL ESTATE">Addison Wolfe Real Estate</option>
         <option value="MANAGEMENT">Management</option>
         <option value="BLUE EDGE">BlueEdge Marketing</option>
+        <option value="RELOCATION">Coldwell Banker Hearthside Relocation</option>
       </select>
     </div>
     <div class="field" id="company-name-field" style="display:none;">
@@ -561,6 +562,7 @@
     <div class="field-row">
       <div class="field"><label>Office phone</label><input id="f-office-phone" placeholder="e.g. 215-555-0100" oninput="render()" /></div>
       <div class="field" id="direct-field" style="display:none;"><label>Direct #</label><input id="f-direct" placeholder="e.g. 610-234-3842" oninput="render()" /></div>
+      <div class="field" id="ext-field" style="display:none;"><label>Extension</label><input id="f-ext" placeholder="e.g. 101" oninput="render()" /></div>
       <div class="field"><label>Cell phone</label><input id="f-cell" placeholder="e.g. 410-555-0199" oninput="render()" /></div>
       <div class="field" id="fax-field" style="display:none;"><label>Fax</label><input id="f-fax" placeholder="e.g. 484-555-0199" oninput="render()" /></div>
     </div>
@@ -786,7 +788,8 @@ const COMPANY_BANNERS = {
   'BLUE SKY HOME FINANCE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg',
   'ADDISON WOLFE REAL ESTATE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/refs/heads/main/AW-Logo.jpg',
   'MANAGEMENT': '',
-  'BLUE EDGE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Blue-Edge.jpg'
+  'BLUE EDGE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Blue-Edge.jpg',
+  'RELOCATION': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/all-companys.jpg'
 };
 
 const COMPANY_SETTINGS = {
@@ -921,7 +924,11 @@ function onCompanyChange() {
   const isBlueSky = company === 'BLUE SKY HOME FINANCE';
 
   if (faxField) faxField.style.display = (company === 'CONNECT CLOSING' || company === 'SKY SETTLEMENT SERVICE' || isBlueSky) ? 'block' : 'none';
+  const extField = document.getElementById('ext-field');
+  const isRelocation = company === 'RELOCATION';
   if (directField) directField.style.display = isBlueSky ? 'block' : 'none';
+  if (extField) extField.style.display = isRelocation ? 'block' : 'none';
+  if (!isRelocation && document.getElementById('f-ext')) document.getElementById('f-ext').value = '';
   if (nmlsField) nmlsField.style.display = isBlueSky ? 'block' : 'none';
   if (applyLinkField) applyLinkField.style.display = isBlueSky ? 'block' : 'none';
   if (bsOfficeSection) bsOfficeSection.style.display = isBlueSky ? 'block' : 'none';
@@ -999,7 +1006,8 @@ function applyOffice() {
     'CONNECT CLOSING':            'Arial, sans-serif',
     'BLUE SKY HOME FINANCE':      'Arial, sans-serif',
     'BLUE EDGE':                  'Arial, sans-serif',
-    'MANAGEMENT':                 'Arial, sans-serif'
+    'MANAGEMENT':                 'Arial, sans-serif',
+    'RELOCATION':                 'Arial, sans-serif'
   };
   const fontSelect = document.getElementById('f-font');
   if (fontSelect && companyFonts[company]) fontSelect.value = companyFonts[company];
@@ -1021,12 +1029,14 @@ function buildSig() {
   const companySelect = v('f-company');
   const teamSelect = (document.getElementById('f-team') || {}).value || '';
   const teamSettings = TEAM_SETTINGS[teamSelect] || null;
-  const companyDisplayNames = { 'BLUE EDGE': 'BlueEdge Marketing' };
+  const companyDisplayNames = { 'BLUE EDGE': 'BlueEdge Marketing', 'RELOCATION': 'Coldwell Banker Hearthside Relocation' };
   const company = companySelect === 'MANAGEMENT' ? (v('f-company-name') || 'Management') : (teamSettings ? teamSettings.companyName : (companyDisplayNames[companySelect] || companySelect));
   const office     = v('f-office-phone');
   const cell       = v('f-cell');
   const fax        = v('f-fax');
   const direct     = v('f-direct');
+  const ext        = v('f-ext');
+  const isRelocation = companySelect === 'RELOCATION';
   const nmls       = v('f-nmls');
   const applyLink  = v('f-apply-link');
   const isBlueSky  = companySelect === 'BLUE SKY HOME FINANCE';
@@ -1393,7 +1403,7 @@ function copyRich() {
 function copyHTML() { copyRich(); }
 
 function clearAll() {
-  ['f-name','f-title','f-company-name','f-office-phone','f-direct','f-cell','f-fax','f-nmls','f-apply-link','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-testimonials','f-other','f-photo','f-banner','f-bannerlink']
+  ['f-name','f-title','f-company-name','f-office-phone','f-direct','f-ext','f-cell','f-fax','f-nmls','f-apply-link','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-testimonials','f-other','f-photo','f-banner','f-bannerlink']
     .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
