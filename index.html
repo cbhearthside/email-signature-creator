@@ -736,11 +736,12 @@ function togglePhoto() {
 
 const LOGOS_BANNERS_BASE = 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main';
 
+const CBH_DEFAULT_BANNER = 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg';
+
 function autoFillBanner() {
   const companySelect = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
   if (companySelect !== 'COLDWELL BANKER HEARTHSIDE') return;
 
-  // Only auto-fill if no team banner
   const teamSelect = (document.getElementById('f-team') || {}).value || '';
   const teamSettings = TEAM_SETTINGS[teamSelect] || null;
   if (teamSettings && teamSettings.banner) return;
@@ -753,7 +754,21 @@ function autoFillBanner() {
     const slug = name.trim().split(/\s+/)
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join('-');
-    bannerInput.value = LOGOS_BANNERS_BASE + '/' + slug + '.jpg';
+    const personalUrl = LOGOS_BANNERS_BASE + '/' + slug + '.jpg';
+
+    const img = new Image();
+    img.onload = function() {
+      bannerInput.value = personalUrl;
+      render();
+    };
+    img.onerror = function() {
+      bannerInput.value = CBH_DEFAULT_BANNER;
+      render();
+    };
+    img.src = personalUrl;
+  } else {
+    bannerInput.value = CBH_DEFAULT_BANNER;
+    render();
   }
 }
 
