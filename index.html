@@ -693,7 +693,7 @@ const OFFICES = {
   huntingdonvalley: { label: 'Huntingdon Valley',  address: '2600 Philmont Ave Suite 100, Huntingdon Valley, PA 19006',phone: '215-379-2002',  folder: 'huntingdon-valley' },
   lahaska:          { label: 'Lahaska',            address: '5895 Lower York Road, Lahaska, PA 18931',           phone: '215-794-1070',  folder: 'lahaska' },
   newtown:          { label: 'Newtown',            address: '100 Brandywine Blvd Suite 302, Newtown, PA 18940',        phone: '267-350-5555',  folder: 'newtown' },
-  ottsville:        { label: 'Ottsville',          address: '7531 Easton Road, Ottsville, PA 18942',                   phone: '610-847-3300',  folder: 'Ottsville' },
+  ottsville:        { label: 'Ottsville',          address: '7531 Easton Road, Ottsville, PA 18942',                   phone: '610-847-3300',  folder: 'ottsville' },
   pocono:           { label: 'Pocono',             address: '1656 US-209, Brodheadsville, PA 18322',             phone: '610-936-9953',  folder: 'Pocono' },
   windgap:          { label: 'Wind Gap',           address: '31 W 1st St, Wind Gap, PA 18091',                   phone: '610-863-8444',  folder: 'Wind-Gap' },
   macungie:         { label: 'Macungie',           address: 'Macungie, PA',                                      phone: '610-465-5600',  folder: 'macungie' },
@@ -1261,9 +1261,10 @@ function buildSig() {
     ${phoneRow}
     ${addrRow}
     ${webEmailRow}
-
     ${isBlueSky && nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">NMLS # ${nmls}, Company NMLS # 894392</span></div>` : ''}
     ${isBlueSky && !nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">Company NMLS # 894392</span></div>` : ''}
+    ${isBlueSkyLO && bsNmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">NMLS # ${bsNmls}, Company NMLS # 894392</span></div>` : ''}
+    ${isBlueSkyLO && !bsNmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">Company NMLS # 894392</span></div>` : ''}
     ${isBlueSky ? `<div style="font-size:10px;line-height:10px">&nbsp;</div><div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">Blue Sky Home Finance is a division of Northeast Equitable Mortgage, LLC</span></div>` : ''}
     ${isBlueSky && applyLink ? `<div style="margin-top:6px;"><a href="${applyLink}" target="_blank" style="background:#012169;color:#ffffff;padding:6px 14px;text-decoration:none;font-size:.9em;font-weight:bold;font-family:${font};border-radius:3px;">CLICK HERE TO APPLY NOW</a></div>` : ''}
     <div style="font-size:10px;line-height:10px">&nbsp;</div>
@@ -1283,7 +1284,7 @@ ${isBlueSkyLO ? `<table cellpadding="0" cellspacing="0" style="margin-top:10px;b
     ${bsDirect && bsFax ? `<span style="color:#444444;font-size:${fs};"> | </span>` : ''}
     ${bsFax ? `<span style="color:#444444;font-size:${fs};font-weight:bold;font-family:${font};">Fax: </span><span style="color:#000000;font-size:${fs};font-family:${font};">${bsFax}</span>` : ''}
   </div>` : ''}
-  <div style="margin-top:4px;"><span style="color:#000000;font-size:${fs};font-family:${font};">${bsNmls ? `NMLS # ${bsNmls}, ` : ''}Company NMLS # 894392</span></div>
+
   ${bsApply ? `<div style="margin-top:8px;"><a href="${bsApply}" target="_blank" style="background:#012169;color:#ffffff;padding:6px 14px;text-decoration:none;font-size:${fs};font-weight:bold;font-family:${font};border-radius:3px;display:inline-block;">CLICK HERE TO APPLY NOW</a></div>` : ''}
 </td></tr>
 </table>` : ''}
