@@ -417,10 +417,18 @@
     <div id="mancuso-options" style="display:none;">
       <div class="section-label">Mancuso style</div>
       <div class="field">
-        <label>Logo style</label>
-        <select id="f-mancuso-logo" onchange="render()">
-          <option value="dark">Dark (Navy circle, gold M)</option>
-          <option value="light">Light (Gold circle, gold M)</option>
+        <label>Banner style</label>
+        <select id="f-mancuso-logo" onchange="applyMancusoBanner(); render()">
+          <option value="dark">Dark (Navy background)</option>
+          <option value="light">Light (Cream background)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Headshot</label>
+        <select id="f-mancuso-headshot" onchange="render()">
+          <option value="photo">My photo (from management folder)</option>
+          <option value="dark-m">Dark M logo (Navy circle)</option>
+          <option value="light-m">Light M logo (Gold circle)</option>
         </select>
       </div>
       <div class="field">
@@ -921,6 +929,13 @@ function applyTeam() {
   render();
 }
 
+function applyMancusoBanner() {
+  const logo = (document.getElementById('f-mancuso-logo') || {}).value || 'dark';
+  const bannerInput = document.getElementById('f-banner');
+  if (!bannerInput) return;
+  bannerInput.value = logo === 'dark' ? 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-Banner-Dark.png' : 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-Banner-Light.png';
+}
+
 function onCompanyChange() {
   const company = document.getElementById('f-company').value;
   const officeSection = document.getElementById('office-location-section');
@@ -966,6 +981,7 @@ function onCompanyChange() {
 
   const mancusoOptions = document.getElementById('mancuso-options');
   if (mancusoOptions) mancusoOptions.style.display = (company === 'MANCUSO') ? 'block' : 'none';
+  if (company === 'MANCUSO') applyMancusoBanner();
 
   const bannerSizeField = document.getElementById('banner-size-field');
   if (bannerSizeField) bannerSizeField.style.display = 'block';
@@ -1121,6 +1137,7 @@ function buildSig() {
   const mancusoTitleColor = mancusoStyle === 'navy' ? '#B8962E' : '#1B2B4B';
   const mancusoBorderColor = '#B8962E';
   const mancusoPhotoUrl = mancusoLogo === 'dark' ? 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Dark_1.png' : 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Light.png';
+  const mancusoBannerUrl = mancusoLogo === 'dark' ? 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-Banner-Dark.png' : 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-Banner-Light.png';
   const isBlueSkyLO = document.getElementById('f-bluesky-lo') ? document.getElementById('f-bluesky-lo').checked : false;
   const bsDirect   = isBlueSkyLO ? ((document.getElementById('f-bs-direct') || {}).value || '') : '';
   const bsFax      = isBlueSkyLO ? ((document.getElementById('f-bs-fax') || {}).value || '') : '';
@@ -1157,9 +1174,22 @@ function buildSig() {
   // All shapes assume the source image is already square or rectangle
   let photoCell = '';
   if (isMancuso) {
-    photoCell = `<td style="vertical-align:top;padding:0 12px 5px 0;">
-      <img src="${mancusoPhotoUrl}" width="100" height="100" style="display:block;border:0;border-radius:50%;" alt="Mancuso M logo"/>
-    </td>`;
+    const mancusoHeadshot = (document.getElementById('f-mancuso-headshot') || {}).value || 'photo';
+    let mancusoImgUrl = '';
+    if (mancusoHeadshot === 'dark-m') {
+      mancusoImgUrl = 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Dark_1.png';
+    } else if (mancusoHeadshot === 'light-m') {
+      mancusoImgUrl = 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Light.png';
+    } else {
+      // Use photo from management folder
+      mancusoImgUrl = photo;
+    }
+    if (mancusoImgUrl) {
+      const mRadius = mancusoHeadshot !== 'photo' ? '50%' : '50%';
+      photoCell = `<td style="vertical-align:top;padding:0 12px 5px 0;">
+        <img src="${mancusoImgUrl}" width="100" height="100" style="display:block;border:0;border-radius:${mRadius};" alt="Mancuso headshot"/>
+      </td>`;
+    }
   } else if (photo) {
     if (photoShape === 'rectangle') {
       // Original — no cropping, natural size
