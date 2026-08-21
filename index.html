@@ -1320,7 +1320,7 @@ function buildSig() {
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"></head>
 <body>
-<div style="min-width:600px;width:100%;background-color:${mancusoBg};padding:${isMancuso ? '16px' : '0'};">
+${isMancuso ? `<table cellpadding="16" cellspacing="0" border="0" bgcolor="${mancusoBg}" style="background-color:${mancusoBg};"><tr><td>` : ''}<div style="min-width:600px;width:100%;">
 <table style="font-family:${font};font-size:90%;color:#000000;" face="${font}">
 <tr>
   ${photoCell}
@@ -1388,6 +1388,7 @@ ${(isBlueSkyLO && !bsHideBanner) ? `<table cellpadding="0" style="border-collaps
 ${isBlueSkyLO && !bsHideDisclosure ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.</div>` : ''}
 ${disclosureSection}
 </div>
+${isMancuso ? '</td></tr></table>' : ''}
 </body>
 </html>`;
 }
