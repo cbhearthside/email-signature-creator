@@ -1201,14 +1201,32 @@ function buildSig() {
     } else if (mancusoHeadshot === 'light-m') {
       mancusoImgUrl = 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Light.png';
     } else {
-      // Use photo from management folder
       mancusoImgUrl = photo;
     }
     if (mancusoImgUrl) {
-      const mRadius = mancusoHeadshot !== 'photo' ? '50%' : '50%';
-      photoCell = `<td style="vertical-align:top;padding:0 12px 5px 0;">
-        <img src="${mancusoImgUrl}" width="100" height="100" style="display:block;border:0;border-radius:${mRadius};" alt="Mancuso headshot"/>
-      </td>`;
+      if (mancusoHeadshot !== 'photo') {
+        // M logos - fixed size, no sliders
+        photoCell = `<td style="vertical-align:top;padding:0 12px 5px 0;">
+          <img src="${mancusoImgUrl}" width="100" height="100" style="display:block;border:0;border-radius:50%;" alt="Mancuso headshot"/>
+        </td>`;
+      } else {
+        // Own photo - use all sliders same as circle
+        const mCircleSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
+        const mZoom = parseInt((document.getElementById('f-photo-zoom') || {}).value || 100);
+        const mVpos = parseInt((document.getElementById('f-photo-vpos') || {}).value || 0);
+        const mHpos = parseInt((document.getElementById('f-photo-hpos') || {}).value || 0);
+        const mImgSize = Math.round(mCircleSize * mZoom / 100);
+        const mOffsetX = Math.round((mImgSize - mCircleSize) / 2) - mHpos;
+        const mOffsetY = Math.round((mImgSize - mCircleSize) / 2) - mVpos;
+        photoCell = `<td style="vertical-align:top;padding:0 12px 5px 0;">
+          <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:${Math.round(mCircleSize*0.75)}pt;height:${Math.round(mCircleSize*0.75)}pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${mancusoImgUrl}"/></v:roundrect><![endif]-->
+          <!--[if !mso]><!-->
+          <div style="width:${mCircleSize}px;height:${mCircleSize}px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
+            <img src="${mancusoImgUrl}" width="${mImgSize}" style="display:block;border:0;transform:translate(${mHpos}px, ${mVpos}px);margin:auto;" alt="Mancuso headshot" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+          </div>
+          <!--<![endif]-->
+        </td>`;
+      }
     }
   } else if (photo) {
     if (photoShape === 'rectangle') {
