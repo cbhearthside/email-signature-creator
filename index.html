@@ -1133,9 +1133,8 @@ function buildSig() {
   const applyLink  = v('f-apply-link');
   const isBlueSky  = companySelect === 'BLUE SKY HOME FINANCE';
   const isMancuso  = companySelect === 'MANCUSO';
-  const mancusoBg   = isMancuso ? (mancusoLogo === 'dark' ? '#1B2B4B' : '#F5F4F0') : 'transparent';
-  const mancusoTextBg = isMancuso ? mancusoBg : 'transparent';
   const mancusoLogo  = isMancuso ? ((document.getElementById('f-mancuso-logo') || {}).value || 'dark') : 'dark';
+  const mancusoBg   = isMancuso ? (mancusoLogo === 'dark' ? '#1B2B4B' : '#F5F4F0') : 'transparent';
   const mancusoStyle = isMancuso ? ((document.getElementById('f-mancuso-style') || {}).value || 'navy') : 'navy';
   const mancusoNameColor = mancusoStyle === 'navy' ? '#1B2B4B' : '#B8962E';
   const mancusoTitleColor = mancusoStyle === 'navy' ? '#B8962E' : '#1B2B4B';
