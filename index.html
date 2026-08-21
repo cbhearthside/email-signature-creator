@@ -1335,9 +1335,27 @@ function buildSig() {
       return dividerLine + '<div style="color:' + compColor + ';font-size:' + compSize + ';font-weight:' + compWeight + ';font-family:' + font + ';letter-spacing:' + compSpacing + ';">' + company + '</div>';
     })() : ''}
     <div style="font-size:10px;line-height:10px">&nbsp;</div>
-    ${phoneRow}
+    ${isMancuso ? (() => {
+      const sep = `<span style="color:#B8962E;font-size:${fs};font-family:${font};padding:0 8px;">|</span>`;
+      const iconStyle = `color:#B8962E;font-size:${fs};font-family:${font};`;
+      const textStyle = `color:#1B2B4B;font-size:${fs};font-family:${font};`;
+      let parts = [];
+      if (office) parts.push(
+        `<span style="${iconStyle}">&#9990;</span>&nbsp;<span style="${textStyle}">${office}${ext ? ' x' + ext : ''}</span>`
+      );
+      if (cell) parts.push(
+        `<span style="${iconStyle}">&#9974;</span>&nbsp;<span style="${textStyle}">${cell}</span>`
+      );
+      if (email) parts.push(
+        `<span style="${iconStyle}">&#9993;</span>&nbsp;<a href="mailto:${email}" style="color:#1B2B4B;font-size:${fs};font-family:${font};text-decoration:none;">${email}</a>`
+      );
+      if (web) parts.push(
+        `<span style="${iconStyle}">&#127760;</span>&nbsp;<a href="${webHref}" target="_blank" style="color:#1B2B4B;font-size:${fs};font-family:${font};text-decoration:none;">${web}</a>`
+      );
+      return parts.length ? `<div style="white-space:nowrap;margin-top:6px;">${parts.join(sep)}</div>` : '';
+    })() : `${phoneRow}
     ${addrRow}
-    ${webEmailRow}
+    ${webEmailRow}`}
     ${isMancuso ? `<div style="font-size:${fsSmall};color:${mancusoNameColor};font-family:${font};letter-spacing:1.5px;margin-top:4px;">REAL ESTATE &#x2022; FINANCE &#x2022; DEVELOPMENT</div>` : ''}
     ${isBlueSky && nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">NMLS # ${nmls}, Company NMLS # 894392</span></div>` : ''}
     ${isBlueSky && !nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">Company NMLS # 894392</span></div>` : ''}
