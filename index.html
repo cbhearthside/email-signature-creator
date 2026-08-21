@@ -1320,10 +1320,10 @@ function buildSig() {
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"></head>
 <body>
 <div style="min-width:600px;width:100%">
-<table style="font-family:${font};font-size:90%;color:#000000">
+<table style="font-family:${font};font-size:90%;color:#000000;" face="${font}">
 <tr>
   ${photoCell}
-  <td style="vertical-align:top;color:#444444;font:90% Arial;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
+  <td style="vertical-align:top;color:#444444;font-family:${font};font-size:90%;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
     <div style="color:${isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};letter-spacing:${isMancuso ? '2px' : 'normal'};">${name || 'Your Name'}</div>
     ${(() => { if (!title) return ''; const tc = isMancuso ? mancusoTitleColor : '#000000'; const ts2 = isMancuso ? '1.5px' : 'normal'; return '<span style="color:' + tc + ';font-size:' + fsSmall + ';font-family:' + font + ';letter-spacing:' + ts2 + ';">' + title + '</span> '; })()}
     ${company ? (() => {
@@ -1351,7 +1351,7 @@ function buildSig() {
     })() : `${phoneRow}
     ${addrRow}
     ${webEmailRow}`}
-    ${isMancuso ? `<div style="font-size:${fsSmall};color:${mancusoNameColor};font-family:${font};letter-spacing:1.5px;margin-top:4px;">REAL ESTATE &#x2022; FINANCE &#x2022; DEVELOPMENT</div>` : ''}
+
     ${isBlueSky && nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">NMLS # ${nmls}, Company NMLS # 894392</span></div>` : ''}
     ${isBlueSky && !nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">Company NMLS # 894392</span></div>` : ''}
     ${isBlueSkyLO && bsNmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">NMLS # ${bsNmls}, Company NMLS # 894392</span></div>` : ''}
