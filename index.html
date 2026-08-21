@@ -73,6 +73,7 @@
     gap: 20px;
     overflow-y: auto;
     height: 100%;
+    box-sizing: border-box;
   }
 
   .section-label {
@@ -150,6 +151,8 @@
     border-radius: var(--radius);
     padding: 28px;
     overflow-x: auto;
+    overflow-y: visible;
+    flex-shrink: 0;
   }
 
   .preview-label {
@@ -408,8 +411,27 @@
         <option value="MANAGEMENT">Management</option>
         <option value="BLUE EDGE">BlueEdge Marketing</option>
         <option value="RELOCATION">Coldwell Banker Hearthside Relocation</option>
+        <option value="MANCUSO">Mancuso Family of Companies</option>
       </select>
     </div>
+    <div id="mancuso-options" style="display:none;">
+      <div class="section-label">Mancuso style</div>
+      <div class="field">
+        <label>Logo style</label>
+        <select id="f-mancuso-logo" onchange="render()">
+          <option value="dark">Dark (Navy circle, gold M)</option>
+          <option value="light">Light (Gold circle, gold M)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Signature color</label>
+        <select id="f-mancuso-style" onchange="render()">
+          <option value="navy">Navy style</option>
+          <option value="gold">Gold style</option>
+        </select>
+      </div>
+    </div>
+
     <div class="field" id="company-name-field" style="display:none;">
       <label>Company name (editable)</label>
       <input id="f-company-name" placeholder="Enter company name..." oninput="render()" />
@@ -835,7 +857,8 @@ const COMPANY_BANNERS = {
   'ADDISON WOLFE REAL ESTATE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/refs/heads/main/AW-Logo.jpg',
   'MANAGEMENT': '',
   'BLUE EDGE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Blue-Edge.jpg',
-  'RELOCATION': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/all-companys.jpg'
+  'RELOCATION': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/all-companys.jpg',
+  'MANCUSO': ''
 };
 
 const COMPANY_SETTINGS = {
@@ -940,6 +963,9 @@ function onCompanyChange() {
   const companyNameField = document.getElementById('company-name-field');
   if (companyNameField) companyNameField.style.display = (company === 'MANAGEMENT') ? 'block' : 'none';
   if (company !== 'MANAGEMENT') document.getElementById('f-company-name').value = '';
+
+  const mancusoOptions = document.getElementById('mancuso-options');
+  if (mancusoOptions) mancusoOptions.style.display = (company === 'MANCUSO') ? 'block' : 'none';
 
   const bannerSizeField = document.getElementById('banner-size-field');
   if (bannerSizeField) bannerSizeField.style.display = 'block';
@@ -1053,7 +1079,8 @@ function applyOffice() {
     'BLUE SKY HOME FINANCE':      'Arial, sans-serif',
     'BLUE EDGE':                  'Arial, sans-serif',
     'MANAGEMENT':                 'Arial, sans-serif',
-    'RELOCATION':                 'Arial, sans-serif'
+    'RELOCATION':                 'Arial, sans-serif',
+    'MANCUSO':                    "'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif"
   };
   const fontSelect = document.getElementById('f-font');
   if (fontSelect && companyFonts[company]) fontSelect.value = companyFonts[company];
@@ -1076,7 +1103,7 @@ function buildSig() {
   const companySelect = v('f-company');
   const teamSelect = (document.getElementById('f-team') || {}).value || '';
   const teamSettings = TEAM_SETTINGS[teamSelect] || null;
-  const companyDisplayNames = { 'BLUE EDGE': 'BlueEdge Marketing', 'RELOCATION': 'Coldwell Banker Hearthside Relocation' };
+  const companyDisplayNames = { 'BLUE EDGE': 'BlueEdge Marketing', 'RELOCATION': 'Coldwell Banker Hearthside Relocation', 'MANCUSO': 'Mancuso Family of Companies' };
   const company = companySelect === 'MANAGEMENT' ? (v('f-company-name') || 'Management') : (teamSettings ? teamSettings.companyName : (companyDisplayNames[companySelect] || companySelect));
   const office     = v('f-office-phone');
   const cell       = v('f-cell');
@@ -1087,6 +1114,13 @@ function buildSig() {
   const nmls       = v('f-nmls');
   const applyLink  = v('f-apply-link');
   const isBlueSky  = companySelect === 'BLUE SKY HOME FINANCE';
+  const isMancuso  = companySelect === 'MANCUSO';
+  const mancusoLogo  = isMancuso ? ((document.getElementById('f-mancuso-logo') || {}).value || 'dark') : 'dark';
+  const mancusoStyle = isMancuso ? ((document.getElementById('f-mancuso-style') || {}).value || 'navy') : 'navy';
+  const mancusoNameColor = mancusoStyle === 'navy' ? '#1B2B4B' : '#B8962E';
+  const mancusoTitleColor = mancusoStyle === 'navy' ? '#B8962E' : '#1B2B4B';
+  const mancusoBorderColor = '#B8962E';
+  const mancusoPhotoUrl = mancusoLogo === 'dark' ? 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Dark_1.png' : 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Light.png';
   const isBlueSkyLO = document.getElementById('f-bluesky-lo') ? document.getElementById('f-bluesky-lo').checked : false;
   const bsDirect   = isBlueSkyLO ? ((document.getElementById('f-bs-direct') || {}).value || '') : '';
   const bsFax      = isBlueSkyLO ? ((document.getElementById('f-bs-fax') || {}).value || '') : '';
@@ -1116,13 +1150,17 @@ function buildSig() {
 
   const photoShape = 'circle';
   const photoPositionField = document.getElementById('photo-position-field');
-  const noPhotoChecked = document.getElementById('f-no-photo') && document.getElementById('f-no-photo').checked;
+  const noPhotoChecked = (document.getElementById('f-no-photo') && document.getElementById('f-no-photo').checked) || isMancuso;
   if (photoPositionField) photoPositionField.style.display = noPhotoChecked ? 'none' : 'block';
 
   // Email-safe shape rendering using table/div wrappers with overflow:hidden
   // All shapes assume the source image is already square or rectangle
   let photoCell = '';
-  if (photo) {
+  if (isMancuso) {
+    photoCell = `<td style="vertical-align:top;padding:0 12px 5px 0;">
+      <img src="${mancusoPhotoUrl}" width="100" height="100" style="display:block;border:0;border-radius:50%;" alt="Mancuso M logo"/>
+    </td>`;
+  } else if (photo) {
     if (photoShape === 'rectangle') {
       // Original — no cropping, natural size
       photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
@@ -1219,11 +1257,11 @@ function buildSig() {
     yt: 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg',
   };
   const socialLinks = [
-    { url: fb, icon: 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/social-icons/fb.png', alt: 'facebook' },
-    { url: li, icon: 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/social-icons/li.png', alt: 'linkedin' },
-    { url: x,  icon: 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/social-icons/x.png', alt: 'X' },
-    { url: ig, icon: 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/social-icons/ig.png', alt: 'instagram' },
-    { url: yt, icon: 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/social-icons/yt.png', alt: 'youtube' },
+    { url: fb, icon: 'https://img.newoldstamp.com/i/0/1/0/0/55.png?ReWqy', alt: 'facebook' },
+    { url: li, icon: 'https://img.newoldstamp.com/i/0/1/0/0/106.png?QxkcH', alt: 'linkedin' },
+    { url: x,  icon: 'https://cdn-icons-png.flaticon.com/24/5968/5968958.png', alt: 'X' },
+    { url: ig, icon: 'https://cdn-icons-png.flaticon.com/24/2111/2111463.png', alt: 'instagram' },
+    { url: yt, icon: 'https://cdn-icons-png.flaticon.com/24/1384/1384060.png', alt: 'youtube' },
   ];
   const socialCells = socialLinks
     .filter(s => s.url)
@@ -1253,14 +1291,22 @@ function buildSig() {
 <table style="font-family:${font};font-size:90%;color:#000000">
 <tr>
   ${photoCell}
-  <td style="vertical-align:top;color:#444444;font:90% Arial;border-left:3px solid ${isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
-    <div style="color:${(COMPANY_SETTINGS[company] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};">${name || 'Your Name'}</div>
-    ${title   ? `<span style="color:#000000;font-size:${fsSmall};font-family:${font};">${fsSmall && title}</span> ` : ''}
-    ${company ? `<div style="color:${(COMPANY_SETTINGS[company] || {}).companyColor || '#012169'};font-size:${fsLarge};font-weight:bold;font-family:${font};">${company}</div>` : ''}
+  <td style="vertical-align:top;color:#444444;font:90% Arial;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
+    <div style="color:${isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};letter-spacing:${isMancuso ? '2px' : 'normal'};">${name || 'Your Name'}</div>
+    ${(() => { if (!title) return ''; const tc = isMancuso ? mancusoTitleColor : '#000000'; const ts2 = isMancuso ? '1.5px' : 'normal'; return '<span style="color:' + tc + ';font-size:' + fsSmall + ';font-family:' + font + ';letter-spacing:' + ts2 + ';">' + title + '</span> '; })()}
+    ${company ? (() => {
+      const dividerLine = isMancuso ? '<div style="width:40px;height:1px;background:#B8962E;margin:4px 0;"></div>' : '';
+      const compColor = isMancuso ? mancusoNameColor : ((COMPANY_SETTINGS[companySelect] || {}).companyColor || '#012169');
+      const compSize = isMancuso ? fs : fsLarge;
+      const compWeight = isMancuso ? 'normal' : 'bold';
+      const compSpacing = isMancuso ? '2px' : 'normal';
+      return dividerLine + '<div style="color:' + compColor + ';font-size:' + compSize + ';font-weight:' + compWeight + ';font-family:' + font + ';letter-spacing:' + compSpacing + ';">' + company + '</div>';
+    })() : ''}
     <div style="font-size:10px;line-height:10px">&nbsp;</div>
     ${phoneRow}
     ${addrRow}
     ${webEmailRow}
+    ${isMancuso ? `<div style="font-size:${fsSmall};color:${mancusoNameColor};font-family:${font};letter-spacing:1.5px;margin-top:4px;">REAL ESTATE &#x2022; FINANCE &#x2022; DEVELOPMENT</div>` : ''}
     ${isBlueSky && nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">NMLS # ${nmls}, Company NMLS # 894392</span></div>` : ''}
     ${isBlueSky && !nmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">Company NMLS # 894392</span></div>` : ''}
     ${isBlueSkyLO && bsNmls ? `<div style="white-space:nowrap !important"><span style="color:#000000;font-size:${fs};font-family:${font};">NMLS # ${bsNmls}, Company NMLS # 894392</span></div>` : ''}
