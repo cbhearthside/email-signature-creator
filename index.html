@@ -1338,10 +1338,10 @@ function buildSig() {
     ${isMancuso ? (() => {
       const sep = `<span style="color:#B8962E;font-size:${fs};font-family:${font};padding:0 8px;">|</span>`;
       const textStyle = `color:#1B2B4B;font-size:${fs};font-family:${font};`;
-      const phoneIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8962E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.77a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`;
-      const mobileIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8962E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`;
-      const emailIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8962E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`;
-      const webIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B8962E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`;
+      const phoneIcon = `<img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/mancuso-icon-phone.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;border:0;" alt="phone"/>`;
+      const mobileIcon = `<img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/mancuso-icon-mobile.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;border:0;" alt="mobile"/>`;
+      const emailIcon = `<img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/mancuso-icon-email.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;border:0;" alt="email"/>`;
+      const webIcon = `<img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/mancuso-icon-globe.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;border:0;" alt="website"/>`;
       let parts = [];
       if (office) parts.push(`${phoneIcon}<span style="${textStyle}">${office}${ext ? ' x' + ext : ''}</span>`);
       if (cell) parts.push(`${mobileIcon}<span style="${textStyle}">${cell}</span>`);
