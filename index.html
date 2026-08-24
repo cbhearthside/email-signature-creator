@@ -848,6 +848,8 @@ function autoFillPhoto() {
   const companySettings = COMPANY_SETTINGS[company] || {};
   const officeFolder = key && OFFICES[key] ? OFFICES[key].folder : null;
   const companyFolder = companySettings.folder || null;
+  // Debug: log folder for troubleshooting
+  // console.log('company:', company, 'folder:', companyFolder);
   const folder = officeFolder || companyFolder;
 
   if (name && folder) {
@@ -914,7 +916,8 @@ const COMPANY_SETTINGS = {
   'BLUE EDGE':                  { nameColor: '#012169', companyColor: '#012169', website: 'blueedgeteam.com', folder: 'blue-edge', phone: '267-352-9120', address: '212 N. Main Street, Doylestown, PA 18901', companyDisplayName: 'BlueEdge Marketing' },
   'MANAGEMENT':                 { nameColor: '#000000', companyColor: '#000000', website: '', folder: 'management', phone: '' },
   'RELOCATION':                 { nameColor: '#000000', companyColor: '#000000', website: 'cbhre.com/relocation', folder: 'management', phone: '215-489-6100', address: '100 Brandywine Blvd Suite 302, Newtown, PA 18940' },
-  'MANCUSO':                    { nameColor: '#1B2B4B', companyColor: '#B8962E', website: '', folder: 'management', phone: '' }
+  'MANCUSO':                    { nameColor: '#1B2B4B', companyColor: '#B8962E', website: '', folder: 'management', phone: '' },
+  'EMPLOYEE':                   { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'cbh-employee', phone: '' }
 };
 
 function updateBannerLink() {
