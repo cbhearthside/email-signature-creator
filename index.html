@@ -412,8 +412,31 @@
         <option value="BLUE EDGE">BlueEdge Marketing</option>
         <option value="RELOCATION">Coldwell Banker Hearthside Relocation</option>
         <option value="MANCUSO">Mancuso Family of Companies</option>
+        <option value="EMPLOYEE">CBH Employee</option>
       </select>
     </div>
+    <div id="employee-options" style="display:none;">
+      <div class="section-label">Offices covered</div>
+      <p class="hint" style="margin-bottom:10px;">Check all offices this employee covers</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-allentown" onchange="render()" style="width:auto;" /><label for="emp-allentown" style="font-size:12px;margin:0;">Allentown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-bethlehem" onchange="render()" style="width:auto;" /><label for="emp-bethlehem" style="font-size:12px;margin:0;">Bethlehem</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-collegeville" onchange="render()" style="width:auto;" /><label for="emp-collegeville" style="font-size:12px;margin:0;">Collegeville</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-doylestown" onchange="render()" style="width:auto;" /><label for="emp-doylestown" style="font-size:12px;margin:0;">Doylestown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-easton" onchange="render()" style="width:auto;" /><label for="emp-easton" style="font-size:12px;margin:0;">Easton</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-frenchtown" onchange="render()" style="width:auto;" /><label for="emp-frenchtown" style="font-size:12px;margin:0;">Frenchtown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-hellertown" onchange="render()" style="width:auto;" /><label for="emp-hellertown" style="font-size:12px;margin:0;">Hellertown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-huntingdonvalley" onchange="render()" style="width:auto;" /><label for="emp-huntingdonvalley" style="font-size:12px;margin:0;">Huntingdon Valley</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-lahaska" onchange="render()" style="width:auto;" /><label for="emp-lahaska" style="font-size:12px;margin:0;">Lahaska</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-macungie" onchange="render()" style="width:auto;" /><label for="emp-macungie" style="font-size:12px;margin:0;">Macungie</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-newtown" onchange="render()" style="width:auto;" /><label for="emp-newtown" style="font-size:12px;margin:0;">Newtown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-ottsville" onchange="render()" style="width:auto;" /><label for="emp-ottsville" style="font-size:12px;margin:0;">Ottsville</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-pocono" onchange="render()" style="width:auto;" /><label for="emp-pocono" style="font-size:12px;margin:0;">Pocono</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-windgap" onchange="render()" style="width:auto;" /><label for="emp-windgap" style="font-size:12px;margin:0;">Wind Gap</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-addisonwolfe" onchange="render()" style="width:auto;" /><label for="emp-addisonwolfe" style="font-size:12px;margin:0;">Addison Wolfe</label></div>
+      </div>
+    </div>
+
     <div id="mancuso-options" style="display:none;">
       <div class="section-label">Mancuso style</div>
       <div class="field">
@@ -878,7 +901,8 @@ const COMPANY_BANNERS = {
   'MANAGEMENT': '',
   'BLUE EDGE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Blue-Edge.jpg',
   'RELOCATION': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/all-companys.jpg',
-  'MANCUSO': ''
+  'MANCUSO': '',
+  'EMPLOYEE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg'
 };
 
 const COMPANY_SETTINGS = {
@@ -966,6 +990,7 @@ function onCompanyChange() {
     document.getElementById('office-badge').style.display = 'none';
     document.getElementById('f-team').value = '';
   const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
+  ['emp-allentown','emp-bethlehem','emp-collegeville','emp-doylestown','emp-easton','emp-frenchtown','emp-hellertown','emp-huntingdonvalley','emp-lahaska','emp-macungie','emp-newtown','emp-ottsville','emp-pocono','emp-windgap','emp-addisonwolfe'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
   const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
     addrField.value = '';
     officePhone.value = '';
@@ -997,6 +1022,9 @@ function onCompanyChange() {
   if (mancusoOptions) mancusoOptions.style.display = (company === 'MANCUSO') ? 'block' : 'none';
   if (company === 'MANCUSO') applyMancusoBanner();
 
+  const employeeOptions = document.getElementById('employee-options');
+  if (employeeOptions) employeeOptions.style.display = (company === 'EMPLOYEE') ? 'block' : 'none';
+
   const bannerSizeField = document.getElementById('banner-size-field');
   if (bannerSizeField) bannerSizeField.style.display = 'block';
   const awRedToggle = document.getElementById('aw-red-toggle-field');
@@ -1006,7 +1034,7 @@ function onCompanyChange() {
   // Auto-fill address for companies that have one
   const addrInput = document.getElementById('f-addr');
   const settingsForAddr = COMPANY_SETTINGS[company] || {};
-  if (settingsForAddr.address && company !== 'COLDWELL BANKER HEARTHSIDE') {
+  if (settingsForAddr.address && company !== 'COLDWELL BANKER HEARTHSIDE' && company !== 'EMPLOYEE') {
     addrInput.value = settingsForAddr.address;
     addrInput.readOnly = true;
     addrInput.style.background = '#f5f6f8';
@@ -1110,7 +1138,8 @@ function applyOffice() {
     'BLUE EDGE':                  'Arial, sans-serif',
     'MANAGEMENT':                 'Arial, sans-serif',
     'RELOCATION':                 'Arial, sans-serif',
-    'MANCUSO':                    "'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif"
+    'MANCUSO':                    "'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif",
+    'EMPLOYEE':                   'Arial, sans-serif'
   };
   const fontSelect = document.getElementById('f-font');
   if (fontSelect && companyFonts[company]) fontSelect.value = companyFonts[company];
@@ -1145,6 +1174,18 @@ function buildSig() {
   const applyLink  = v('f-apply-link');
   const isBlueSky  = companySelect === 'BLUE SKY HOME FINANCE';
   const isMancuso  = companySelect === 'MANCUSO';
+  const isEmployee = companySelect === 'EMPLOYEE';
+  const empOfficeMap = [
+    ['emp-allentown','Allentown'],['emp-bethlehem','Bethlehem'],['emp-collegeville','Collegeville'],
+    ['emp-doylestown','Doylestown'],['emp-easton','Easton'],['emp-frenchtown','Frenchtown'],
+    ['emp-hellertown','Hellertown'],['emp-huntingdonvalley','Huntingdon Valley'],['emp-lahaska','Lahaska'],
+    ['emp-macungie','Macungie'],['emp-newtown','Newtown'],['emp-ottsville','Ottsville'],
+    ['emp-pocono','Pocono'],['emp-windgap','Wind Gap'],['emp-addisonwolfe','Addison Wolfe']
+  ];
+  const empOffices = isEmployee ? empOfficeMap
+    .filter(([id]) => document.getElementById(id) && document.getElementById(id).checked)
+    .map(([,label]) => label)
+    .join(' - ') : '';
   const mancusoLogo  = isMancuso ? ((document.getElementById('f-mancuso-logo') || {}).value || 'dark') : 'dark';
   const mancusoBg   = isMancuso ? (mancusoLogo === 'dark' ? '#1B2B4B' : '#F5F4F0') : 'transparent';
   const mancusoStyle = isMancuso ? ((document.getElementById('f-mancuso-style') || {}).value || 'navy') : 'navy';
@@ -1371,6 +1412,7 @@ ${isMancuso ? `<table cellpadding="16" cellspacing="0" border="0" bgcolor="${man
       return dividerLine + '<div style="color:' + compColor + ';font-size:' + compSize + ';font-weight:' + compWeight + ';font-family:' + font + ';letter-spacing:' + compSpacing + ';">' + company + '</div>';
     })() : ''}
     <div style="font-size:10px;line-height:10px">&nbsp;</div>
+    ${isEmployee && empOffices ? `<div style="color:#012169;font-size:${fs};font-family:${font};font-weight:bold;margin-top:2px;">${empOffices}</div>` : ''}
     ${isMancuso ? (() => {
       const sep = `<span style="color:#B8962E;font-size:${fs};font-family:${font};padding:0 8px;">|</span>`;
       const textStyle = `color:${mancusoFontColor};font-size:${fs};font-family:${font};`;
@@ -1587,6 +1629,7 @@ function clearAll() {
   document.getElementById('office-location-section').style.display = 'none';
   document.getElementById('f-team').value = '';
   const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
+  ['emp-allentown','emp-bethlehem','emp-collegeville','emp-doylestown','emp-easton','emp-frenchtown','emp-hellertown','emp-huntingdonvalley','emp-lahaska','emp-macungie','emp-newtown','emp-ottsville','emp-pocono','emp-windgap','emp-addisonwolfe'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
   const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
   document.getElementById('f-office-select').value = '';
   document.getElementById('office-badge').style.display = 'none';
