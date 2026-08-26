@@ -1249,6 +1249,7 @@ function buildSig() {
   // Email-safe shape rendering using table/div wrappers with overflow:hidden
   // All shapes assume the source image is already square or rectangle
   let photoCell = '';
+  const circleSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
   if (isMancuso) {
     const mancusoHeadshot = (document.getElementById('f-mancuso-headshot') || {}).value || 'photo';
     let mancusoImgUrl = '';
@@ -1296,7 +1297,6 @@ function buildSig() {
         <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
       </td>`;
     } else if (photoShape === 'circle') {
-      const circleSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
       const zoom = parseInt((document.getElementById('f-photo-zoom') || {}).value || 100);
       const vpos = parseInt((document.getElementById('f-photo-vpos') || {}).value || 0);
       const hpos = parseInt((document.getElementById('f-photo-hpos') || {}).value || 0);
@@ -1402,8 +1402,12 @@ function buildSig() {
   const disclosureText = 'The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.';
   const disclosureSection = isBlueSky ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">${disclosureText}</div>` : '';
 
-  const templateNameC = isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169';
-  const templateCompC = isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).companyColor || '#012169';
+  const bannerSection = (effectiveBanner && selectedCompany)
+    ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;">
+        ${bannerlink ? `<a href="${bannerlink}" target="_blank">` : ''}
+        <img src="${effectiveBanner}" width="${bannerWidth}" style="vertical-align:middle;border:0;background:#ffffff;" alt="banner"/>
+        ${bannerlink ? `</a>` : ''}
+       </td></tr></table>` : '';
 
   if (template === 'modern' || template === 'bold') {
     const cSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
@@ -1468,14 +1472,10 @@ ${bannerSection}${disclosureSection}
 </div></body></html>`;
     }
   }
-  const bannerSection = (effectiveBanner && selectedCompany)
-    ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;">
-        ${bannerlink ? `<a href="${bannerlink}" target="_blank">` : ''}
-        <img src="${effectiveBanner}" width="${bannerWidth}" style="vertical-align:middle;border:0;background:#ffffff;" alt="banner"/>
-        ${bannerlink ? `</a>` : ''}
-       </td></tr></table>` : '';
 
-  return `<!DOCTYPE html>
+  const templateNameC = isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169';
+  const templateCompC = isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).companyColor || '#012169';
+return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"></head>
 <body>
