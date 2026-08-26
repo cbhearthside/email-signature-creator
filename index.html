@@ -682,11 +682,6 @@
 
   <main class="main">
 
-    <div class="preview-card">
-      <div class="preview-label">Live preview</div>
-      <div id="preview-box"></div>
-    </div>
-
     <div class="copy-rich-card">
       <div class="copy-rich-header">
         <div>
@@ -699,6 +694,11 @@
         </button>
       </div>
       <div class="copy-rich-box" id="copy-rich-box"></div>
+    </div>
+
+    <div class="preview-card">
+      <div class="preview-label">Live preview</div>
+      <div id="preview-box"></div>
     </div>
 
     <!-- Platform instructions -->
@@ -1570,9 +1570,6 @@ function render() {
   const body = doc.body ? doc.body.innerHTML : html;
   preview.innerHTML = body;
   richBox.innerHTML = body;
-  // Make sure copy-rich-box is visible
-  const richCard = document.getElementById('copy-rich-box');
-  if (richCard) richCard.style.minHeight = '80px';
 }
 
 const PLATFORM_INSTRUCTIONS = {
