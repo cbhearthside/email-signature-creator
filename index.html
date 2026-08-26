@@ -153,6 +153,7 @@
     overflow-x: auto;
     overflow-y: visible;
     flex-shrink: 0;
+    flex-grow: 0;
   }
 
   .preview-label {
@@ -397,6 +398,16 @@
 
 <div class="layout">
   <aside class="sidebar">
+
+    <div class="section-label">Signature template</div>
+    <div class="field">
+      <label>Template style</label>
+      <select id="f-template" onchange="render()" style="font-family:inherit;">
+        <option value="classic">Classic (current)</option>
+        <option value="modern">Modern</option>
+        <option value="bold">Bold</option>
+      </select>
+    </div>
 
     <div class="section-label">Agent information</div>
     <div class="field">
@@ -1154,6 +1165,7 @@ function applyOffice() {
 }
 
 function buildSig() {
+  const template   = (document.getElementById('f-template') || {}).value || 'classic';
   const font       = (document.getElementById('f-font') || {}).value || 'Arial, sans-serif';
   const fontSize   = parseInt((document.getElementById('f-font-size') || {}).value || 13);
   const fs         = fontSize + 'px';
@@ -1390,6 +1402,72 @@ function buildSig() {
   const disclosureText = 'The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.';
   const disclosureSection = isBlueSky ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">${disclosureText}</div>` : '';
 
+  const templateNameC = isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169';
+  const templateCompC = isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).companyColor || '#012169';
+
+  if (template === 'modern' || template === 'bold') {
+    const cSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
+    const photoHtml = photo ? (template === 'bold'
+      ? `<div style="width:${cSize}px;height:${cSize}px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,0.5);"><img src="${photo}" width="${cSize}" style="display:block;border:0;" alt="photo"/></div>`
+      : `<div style="width:${cSize}px;height:${cSize}px;border-radius:50%;overflow:hidden;"><img src="${photo}" width="${cSize}" style="display:block;border:0;" alt="photo"/></div>`) : '';
+
+    if (template === 'modern') {
+      const contactParts = [];
+      if (office) contactParts.push(`<span style="color:#666;font-size:${fs};font-family:${font};font-weight:bold;">Office:</span>&nbsp;<a href="tel:${office}" style="color:#333;font-size:${fs};font-family:${font};text-decoration:none;">${office}</a>`);
+      if (cell) contactParts.push(`<span style="color:#666;font-size:${fs};font-family:${font};font-weight:bold;">Cell:</span>&nbsp;<a href="tel:${cell}" style="color:#333;font-size:${fs};font-family:${font};text-decoration:none;">${cell}</a>`);
+      if (email) contactParts.push(`<a href="mailto:${email}" style="color:${templateNameC};font-size:${fs};font-family:${font};text-decoration:none;">${email}</a>`);
+      if (web) contactParts.push(`<a href="${webHref}" target="_blank" style="color:${templateNameC};font-size:${fs};font-family:${font};text-decoration:none;">${web}</a>`);
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>
+<div style="min-width:500px;font-family:${font};">
+<table cellpadding="0" cellspacing="0" border="0"><tr>
+  ${photo ? `<td style="vertical-align:top;padding-right:16px;">${photoHtml}</td>` : ''}
+  <td style="vertical-align:top;">
+    <div style="font-size:${fsXLarge};font-weight:bold;color:${templateNameC};font-family:${font};">${name || 'Your Name'}</div>
+    ${title ? `<div style="font-size:${fs};color:#666;font-family:${font};margin-top:2px;">${title}</div>` : ''}
+    <div style="width:40px;height:2px;background:${templateNameC};margin:8px 0;"></div>
+    ${company ? `<div style="font-size:${fsLarge};font-weight:bold;color:${templateCompC};font-family:${font};margin-bottom:6px;">${company}</div>` : ''}
+    ${addr ? `<div style="font-size:${fs};color:#444;font-family:${font};margin-bottom:4px;">${addr}</div>` : ''}
+    <div style="font-size:${fs};color:#444;font-family:${font};">${contactParts.join('&nbsp;&nbsp;|&nbsp;&nbsp;')}</div>
+    <div style="margin-top:6px;">${socialRow}</div>
+  </td>
+</tr></table>
+${bannerSection}${disclosureSection}
+</div></body></html>`;
+    }
+
+    if (template === 'bold') {
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>
+<div style="min-width:500px;font-family:${font};">
+<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:100%;">
+  <tr>
+    <td style="background:${templateNameC};padding:14px 20px;vertical-align:middle;" bgcolor="${templateNameC}">
+      <table cellpadding="0" cellspacing="0" border="0"><tr>
+        ${photo ? `<td style="vertical-align:middle;padding-right:14px;">${photoHtml}</td>` : ''}
+        <td style="vertical-align:middle;">
+          <div style="font-size:${fsXLarge};font-weight:bold;color:#ffffff;font-family:${font};letter-spacing:1px;">${name || 'Your Name'}</div>
+          ${title ? `<div style="font-size:${fs};color:rgba(255,255,255,0.85);font-family:${font};margin-top:3px;">${title}</div>` : ''}
+          ${company ? `<div style="font-size:${fs};color:rgba(255,255,255,0.7);font-family:${font};margin-top:3px;font-weight:bold;">${company}</div>` : ''}
+        </td>
+      </tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td style="background:#f8f8f8;padding:12px 20px;border-left:4px solid ${templateNameC};" bgcolor="#f8f8f8">
+      <table cellpadding="0" cellspacing="4" border="0" style="font-family:${font};font-size:${fs};">
+        ${addr ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Address:</td><td style="color:#333;">${addr}</td></tr>` : ''}
+        ${office ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Office:</td><td><a href="tel:${office}" style="color:#333;text-decoration:none;">${office}</a></td></tr>` : ''}
+        ${cell ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Cell:</td><td><a href="tel:${cell}" style="color:#333;text-decoration:none;">${cell}</a></td></tr>` : ''}
+        ${email ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Email:</td><td><a href="mailto:${email}" style="color:${templateNameC};text-decoration:none;">${email}</a></td></tr>` : ''}
+        ${web ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Website:</td><td><a href="${webHref}" target="_blank" style="color:${templateNameC};text-decoration:none;">${web}</a></td></tr>` : ''}
+      </table>
+      ${socialRow ? `<div style="margin-top:8px;">${socialRow}</div>` : ''}
+    </td>
+  </tr>
+</table>
+${bannerSection}${disclosureSection}
+</div></body></html>`;
+    }
+  }
   const bannerSection = (effectiveBanner && selectedCompany)
     ? `<table cellpadding="0" style="border-collapse:collapse"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;">
         ${bannerlink ? `<a href="${bannerlink}" target="_blank">` : ''}
@@ -1492,6 +1570,9 @@ function render() {
   const body = doc.body ? doc.body.innerHTML : html;
   preview.innerHTML = body;
   richBox.innerHTML = body;
+  // Make sure copy-rich-box is visible
+  const richCard = document.getElementById('copy-rich-box');
+  if (richCard) richCard.style.minHeight = '80px';
 }
 
 const PLATFORM_INSTRUCTIONS = {
