@@ -230,7 +230,9 @@
     background: var(--white);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: visible;
+    flex-shrink: 0;
   }
 
   .copy-rich-header {
@@ -281,6 +283,8 @@
     min-height: 80px;
     user-select: all;
     cursor: text;
+    overflow-x: auto;
+    display: block;
   }
 
   .copy-rich-box:empty::after {
@@ -1484,7 +1488,7 @@ ${isMancuso ? `<table cellpadding="16" cellspacing="0" border="0" bgcolor="${man
 <tr valign="top" style="vertical-align:top;">
   ${photoCell}
   <td valign="top" width="400" style="vertical-align:top;width:400px;color:#444444;font-family:${font};font-size:90%;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
-    <div style="color:${isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};letter-spacing:${isMancuso ? '2px' : 'normal'};">${name || 'Your Name'}</div>
+    <div style="color:${isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};letter-spacing:${isMancuso ? '2px' : 'normal'};margin-top:${isMancuso ? '6px' : '0'};">${name || 'Your Name'}</div>
     ${(() => { if (!title) return ''; const tc = isMancuso ? mancusoTitleColor : '#000000'; const ts2 = isMancuso ? '1.5px' : 'normal'; return '<span style="color:' + tc + ';font-size:' + fsSmall + ';font-family:' + font + ';letter-spacing:' + ts2 + ';">' + title + '</span> '; })()}
     ${company ? (() => {
       const dividerLine = isMancuso ? '<div style="width:40px;height:1px;background:#B8962E;margin:4px 0;"></div>' : '';
@@ -1569,7 +1573,7 @@ function render() {
   const doc = parser.parseFromString(html, 'text/html');
   const body = doc.body ? doc.body.innerHTML : html;
   preview.innerHTML = body;
-  richBox.innerHTML = body;
+  richBox.innerHTML = html;
 }
 
 const PLATFORM_INSTRUCTIONS = {
