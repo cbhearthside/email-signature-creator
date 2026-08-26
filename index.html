@@ -1262,7 +1262,7 @@ function buildSig() {
     if (mancusoImgUrl) {
       if (mancusoHeadshot !== 'photo') {
         // M logos - fixed size, no sliders
-        photoCell = `<td valign="top" style="vertical-align:top;padding:0 12px 5px 0;">
+        photoCell = `<td valign="top" width="${circleSize + 12}" style="vertical-align:top;width:${circleSize + 12}px;padding:0 12px 5px 0;"
           <img src="${mancusoImgUrl}" width="100" height="100" style="display:block;border:0;border-radius:50%;" alt="Mancuso headshot"/>
         </td>`;
       } else {
@@ -1274,7 +1274,7 @@ function buildSig() {
         const mImgSize = Math.round(mCircleSize * mZoom / 100);
         const mOffsetX = Math.round((mImgSize - mCircleSize) / 2) - mHpos;
         const mOffsetY = Math.round((mImgSize - mCircleSize) / 2) - mVpos;
-        photoCell = `<td valign="top" style="vertical-align:top;padding:0 12px 5px 0;">
+        photoCell = `<td valign="top" width="${circleSize + 12}" style="vertical-align:top;width:${circleSize + 12}px;padding:0 12px 5px 0;"
           <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:${Math.round(mCircleSize*0.75)}pt;height:${Math.round(mCircleSize*0.75)}pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${mancusoImgUrl}"/></v:roundrect><![endif]-->
           <!--[if !mso]><!-->
           <div style="width:${mCircleSize}px;height:${mCircleSize}px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
@@ -1287,12 +1287,12 @@ function buildSig() {
   } else if (photo) {
     if (photoShape === 'rectangle') {
       // Original — no cropping, natural size
-      photoCell = `<td valign="top" style="vertical-align:top;padding:0 8px 5px 0;">
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
         <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
       </td>`;
     } else if (photoShape === 'square') {
       // Square — fixed width, natural height
-      photoCell = `<td valign="top" style="vertical-align:top;padding:0 8px 5px 0;">
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
         <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
       </td>`;
     } else if (photoShape === 'circle') {
@@ -1304,7 +1304,7 @@ function buildSig() {
       const translateX = hpos;
       const translateY = vpos;
       const circlePt = Math.round(circleSize * 0.75); // convert px to pt for VML
-      photoCell = `<td valign="top" style="vertical-align:top;padding:0 8px 5px 0;">
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
         <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:${circlePt}pt;height:${circlePt}pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${photo}"/></v:roundrect><![endif]-->
         <!--[if !mso]><!-->
         <div style="width:${circleSize}px;height:${circleSize}px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
@@ -1314,17 +1314,17 @@ function buildSig() {
       </td>`;
     } else if (photoShape === 'oval') {
       // Oval — taller than wide
-      photoCell = `<td valign="top" style="vertical-align:top;padding:0 8px 5px 0;">
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
         <div style="width:100px;height:130px;border-radius:50%;overflow:hidden;display:block;">
           <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
         </div>
       </td>`;
     } else if (photoShape === 'wide-square') {
-      photoCell = `<td valign="top" style="vertical-align:top;padding:0 8px 5px 0;">
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
         <img src="${photo}" width="160" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
       </td>`;
     } else if (photoShape === 'wide-circle') {
-      photoCell = `<td valign="top" style="vertical-align:top;padding:0 8px 5px 0;">
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
         <div style="width:160px;height:125px;border-radius:50%;overflow:hidden;display:block;">
           <img src="${photo}" width="160" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
         </div>
@@ -1480,10 +1480,10 @@ ${bannerSection}${disclosureSection}
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"></head>
 <body>
 ${isMancuso ? `<table cellpadding="16" cellspacing="0" border="0" bgcolor="${mancusoBg}" style="background-color:${mancusoBg};"><tr><td>` : ''}<div style="min-width:600px;width:100%;">
-<table style="font-family:${font};font-size:90%;color:#000000;" face="${font}">
-<tr valign="top">
+<table cellpadding="0" cellspacing="0" border="0" style="font-family:${font};font-size:90%;color:#000000;border-collapse:collapse;" face="${font}">
+<tr valign="top" style="vertical-align:top;">
   ${photoCell}
-  <td valign="top" style="vertical-align:top;color:#444444;font-family:${font};font-size:90%;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
+  <td valign="top" width="400" style="vertical-align:top;width:400px;color:#444444;font-family:${font};font-size:90%;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
     <div style="color:${isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};letter-spacing:${isMancuso ? '2px' : 'normal'};">${name || 'Your Name'}</div>
     ${(() => { if (!title) return ''; const tc = isMancuso ? mancusoTitleColor : '#000000'; const ts2 = isMancuso ? '1.5px' : 'normal'; return '<span style="color:' + tc + ';font-size:' + fsSmall + ';font-family:' + font + ';letter-spacing:' + ts2 + ';">' + title + '</span> '; })()}
     ${company ? (() => {
