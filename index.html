@@ -1653,59 +1653,50 @@ function showInstructions(platform) {
 }
 
 function copyRich() {
-  const box = document.getElementById('copy-rich-box');
-  const btn = document.getElementById('copy-rich-btn');
-  if (!box.innerHTML.trim()) return;
+  const sig = buildSig();
+  if (!sig) return;
 
-  // Use execCommand approach which preserves rich text better in email clients
-  const range = document.createRange();
-  range.selectNodeContents(box);
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-  box.classList.add('copy-selected');
-
-  try {
-    // Try execCommand first - best compatibility with email clients
-    const success = document.execCommand('copy');
-    if (success) {
-      btn.classList.add('copied');
-      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-      setTimeout(() => {
-        btn.classList.remove('copied');
-        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-        box.classList.remove('copy-selected');
-        sel.removeAllRanges();
-      }, 2500);
-    } else {
-      throw new Error('execCommand failed');
-    }
-  } catch(e) {
-    // Fallback: try ClipboardItem API
-    try {
-      const blob = new Blob([box.innerHTML], { type: 'text/html' });
-      const plainBlob = new Blob([box.innerText], { type: 'text/plain' });
-      const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
-      navigator.clipboard.write([item]).then(() => {
-        btn.classList.add('copied');
-        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-        setTimeout(() => {
-          btn.classList.remove('copied');
-          btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-          box.classList.remove('copy-selected');
-          sel.removeAllRanges();
-        }, 2500);
-      });
-    } catch(e2) {
-      // Last resort: signature is already selected, prompt manual copy
-      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Selected! Press Ctrl+C to copy';
-      setTimeout(() => {
-        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-        box.classList.remove('copy-selected');
-      }, 4000);
-    }
-  }
+  // Open signature in a new window so user can Ctrl+A, Ctrl+C
+  const win = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
+  win.document.open();
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <style>
+      body { margin: 20px; font-family: Arial, sans-serif; }
+      .instructions {
+        background: #012169; color: white; padding: 12px 20px;
+        border-radius: 6px; margin-bottom: 20px; font-size: 14px;
+      }
+      .instructions strong { font-size: 16px; display: block; margin-bottom: 4px; }
+      .copy-btn {
+        background: #012169; color: white; border: none; padding: 10px 20px;
+        border-radius: 4px; font-size: 14px; cursor: pointer; margin-bottom: 16px;
+      }
+      .copy-btn:hover { background: #01307a; }
+      #sig-content { border: 1px solid #ddd; padding: 20px; background: white; }
+    </style>
+  </head><body>
+    <div class="instructions">
+      <strong>How to copy your signature:</strong>
+      1. Click the button below, OR press Ctrl+A to select all, then Ctrl+C to copy<br>
+      2. Go to Outlook → File → Options → Mail → Signatures<br>
+      3. Click in the signature box and press Ctrl+V to paste
+    </div>
+    <button class="copy-btn" onclick="
+      const r = document.createRange();
+      r.selectNodeContents(document.getElementById('sig-content'));
+      const s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+      document.execCommand('copy');
+      this.textContent = 'Copied! Now paste into Outlook';
+      this.style.background = '#1a7a1a';
+    ">Click to Select &amp; Copy Signature</button>
+    <div id="sig-content">${sig.replace(/`/g, '\`')}</div>
+  </body></html>`);
+  win.document.close();
 }
+
 
 function copyHTML() { copyRich(); }
 
