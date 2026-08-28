@@ -1235,6 +1235,7 @@ function buildSig() {
   // Email-safe shape rendering using table/div wrappers with overflow:hidden
   // All shapes assume the source image is already square or rectangle
   let photoCell = '';
+  const circleSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
   if (isMancuso) {
     const mancusoHeadshot = (document.getElementById('f-mancuso-headshot') || {}).value || 'photo';
     let mancusoImgUrl = '';
@@ -1247,10 +1248,23 @@ function buildSig() {
       mancusoImgUrl = photo;
     }
     if (mancusoImgUrl) {
-      const mRadius = mancusoHeadshot !== 'photo' ? '50%' : '50%';
-      photoCell = `<td style="vertical-align:top;padding:0 12px 5px 0;">
-        <img src="${mancusoImgUrl}" width="100" height="100" style="display:block;border:0;border-radius:${mRadius};" alt="Mancuso headshot"/>
-      </td>`;
+      if (mancusoHeadshot !== 'photo') {
+        // M logos - fixed size
+        photoCell = `<td valign="top" style="vertical-align:top;padding:0 12px 5px 0;">
+          <img src="${mancusoImgUrl}" width="100" height="100" style="display:block;border:0;border-radius:50%;" alt="Mancuso M logo"/>
+        </td>`;
+      } else {
+        // Own photo - use sliders
+        const zoom = parseInt((document.getElementById('f-photo-zoom') || {}).value || 100);
+        const vpos = parseInt((document.getElementById('f-photo-vpos') || {}).value || 0);
+        const hpos = parseInt((document.getElementById('f-photo-hpos') || {}).value || 0);
+        const imgSize = Math.round(circleSize * zoom / 100);
+        photoCell = `<td valign="top" style="vertical-align:top;padding:0 12px 5px 0;">
+          <div style="width:${circleSize}px;height:${circleSize}px;border-radius:50%;overflow:hidden;display:block;">
+            <img src="${mancusoImgUrl}" width="${imgSize}" style="display:block;border:0;transform:translate(${hpos}px, ${vpos}px);margin:auto;" alt="Mancuso headshot"/>
+          </div>
+        </td>`;
+      }
     }
   } else if (photo) {
     if (photoShape === 'rectangle') {
@@ -1264,7 +1278,6 @@ function buildSig() {
         <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
       </td>`;
     } else if (photoShape === 'circle') {
-      const circleSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
       const zoom = parseInt((document.getElementById('f-photo-zoom') || {}).value || 100);
       const vpos = parseInt((document.getElementById('f-photo-vpos') || {}).value || 0);
       const hpos = parseInt((document.getElementById('f-photo-hpos') || {}).value || 0);
@@ -1447,7 +1460,7 @@ ${isBlueSkyLO ? `<table cellpadding="0" cellspacing="0" style="margin-top:10px;b
 
 ${testimonials ? `<div style="margin:8px 0;font-family:${font};font-size:.9em;"><a href="${testimonials}" target="_blank" style="color:#012169;text-decoration:none;font-weight:bold;">⭐ Client Testimonials</a></div>` : ''}
 ${other ? `<div style="margin:8px 0;font-family:${font};font-size:${fs};">${otherLink ? `<a href="${otherLink}" target="_blank" style="color:#012169;text-decoration:none;font-weight:bold;font-family:${font};font-size:${fs};">${other}</a>` : `<span style="color:#000000;font-family:${font};font-size:${fs};">${other}</span>`}</div>` : ''}
-${bannerSection}
+${isMancuso ? '' : bannerSection}
 ${(isBlueSkyLO && !bsHideBanner) ? `<table cellpadding="0" style="border-collapse:collapse;margin-top:4px;"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;"><img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg" width="${bannerWidth}" style="vertical-align:middle;border:0;background:#ffffff;" alt="Blue Sky banner"/></td></tr></table>` : ''}
 ${isBlueSkyLO && !bsHideDisclosure ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.</div>` : ''}
 ${disclosureSection}
