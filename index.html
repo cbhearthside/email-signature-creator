@@ -1695,17 +1695,24 @@ function copyRich() {
     sel.addRange(range);
     box.classList.add('copy-selected');
 
-    try {
-      const blob = new Blob([box.innerHTML], { type: 'text/html' });
+    // Use innerHTML (with base64 images) for ClipboardItem
+    const htmlContent = box.innerHTML;
+    if (navigator.clipboard && window.ClipboardItem) {
+      const blob = new Blob([htmlContent], { type: 'text/html' });
       const plainBlob = new Blob([box.innerText], { type: 'text/plain' });
-      const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
-      navigator.clipboard.write([item]).then(() => {
-        showCopied();
-      }).catch(() => {
+      try {
+        const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
+        navigator.clipboard.write([item]).then(() => {
+          showCopied();
+        }).catch(() => {
+          document.execCommand('copy');
+          showCopied();
+        });
+      } catch(e) {
         document.execCommand('copy');
         showCopied();
-      });
-    } catch(e) {
+      }
+    } else {
       document.execCommand('copy');
       showCopied();
     }
