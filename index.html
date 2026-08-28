@@ -690,7 +690,7 @@
       <div class="copy-rich-header">
         <div>
           <div class="copy-rich-title">Your signature — ready to copy</div>
-          <div class="copy-rich-subtitle">Click the button to open your signature in a new tab. Then press <strong>Ctrl+A</strong> to select all, <strong>Ctrl+C</strong> to copy, then paste into Outlook or Gmail.</div>
+          <div class="copy-rich-subtitle">Click the button to select it, then paste directly into Gmail, Outlook, or iOS Mail settings</div>
         </div>
         <button class="copy-rich-btn" id="copy-rich-btn" onclick="copyRich()">
           <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -1654,115 +1654,56 @@ function showInstructions(platform) {
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-async function imageToBase64(url) {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.readAsDataURL(blob);
-    });
-  } catch(e) {
-    return url; // fall back to URL if fetch fails
-  }
-}
-
-async function buildSigWithBase64() {
-  let sig = buildSig();
-  if (!sig) return sig;
-
-  // Find all img src URLs from githubusercontent
-  const imgRegex = /src="(https:\/\/raw\.githubusercontent\.com[^"]+)"/g;
-  const urls = [];
-  let match;
-  while ((match = imgRegex.exec(sig)) !== null) {
-    if (!urls.includes(match[1])) urls.push(match[1]);
-  }
-
-  // Convert each URL to base64
-  for (const url of urls) {
-    const b64 = await imageToBase64(url);
-    sig = sig.split(`src="${url}"`).join(`src="${b64}"`);
-  }
-
-  return sig;
-}
-
 function copyRich() {
+  const box = document.getElementById('copy-rich-box');
   const btn = document.getElementById('copy-rich-btn');
-  btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Preparing...';
-  btn.disabled = true;
+  if (!box.innerHTML.trim()) return;
 
-  buildSigWithBase64().then(sig => {
-    if (!sig) { btn.disabled = false; btn.innerHTML = 'Select & Copy'; return; }
+  // Select the content visually
+  const range = document.createRange();
+  range.selectNodeContents(box);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  box.classList.add('copy-selected');
 
-    const blob = new Blob([sig], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const win = window.open(url, '_blank');
-
-    if (!win) {
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'signature-copy-me.html';
-      a.click();
-      alert('File downloaded. Open it in your browser, press Ctrl+A, Ctrl+C, then paste into Outlook.');
+  try {
+    // Try execCommand first - best compatibility with email clients
+    const success = document.execCommand('copy');
+    if (success) {
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+        box.classList.remove('copy-selected');
+        sel.removeAllRanges();
+      }, 2500);
+    } else {
+      throw new Error('execCommand failed');
     }
-
-    btn.disabled = false;
-    btn.classList.add('copied');
-    btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Opened! Ctrl+A then Ctrl+C';
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-      URL.revokeObjectURL(url);
-    }, 5000);
-  });
+  } catch(e) {
+    // Fallback: try ClipboardItem API
+    try {
+      const blob = new Blob([box.innerHTML], { type: 'text/html' });
+      const plainBlob = new Blob([box.innerText], { type: 'text/plain' });
+      const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
+      navigator.clipboard.write([item]).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+          box.classList.remove('copy-selected');
+          sel.removeAllRanges();
+        }, 2500);
+      });
+    } catch(e2) {
+      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Selected! Press Ctrl+C to copy';
+      setTimeout(() => {
+        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+        box.classList.remove('copy-selected');
+      }, 4000);
+    }
+  }
 }
-
-
-function copyHTML() { copyRich(); }
-
-function clearAll() {
-  ['f-name','f-title','f-company-name','f-office-phone','f-direct','f-ext','f-cell','f-fax','f-nmls','f-apply-link','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-testimonials','f-other','f-other-link','f-photo','f-banner','f-bannerlink']
-    .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
-  document.getElementById('f-company').value = '';
-  document.getElementById('office-location-section').style.display = 'none';
-  document.getElementById('f-team').value = '';
-  const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
-  ['emp-allentown','emp-bethlehem','emp-collegeville','emp-doylestown','emp-easton','emp-frenchtown','emp-hellertown','emp-huntingdonvalley','emp-lahaska','emp-macungie','emp-newtown','emp-ottsville','emp-pocono','emp-windgap','emp-addisonwolfe'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
-  const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
-  document.getElementById('f-office-select').value = '';
-  document.getElementById('office-badge').style.display = 'none';
-  document.getElementById('office-folder-hint').textContent = 'office';
-  document.getElementById('photo-auto-badge').style.display = 'none';
-  const noPhotoCheck = document.getElementById('f-no-photo');
-  if (noPhotoCheck) { noPhotoCheck.checked = false; togglePhoto(); }
-  render();
-}
-
-onCompanyChange();
-
-function getFileName() {
-  const name = v('f-name').trim();
-  const slug = name ? name.toLowerCase().replace(/\s+/g, '-') : 'signature';
-  return slug + '-signature.html';
-}
-
-function downloadSig() {
-  const html = buildSig();
-  if (!html) { alert('Please fill in your details first.'); return; }
-  const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = getFileName();
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-
-render();
-</script>
-</body>
-</html>
