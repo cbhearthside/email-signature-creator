@@ -996,8 +996,6 @@ function onCompanyChange() {
     document.getElementById('office-badge').style.display = 'none';
     document.getElementById('f-team').value = '';
   const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
-  ['emp-allentown','emp-bethlehem','emp-collegeville','emp-doylestown','emp-easton','emp-frenchtown','emp-hellertown','emp-huntingdonvalley','emp-lahaska','emp-macungie','emp-newtown','emp-ottsville','emp-pocono','emp-windgap','emp-addisonwolfe'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
-  const employeeOptions = document.getElementById('employee-options'); if (employeeOptions) employeeOptions.style.display = 'none';
   const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
     addrField.value = '';
     officePhone.value = '';
@@ -1617,8 +1615,6 @@ function clearAll() {
   document.getElementById('office-location-section').style.display = 'none';
   document.getElementById('f-team').value = '';
   const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
-  ['emp-allentown','emp-bethlehem','emp-collegeville','emp-doylestown','emp-easton','emp-frenchtown','emp-hellertown','emp-huntingdonvalley','emp-lahaska','emp-macungie','emp-newtown','emp-ottsville','emp-pocono','emp-windgap','emp-addisonwolfe'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
-  const employeeOptions = document.getElementById('employee-options'); if (employeeOptions) employeeOptions.style.display = 'none';
   const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
   document.getElementById('f-office-select').value = '';
   document.getElementById('office-badge').style.display = 'none';
