@@ -1575,7 +1575,7 @@ function render() {
   const doc = parser.parseFromString(html, 'text/html');
   const body = doc.body ? doc.body.innerHTML : html;
   preview.innerHTML = body;
-  richBox.innerHTML = html;
+  richBox.innerHTML = body;
 }
 
 const PLATFORM_INSTRUCTIONS = {
@@ -1654,88 +1654,57 @@ function showInstructions(platform) {
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-async function urlToBase64(url) {
-  try {
-    const r = await fetch(url);
-    const blob = await r.blob();
-    return new Promise(res => {
-      const reader = new FileReader();
-      reader.onloadend = () => res(reader.result);
-      reader.readAsDataURL(blob);
-    });
-  } catch(e) { return url; }
-}
-
 function copyRich() {
   const box = document.getElementById('copy-rich-box');
   const btn = document.getElementById('copy-rich-btn');
   if (!box.innerHTML.trim()) return;
 
-  btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Preparing...';
-  btn.disabled = true;
+  // Use execCommand approach which preserves rich text better in email clients
+  const range = document.createRange();
+  range.selectNodeContents(box);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  box.classList.add('copy-selected');
 
-  // Find all github image URLs in the box and convert to base64
-  const imgs = Array.from(box.querySelectorAll('img')).filter(img =>
-    img.src && img.src.includes('githubusercontent.com')
-  );
-
-  const conversions = imgs.map(img =>
-    urlToBase64(img.src).then(b64 => ({ img, b64 }))
-  );
-
-  Promise.all(conversions).then(results => {
-    // Temporarily swap src to base64
-    results.forEach(({ img, b64 }) => { img.setAttribute('data-orig', img.src); img.src = b64; });
-
-    // Now select and copy
-    const range = document.createRange();
-    range.selectNodeContents(box);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    box.classList.add('copy-selected');
-
-    // Use innerHTML (with base64 images) for ClipboardItem
-    const htmlContent = box.innerHTML;
-    if (navigator.clipboard && window.ClipboardItem) {
-      const blob = new Blob([htmlContent], { type: 'text/html' });
-      const plainBlob = new Blob([box.innerText], { type: 'text/plain' });
-      try {
-        const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
-        navigator.clipboard.write([item]).then(() => {
-          showCopied();
-        }).catch(() => {
-          document.execCommand('copy');
-          showCopied();
-        });
-      } catch(e) {
-        document.execCommand('copy');
-        showCopied();
-      }
+  try {
+    const success = document.execCommand('copy');
+    if (success) {
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+        box.classList.remove('copy-selected');
+        sel.removeAllRanges();
+      }, 2500);
     } else {
-      document.execCommand('copy');
-      showCopied();
+      throw new Error('execCommand failed');
     }
-
-    // Restore original src
-    results.forEach(({ img }) => { img.src = img.getAttribute('data-orig'); img.removeAttribute('data-orig'); });
-    sel.removeAllRanges();
-    box.classList.remove('copy-selected');
-    btn.disabled = false;
-  });
-
-  function showCopied() {
-    btn.disabled = false;
-    btn.classList.add('copied');
-    btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-    }, 2500);
+  } catch(e) {
+    try {
+      const blob = new Blob([box.innerHTML], { type: 'text/html' });
+      const plainBlob = new Blob([box.innerText], { type: 'text/plain' });
+      const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
+      navigator.clipboard.write([item]).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+          box.classList.remove('copy-selected');
+          sel.removeAllRanges();
+        }, 2500);
+      });
+    } catch(e2) {
+      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Selected! Press Ctrl+C to copy';
+      setTimeout(() => {
+        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+        box.classList.remove('copy-selected');
+      }, 4000);
+    }
   }
 }
-
-
 
 function copyHTML() { copyRich(); }
 
