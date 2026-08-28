@@ -153,6 +153,7 @@
     overflow-x: auto;
     overflow-y: visible;
     flex-shrink: 0;
+    flex-grow: 0;
   }
 
   .preview-label {
@@ -229,7 +230,9 @@
     background: var(--white);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: visible;
+    flex-shrink: 0;
   }
 
   .copy-rich-header {
@@ -280,6 +283,8 @@
     min-height: 80px;
     user-select: all;
     cursor: text;
+    overflow-x: auto;
+    display: block;
   }
 
   .copy-rich-box:empty::after {
@@ -398,6 +403,16 @@
 <div class="layout">
   <aside class="sidebar">
 
+    <div class="section-label">Signature template</div>
+    <div class="field">
+      <label>Template style</label>
+      <select id="f-template" onchange="render()" style="font-family:inherit;">
+        <option value="classic">Classic (current)</option>
+        <option value="modern">Modern</option>
+        <option value="bold">Bold</option>
+      </select>
+    </div>
+
     <div class="section-label">Agent information</div>
     <div class="field">
       <label>Company name</label>
@@ -412,8 +427,31 @@
         <option value="BLUE EDGE">BlueEdge Marketing</option>
         <option value="RELOCATION">Coldwell Banker Hearthside Relocation</option>
         <option value="MANCUSO">Mancuso Family of Companies</option>
+        <option value="EMPLOYEE">CBH Employee</option>
       </select>
     </div>
+    <div id="employee-options" style="display:none;">
+      <div class="section-label">Offices covered</div>
+      <p class="hint" style="margin-bottom:10px;">Check all offices this employee covers</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-allentown" onchange="render()" style="width:auto;" /><label for="emp-allentown" style="font-size:12px;margin:0;">Allentown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-bethlehem" onchange="render()" style="width:auto;" /><label for="emp-bethlehem" style="font-size:12px;margin:0;">Bethlehem</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-collegeville" onchange="render()" style="width:auto;" /><label for="emp-collegeville" style="font-size:12px;margin:0;">Collegeville</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-doylestown" onchange="render()" style="width:auto;" /><label for="emp-doylestown" style="font-size:12px;margin:0;">Doylestown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-easton" onchange="render()" style="width:auto;" /><label for="emp-easton" style="font-size:12px;margin:0;">Easton</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-frenchtown" onchange="render()" style="width:auto;" /><label for="emp-frenchtown" style="font-size:12px;margin:0;">Frenchtown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-hellertown" onchange="render()" style="width:auto;" /><label for="emp-hellertown" style="font-size:12px;margin:0;">Hellertown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-huntingdonvalley" onchange="render()" style="width:auto;" /><label for="emp-huntingdonvalley" style="font-size:12px;margin:0;">Huntingdon Valley</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-lahaska" onchange="render()" style="width:auto;" /><label for="emp-lahaska" style="font-size:12px;margin:0;">Lahaska</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-macungie" onchange="render()" style="width:auto;" /><label for="emp-macungie" style="font-size:12px;margin:0;">Macungie</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-newtown" onchange="render()" style="width:auto;" /><label for="emp-newtown" style="font-size:12px;margin:0;">Newtown</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-ottsville" onchange="render()" style="width:auto;" /><label for="emp-ottsville" style="font-size:12px;margin:0;">Ottsville</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-pocono" onchange="render()" style="width:auto;" /><label for="emp-pocono" style="font-size:12px;margin:0;">Pocono</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-windgap" onchange="render()" style="width:auto;" /><label for="emp-windgap" style="font-size:12px;margin:0;">Wind Gap</label></div>
+        <div style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="emp-addisonwolfe" onchange="render()" style="width:auto;" /><label for="emp-addisonwolfe" style="font-size:12px;margin:0;">Addison Wolfe</label></div>
+      </div>
+    </div>
+
     <div id="mancuso-options" style="display:none;">
       <div class="section-label">Mancuso style</div>
       <div class="field">
@@ -437,6 +475,18 @@
           <option value="navy">Navy style</option>
           <option value="gold">Gold style</option>
         </select>
+      </div>
+      <div class="field">
+        <label>Font color</label>
+        <select id="f-mancuso-font-color" onchange="render()">
+          <option value="navy">Navy</option>
+          <option value="gold">Gold</option>
+          <option value="cream">Cream (for dark background)</option>
+        </select>
+      </div>
+      <div class="field" style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="f-mancuso-separator" onchange="render()" style="width:auto;cursor:pointer;" checked />
+        <label for="f-mancuso-separator" style="margin:0;font-size:13px;cursor:pointer;color:var(--muted);">Show separator line between banner and signature</label>
       </div>
     </div>
 
@@ -636,16 +686,11 @@
 
   <main class="main">
 
-    <div class="preview-card">
-      <div class="preview-label">Live preview</div>
-      <div id="preview-box"></div>
-    </div>
-
     <div class="copy-rich-card">
       <div class="copy-rich-header">
         <div>
           <div class="copy-rich-title">Your signature — ready to copy</div>
-          <div class="copy-rich-subtitle">Click the button to copy, then paste directly into Gmail, Outlook, or iOS Mail settings. If prompted, press Ctrl+C to copy.</div>
+          <div class="copy-rich-subtitle">Click the button to select it, then paste directly into Gmail, Outlook, or iOS Mail settings</div>
         </div>
         <button class="copy-rich-btn" id="copy-rich-btn" onclick="copyRich()">
           <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -653,6 +698,11 @@
         </button>
       </div>
       <div class="copy-rich-box" id="copy-rich-box"></div>
+    </div>
+
+    <div class="preview-card">
+      <div class="preview-label">Live preview</div>
+      <div id="preview-box"></div>
     </div>
 
     <!-- Platform instructions -->
@@ -813,6 +863,8 @@ function autoFillPhoto() {
   const companySettings = COMPANY_SETTINGS[company] || {};
   const officeFolder = key && OFFICES[key] ? OFFICES[key].folder : null;
   const companyFolder = companySettings.folder || null;
+  // Debug: log folder for troubleshooting
+  // console.log('company:', company, 'folder:', companyFolder);
   const folder = officeFolder || companyFolder;
 
   if (name && folder) {
@@ -866,7 +918,8 @@ const COMPANY_BANNERS = {
   'MANAGEMENT': '',
   'BLUE EDGE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Blue-Edge.jpg',
   'RELOCATION': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/all-companys.jpg',
-  'MANCUSO': ''
+  'MANCUSO': '',
+  'EMPLOYEE': 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/logo121045hearthsidehzstkblurgbfr.jpg'
 };
 
 const COMPANY_SETTINGS = {
@@ -878,7 +931,8 @@ const COMPANY_SETTINGS = {
   'BLUE EDGE':                  { nameColor: '#012169', companyColor: '#012169', website: 'blueedgeteam.com', folder: 'blue-edge', phone: '267-352-9120', address: '212 N. Main Street, Doylestown, PA 18901', companyDisplayName: 'BlueEdge Marketing' },
   'MANAGEMENT':                 { nameColor: '#000000', companyColor: '#000000', website: '', folder: 'management', phone: '' },
   'RELOCATION':                 { nameColor: '#000000', companyColor: '#000000', website: 'cbhre.com/relocation', folder: 'management', phone: '215-489-6100', address: '100 Brandywine Blvd Suite 302, Newtown, PA 18940' },
-  'MANCUSO':                    { nameColor: '#1B2B4B', companyColor: '#B8962E', website: '', folder: 'management', phone: '' }
+  'MANCUSO':                    { nameColor: '#1B2B4B', companyColor: '#B8962E', website: '', folder: 'management', phone: '' },
+  'EMPLOYEE':                   { nameColor: '#012169', companyColor: '#012169', website: '', folder: 'cbh-employee', phone: '' }
 };
 
 function updateBannerLink() {
@@ -954,6 +1008,7 @@ function onCompanyChange() {
     document.getElementById('office-badge').style.display = 'none';
     document.getElementById('f-team').value = '';
   const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
+  ['emp-allentown','emp-bethlehem','emp-collegeville','emp-doylestown','emp-easton','emp-frenchtown','emp-hellertown','emp-huntingdonvalley','emp-lahaska','emp-macungie','emp-newtown','emp-ottsville','emp-pocono','emp-windgap','emp-addisonwolfe'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
   const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
     addrField.value = '';
     officePhone.value = '';
@@ -983,7 +1038,10 @@ function onCompanyChange() {
 
   const mancusoOptions = document.getElementById('mancuso-options');
   if (mancusoOptions) mancusoOptions.style.display = (company === 'MANCUSO') ? 'block' : 'none';
-  if (company === 'MANCUSO') applyMancusoBanner();
+  if (company === 'MANCUSO') { applyMancusoBanner(); const bs = document.getElementById('f-banner-size'); if (bs) { bs.value = 391; document.getElementById('banner-size-value').textContent = 391; } }
+
+  const employeeOptions = document.getElementById('employee-options');
+  if (employeeOptions) employeeOptions.style.display = (company === 'EMPLOYEE') ? 'block' : 'none';
 
   const bannerSizeField = document.getElementById('banner-size-field');
   if (bannerSizeField) bannerSizeField.style.display = 'block';
@@ -994,7 +1052,7 @@ function onCompanyChange() {
   // Auto-fill address for companies that have one
   const addrInput = document.getElementById('f-addr');
   const settingsForAddr = COMPANY_SETTINGS[company] || {};
-  if (settingsForAddr.address && company !== 'COLDWELL BANKER HEARTHSIDE') {
+  if (settingsForAddr.address && company !== 'COLDWELL BANKER HEARTHSIDE' && company !== 'EMPLOYEE') {
     addrInput.value = settingsForAddr.address;
     addrInput.readOnly = true;
     addrInput.style.background = '#f5f6f8';
@@ -1098,7 +1156,8 @@ function applyOffice() {
     'BLUE EDGE':                  'Arial, sans-serif',
     'MANAGEMENT':                 'Arial, sans-serif',
     'RELOCATION':                 'Arial, sans-serif',
-    'MANCUSO':                    "'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif"
+    'MANCUSO':                    "'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif",
+    'EMPLOYEE':                   'Arial, sans-serif'
   };
   const fontSelect = document.getElementById('f-font');
   if (fontSelect && companyFonts[company]) fontSelect.value = companyFonts[company];
@@ -1110,6 +1169,7 @@ function applyOffice() {
 }
 
 function buildSig() {
+  const template   = (document.getElementById('f-template') || {}).value || 'classic';
   const font       = (document.getElementById('f-font') || {}).value || 'Arial, sans-serif';
   const fontSize   = parseInt((document.getElementById('f-font-size') || {}).value || 13);
   const fs         = fontSize + 'px';
@@ -1133,11 +1193,26 @@ function buildSig() {
   const applyLink  = v('f-apply-link');
   const isBlueSky  = companySelect === 'BLUE SKY HOME FINANCE';
   const isMancuso  = companySelect === 'MANCUSO';
-  const mancusoBg   = isMancuso ? (mancusoLogo === 'dark' ? '#1B2B4B' : '#F5F4F0') : 'transparent';
-  const mancusoTextBg = isMancuso ? mancusoBg : 'transparent';
+  const isEmployee = companySelect === 'EMPLOYEE';
+  const empOfficeMap = [
+    ['emp-allentown','Allentown'],['emp-bethlehem','Bethlehem'],['emp-collegeville','Collegeville'],
+    ['emp-doylestown','Doylestown'],['emp-easton','Easton'],['emp-frenchtown','Frenchtown'],
+    ['emp-hellertown','Hellertown'],['emp-huntingdonvalley','Huntingdon Valley'],['emp-lahaska','Lahaska'],
+    ['emp-macungie','Macungie'],['emp-newtown','Newtown'],['emp-ottsville','Ottsville'],
+    ['emp-pocono','Pocono'],['emp-windgap','Wind Gap'],['emp-addisonwolfe','Addison Wolfe']
+  ];
+  const empOffices = isEmployee ? empOfficeMap
+    .filter(([id]) => document.getElementById(id) && document.getElementById(id).checked)
+    .map(([,label]) => label)
+    .join(' - ') : '';
   const mancusoLogo  = isMancuso ? ((document.getElementById('f-mancuso-logo') || {}).value || 'dark') : 'dark';
+  const mancusoBg   = isMancuso ? (mancusoLogo === 'dark' ? '#1B2B4B' : '#F5F4F0') : 'transparent';
   const mancusoStyle = isMancuso ? ((document.getElementById('f-mancuso-style') || {}).value || 'navy') : 'navy';
-  const mancusoNameColor = mancusoStyle === 'navy' ? '#1B2B4B' : '#B8962E';
+  const mancusoFontColorSel = isMancuso ? ((document.getElementById('f-mancuso-font-color') || {}).value || 'navy') : 'navy';
+  const mancusoSeparator = isMancuso && document.getElementById('f-mancuso-separator') && document.getElementById('f-mancuso-separator').checked;
+  const mancusoSepColor = mancusoLogo === 'dark' ? '#B8962E' : '#1B2B4B';
+  const mancusoFontColor = mancusoFontColorSel === 'gold' ? '#B8962E' : mancusoFontColorSel === 'cream' ? '#F5F4F0' : '#1B2B4B';
+  const mancusoNameColor = mancusoFontColor;
   const mancusoTitleColor = mancusoStyle === 'navy' ? '#B8962E' : '#1B2B4B';
   const mancusoBorderColor = '#B8962E';
   const mancusoPhotoUrl = mancusoLogo === 'dark' ? 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Dark_1.png' : 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Light.png';
@@ -1165,18 +1240,20 @@ function buildSig() {
   const banner     = v('f-banner');
   const bannerlink = v('f-bannerlink');
 
-  if (!name && !title && !company && !email && !office && !banner) return '';
+  if (!name && !title && !company && !email && !office && !banner && !companySelect) return '';
 
   const webHref = web ? (web.startsWith('http') ? web : 'https://' + web) : '#';
 
   const photoShape = 'circle';
   const photoPositionField = document.getElementById('photo-position-field');
-  const noPhotoChecked = (document.getElementById('f-no-photo') && document.getElementById('f-no-photo').checked) || isMancuso;
-  if (photoPositionField) photoPositionField.style.display = noPhotoChecked ? 'none' : 'block';
+  const noPhotoChecked = document.getElementById('f-no-photo') && document.getElementById('f-no-photo').checked;
+  const mancusoUsingMLogo = isMancuso && ((document.getElementById('f-mancuso-headshot') || {}).value || 'photo') !== 'photo';
+  if (photoPositionField) photoPositionField.style.display = (noPhotoChecked || mancusoUsingMLogo) ? 'none' : 'block';
 
   // Email-safe shape rendering using table/div wrappers with overflow:hidden
   // All shapes assume the source image is already square or rectangle
   let photoCell = '';
+  const circleSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
   if (isMancuso) {
     const mancusoHeadshot = (document.getElementById('f-mancuso-headshot') || {}).value || 'photo';
     let mancusoImgUrl = '';
@@ -1185,28 +1262,45 @@ function buildSig() {
     } else if (mancusoHeadshot === 'light-m') {
       mancusoImgUrl = 'https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/Mancuso-M-Light.png';
     } else {
-      // Use photo from management folder
       mancusoImgUrl = photo;
     }
     if (mancusoImgUrl) {
-      const mRadius = mancusoHeadshot !== 'photo' ? '50%' : '50%';
-      photoCell = `<td style="vertical-align:top;padding:0 12px 5px 0;">
-        <img src="${mancusoImgUrl}" width="100" height="100" style="display:block;border:0;border-radius:${mRadius};" alt="Mancuso headshot"/>
-      </td>`;
+      if (mancusoHeadshot !== 'photo') {
+        // M logos - fixed size, no sliders
+        photoCell = `<td valign="top" width="${circleSize + 12}" style="vertical-align:top;width:${circleSize + 12}px;padding:0 12px 5px 0;"
+          <img src="${mancusoImgUrl}" width="100" height="100" style="display:block;border:0;border-radius:50%;" alt="Mancuso headshot"/>
+        </td>`;
+      } else {
+        // Own photo - use all sliders same as circle
+        const mCircleSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
+        const mZoom = parseInt((document.getElementById('f-photo-zoom') || {}).value || 100);
+        const mVpos = parseInt((document.getElementById('f-photo-vpos') || {}).value || 0);
+        const mHpos = parseInt((document.getElementById('f-photo-hpos') || {}).value || 0);
+        const mImgSize = Math.round(mCircleSize * mZoom / 100);
+        const mOffsetX = Math.round((mImgSize - mCircleSize) / 2) - mHpos;
+        const mOffsetY = Math.round((mImgSize - mCircleSize) / 2) - mVpos;
+        photoCell = `<td valign="top" width="${circleSize + 12}" style="vertical-align:top;width:${circleSize + 12}px;padding:0 12px 5px 0;"
+          <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:${Math.round(mCircleSize*0.75)}pt;height:${Math.round(mCircleSize*0.75)}pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${mancusoImgUrl}"/></v:roundrect><![endif]-->
+          <!--[if !mso]><!-->
+          <div style="width:${mCircleSize}px;height:${mCircleSize}px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
+            <img src="${mancusoImgUrl}" width="${mImgSize}" style="display:block;border:0;transform:translate(${mHpos}px, ${mVpos}px);margin:auto;" alt="Mancuso headshot"/>
+          </div>
+          <!--<![endif]-->
+        </td>`;
+      }
     }
   } else if (photo) {
     if (photoShape === 'rectangle') {
       // Original — no cropping, natural size
-      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
-        <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
+        <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo"/>
       </td>`;
     } else if (photoShape === 'square') {
       // Square — fixed width, natural height
-      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
-        <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
+        <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo"/>
       </td>`;
     } else if (photoShape === 'circle') {
-      const circleSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
       const zoom = parseInt((document.getElementById('f-photo-zoom') || {}).value || 100);
       const vpos = parseInt((document.getElementById('f-photo-vpos') || {}).value || 0);
       const hpos = parseInt((document.getElementById('f-photo-hpos') || {}).value || 0);
@@ -1214,29 +1308,29 @@ function buildSig() {
       const translateX = hpos;
       const translateY = vpos;
       const circlePt = Math.round(circleSize * 0.75); // convert px to pt for VML
-      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
         <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="width:${circlePt}pt;height:${circlePt}pt;" arcsize="50%" stroke="f"><v:fill type="frame" src="${photo}"/></v:roundrect><![endif]-->
         <!--[if !mso]><!-->
         <div style="width:${circleSize}px;height:${circleSize}px;border-radius:50%;overflow:hidden;display:block;mso-hide:all;">
-          <img src="${photo}" width="${imgSize}" style="display:block;border:0;transform:translate(${translateX}px, ${translateY}px);margin:auto;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+          <img src="${photo}" width="${imgSize}" style="display:block;border:0;transform:translate(${translateX}px, ${translateY}px);margin:auto;" alt="photo-logo"/>
         </div>
         <!--<![endif]-->
       </td>`;
     } else if (photoShape === 'oval') {
       // Oval — taller than wide
-      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
         <div style="width:100px;height:130px;border-radius:50%;overflow:hidden;display:block;">
-          <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+          <img src="${photo}" width="100" style="display:block;border:0;" alt="photo-logo"/>
         </div>
       </td>`;
     } else if (photoShape === 'wide-square') {
-      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
-        <img src="${photo}" width="160" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentElement.parentElement.removeChild(this.parentElement)"/>
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
+        <img src="${photo}" width="160" height="125" style="display:block;border:0;" alt="photo-logo"/>
       </td>`;
     } else if (photoShape === 'wide-circle') {
-      photoCell = `<td style="vertical-align:top;padding:0 8px 5px 0;">
+      photoCell = `<td valign="top" width="${circleSize + 8}" style="vertical-align:top;width:${circleSize + 8}px;padding:0 8px 5px 0;"
         <div style="width:160px;height:125px;border-radius:50%;overflow:hidden;display:block;">
-          <img src="${photo}" width="160" height="125" style="display:block;border:0;" alt="photo-logo" onerror="this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode)"/>
+          <img src="${photo}" width="160" height="125" style="display:block;border:0;" alt="photo-logo"/>
         </div>
       </td>`;
     }
@@ -1305,7 +1399,9 @@ function buildSig() {
 
   const selectedCompany = document.getElementById('f-company') ? document.getElementById('f-company').value : '';
   const sliderSize = parseInt((document.getElementById('f-banner-size') || {}).value || 350);
-  const bannerWidth = selectedCompany === 'CONNECT CLOSING' ? Math.min(sliderSize, 300) : sliderSize;
+  const defaultBannerSize = selectedCompany === 'MANCUSO' ? 391 : 350;
+  const effectiveSliderSize = (document.getElementById('f-banner-size') || {}).value ? sliderSize : defaultBannerSize;
+  const bannerWidth = selectedCompany === 'CONNECT CLOSING' ? Math.min(effectiveSliderSize, 300) : effectiveSliderSize;
   const effectiveBanner = teamSettings && teamSettings.banner ? teamSettings.banner : banner;
   const disclosureText = 'The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.';
   const disclosureSection = isBlueSky ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">${disclosureText}</div>` : '';
@@ -1317,16 +1413,82 @@ function buildSig() {
         ${bannerlink ? `</a>` : ''}
        </td></tr></table>` : '';
 
-  return `<!DOCTYPE html>
+  if (template === 'modern' || template === 'bold') {
+    const cSize = parseInt((document.getElementById('f-circle-size') || {}).value || 100);
+    const photoHtml = photo ? (template === 'bold'
+      ? `<div style="width:${cSize}px;height:${cSize}px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,0.5);"><img src="${photo}" width="${cSize}" style="display:block;border:0;" alt="photo"/></div>`
+      : `<div style="width:${cSize}px;height:${cSize}px;border-radius:50%;overflow:hidden;"><img src="${photo}" width="${cSize}" style="display:block;border:0;" alt="photo"/></div>`) : '';
+
+    if (template === 'modern') {
+      const contactParts = [];
+      if (office) contactParts.push(`<span style="color:#666;font-size:${fs};font-family:${font};font-weight:bold;">Office:</span>&nbsp;<a href="tel:${office}" style="color:#333;font-size:${fs};font-family:${font};text-decoration:none;">${office}</a>`);
+      if (cell) contactParts.push(`<span style="color:#666;font-size:${fs};font-family:${font};font-weight:bold;">Cell:</span>&nbsp;<a href="tel:${cell}" style="color:#333;font-size:${fs};font-family:${font};text-decoration:none;">${cell}</a>`);
+      if (email) contactParts.push(`<a href="mailto:${email}" style="color:${templateNameC};font-size:${fs};font-family:${font};text-decoration:none;">${email}</a>`);
+      if (web) contactParts.push(`<a href="${webHref}" target="_blank" style="color:${templateNameC};font-size:${fs};font-family:${font};text-decoration:none;">${web}</a>`);
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>
+<div style="min-width:500px;font-family:${font};">
+<table cellpadding="0" cellspacing="0" border="0"><tr>
+  ${photo ? `<td style="vertical-align:top;padding-right:16px;">${photoHtml}</td>` : ''}
+  <td style="vertical-align:top;">
+    <div style="font-size:${fsXLarge};font-weight:bold;color:${templateNameC};font-family:${font};">${name || 'Your Name'}</div>
+    ${title ? `<div style="font-size:${fs};color:#666;font-family:${font};margin-top:2px;">${title}</div>` : ''}
+    <div style="width:40px;height:2px;background:${templateNameC};margin:8px 0;"></div>
+    ${company ? `<div style="font-size:${fsLarge};font-weight:bold;color:${templateCompC};font-family:${font};margin-bottom:6px;">${company}</div>` : ''}
+    ${addr ? `<div style="font-size:${fs};color:#444;font-family:${font};margin-bottom:4px;">${addr}</div>` : ''}
+    <div style="font-size:${fs};color:#444;font-family:${font};">${contactParts.join('&nbsp;&nbsp;|&nbsp;&nbsp;')}</div>
+    <div style="margin-top:6px;">${socialRow}</div>
+  </td>
+</tr></table>
+${bannerSection}${disclosureSection}
+</div></body></html>`;
+    }
+
+    if (template === 'bold') {
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>
+<div style="min-width:500px;font-family:${font};">
+<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:100%;">
+  <tr>
+    <td style="background:${templateNameC};padding:14px 20px;vertical-align:middle;" bgcolor="${templateNameC}">
+      <table cellpadding="0" cellspacing="0" border="0"><tr>
+        ${photo ? `<td style="vertical-align:middle;padding-right:14px;">${photoHtml}</td>` : ''}
+        <td style="vertical-align:middle;">
+          <div style="font-size:${fsXLarge};font-weight:bold;color:#ffffff;font-family:${font};letter-spacing:1px;">${name || 'Your Name'}</div>
+          ${title ? `<div style="font-size:${fs};color:rgba(255,255,255,0.85);font-family:${font};margin-top:3px;">${title}</div>` : ''}
+          ${company ? `<div style="font-size:${fs};color:rgba(255,255,255,0.7);font-family:${font};margin-top:3px;font-weight:bold;">${company}</div>` : ''}
+        </td>
+      </tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td style="background:#f8f8f8;padding:12px 20px;border-left:4px solid ${templateNameC};" bgcolor="#f8f8f8">
+      <table cellpadding="0" cellspacing="4" border="0" style="font-family:${font};font-size:${fs};">
+        ${addr ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Address:</td><td style="color:#333;">${addr}</td></tr>` : ''}
+        ${office ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Office:</td><td><a href="tel:${office}" style="color:#333;text-decoration:none;">${office}</a></td></tr>` : ''}
+        ${cell ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Cell:</td><td><a href="tel:${cell}" style="color:#333;text-decoration:none;">${cell}</a></td></tr>` : ''}
+        ${email ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Email:</td><td><a href="mailto:${email}" style="color:${templateNameC};text-decoration:none;">${email}</a></td></tr>` : ''}
+        ${web ? `<tr><td style="color:#666;font-weight:bold;padding-right:8px;">Website:</td><td><a href="${webHref}" target="_blank" style="color:${templateNameC};text-decoration:none;">${web}</a></td></tr>` : ''}
+      </table>
+      ${socialRow ? `<div style="margin-top:8px;">${socialRow}</div>` : ''}
+    </td>
+  </tr>
+</table>
+${bannerSection}${disclosureSection}
+</div></body></html>`;
+    }
+  }
+
+  const templateNameC = isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169';
+  const templateCompC = isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).companyColor || '#012169';
+return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"></head>
 <body>
-<div style="min-width:600px;width:100%;background-color:${mancusoBg};padding:${isMancuso ? '16px' : '0'};">
-<table style="font-family:${font};font-size:90%;color:#000000;" face="${font}">
-<tr>
+${isMancuso ? `<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${mancusoBg}" style="background-color:${mancusoBg};border-collapse:collapse;"><tr><td style="padding:16px;">` : ""}<div style="min-width:600px;width:100%;">
+<table cellpadding="0" cellspacing="0" border="0" style="font-family:${font};font-size:90%;color:#000000;border-collapse:collapse;" face="${font}">
+<tr valign="top" style="vertical-align:top;">
   ${photoCell}
-  <td style="vertical-align:top;color:#444444;font-family:${font};font-size:90%;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
-    <div style="color:${isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};letter-spacing:${isMancuso ? '2px' : 'normal'};">${name || 'Your Name'}</div>
+  <td valign="top" width="400" style="vertical-align:top;width:400px;color:#444444;font-family:${font};font-size:90%;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
+    <div style="color:${isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};letter-spacing:${isMancuso ? '2px' : 'normal'};margin-top:${isMancuso ? '6px' : '0'};">${name || 'Your Name'}</div>
     ${(() => { if (!title) return ''; const tc = isMancuso ? mancusoTitleColor : '#000000'; const ts2 = isMancuso ? '1.5px' : 'normal'; return '<span style="color:' + tc + ';font-size:' + fsSmall + ';font-family:' + font + ';letter-spacing:' + ts2 + ';">' + title + '</span> '; })()}
     ${company ? (() => {
       const dividerLine = isMancuso ? '<div style="width:40px;height:1px;background:#B8962E;margin:4px 0;"></div>' : '';
@@ -1337,9 +1499,10 @@ function buildSig() {
       return dividerLine + '<div style="color:' + compColor + ';font-size:' + compSize + ';font-weight:' + compWeight + ';font-family:' + font + ';letter-spacing:' + compSpacing + ';">' + company + '</div>';
     })() : ''}
     <div style="font-size:10px;line-height:10px">&nbsp;</div>
+    ${isEmployee && empOffices ? `<div style="color:#012169;font-size:${fs};font-family:${font};font-weight:bold;margin-top:2px;">${empOffices}</div>` : ''}
     ${isMancuso ? (() => {
       const sep = `<span style="color:#B8962E;font-size:${fs};font-family:${font};padding:0 8px;">|</span>`;
-      const textStyle = `color:#1B2B4B;font-size:${fs};font-family:${font};`;
+      const textStyle = `color:${mancusoFontColor};font-size:${fs};font-family:${font};`;
       const phoneIcon = `<img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/mancuso-icon-phone.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;border:0;" alt="phone"/>`;
       const mobileIcon = `<img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/mancuso-icon-mobile.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;border:0;" alt="mobile"/>`;
       const emailIcon = `<img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/mancuso-icon-email.png" width="14" height="14" style="vertical-align:middle;margin-right:4px;border:0;" alt="email"/>`;
@@ -1347,8 +1510,8 @@ function buildSig() {
       let parts = [];
       if (office) parts.push(`${phoneIcon}<span style="${textStyle}">${office}${ext ? ' x' + ext : ''}</span>`);
       if (cell) parts.push(`${mobileIcon}<span style="${textStyle}">${cell}</span>`);
-      if (email) parts.push(`${emailIcon}<a href="mailto:${email}" style="color:#1B2B4B;font-size:${fs};font-family:${font};text-decoration:none;">${email}</a>`);
-      if (web) parts.push(`${webIcon}<a href="${webHref}" target="_blank" style="color:#1B2B4B;font-size:${fs};font-family:${font};text-decoration:none;">${web}</a>`);
+      if (email) parts.push(`${emailIcon}<a href="mailto:${email}" style="color:${mancusoFontColor};font-size:${fs};font-family:${font};text-decoration:none;">${email}</a>`);
+      if (web) parts.push(`${webIcon}<a href="${webHref}" target="_blank" style="color:${mancusoFontColor};font-size:${fs};font-family:${font};text-decoration:none;">${web}</a>`);
       return parts.length ? `<div style="white-space:nowrap;margin-top:6px;">${parts.join(sep)}</div>` : '';
     })() : `${phoneRow}
     ${addrRow}
@@ -1384,11 +1547,15 @@ ${isBlueSkyLO ? `<table cellpadding="0" cellspacing="0" style="margin-top:10px;b
 
 ${testimonials ? `<div style="margin:8px 0;font-family:${font};font-size:.9em;"><a href="${testimonials}" target="_blank" style="color:#012169;text-decoration:none;font-weight:bold;">⭐ Client Testimonials</a></div>` : ''}
 ${other ? `<div style="margin:8px 0;font-family:${font};font-size:${fs};">${otherLink ? `<a href="${otherLink}" target="_blank" style="color:#012169;text-decoration:none;font-weight:bold;font-family:${font};font-size:${fs};">${other}</a>` : `<span style="color:#000000;font-family:${font};font-size:${fs};">${other}</span>`}</div>` : ''}
+${isMancuso && mancusoSeparator ? `<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:100%;margin:8px 0;"><tr><td style="border-top:2px solid ${mancusoSepColor};font-size:1px;line-height:1px;">&nbsp;</td></tr></table>` : ''}
 ${bannerSection}
 ${(isBlueSkyLO && !bsHideBanner) ? `<table cellpadding="0" style="border-collapse:collapse;margin-top:4px;"><tr><td style="font-size:1px;line-height:1px;background:#ffffff;"><img src="https://raw.githubusercontent.com/cbhearthside/Logos-Banners/main/BlueSky.jpg" width="${bannerWidth}" style="vertical-align:middle;border:0;background:#ffffff;" alt="Blue Sky banner"/></td></tr></table>` : ''}
 ${isBlueSkyLO && !bsHideDisclosure ? `<div style="font-size:9px;color:#666666;max-width:550px;line-height:1.4;margin-top:8px;font-family:${font};">The information contained in this communication is confidential and privileged proprietary information intended only for the personal and confidential use of the individual or entity to whom it is addressed. If you are not the addressee indicated in this message (or an agent responsible for delivery of the message to such person), you are hereby notified that you have received this communication in error and that any review, dissemination, copying or unauthorized use of this message is strictly prohibited. In such case, you should destroy this message and kindly notify the sender by reply email.</div>` : ''}
 ${disclosureSection}
 </div>
+
+</div>
+${isMancuso ? "</td></tr></table>" : ""}
 </body>
 </html>`;
 }
@@ -1408,7 +1575,7 @@ function render() {
   const doc = parser.parseFromString(html, 'text/html');
   const body = doc.body ? doc.body.innerHTML : html;
   preview.innerHTML = body;
-  richBox.innerHTML = body;
+  richBox.innerHTML = html;
 }
 
 const PLATFORM_INSTRUCTIONS = {
@@ -1487,77 +1654,107 @@ function showInstructions(platform) {
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+async function urlToBase64(url) {
+  try {
+    const r = await fetch(url);
+    const blob = await r.blob();
+    return new Promise(res => {
+      const reader = new FileReader();
+      reader.onloadend = () => res(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  } catch(e) { return url; }
+}
+
 function copyRich() {
   const box = document.getElementById('copy-rich-box');
   const btn = document.getElementById('copy-rich-btn');
   if (!box.innerHTML.trim()) return;
 
-  // Use execCommand approach which preserves rich text better in email clients
-  const range = document.createRange();
-  range.selectNodeContents(box);
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-  box.classList.add('copy-selected');
+  btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Preparing...';
+  btn.disabled = true;
 
-  try {
-    // Try execCommand first - best compatibility with email clients
-    const success = document.execCommand('copy');
-    if (success) {
-      btn.classList.add('copied');
-      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-      setTimeout(() => {
-        btn.classList.remove('copied');
-        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-        box.classList.remove('copy-selected');
-        sel.removeAllRanges();
-      }, 2500);
-    } else {
-      throw new Error('execCommand failed');
-    }
-  } catch(e) {
-    // Fallback: try ClipboardItem API
+  // Find all github image URLs in the box and convert to base64
+  const imgs = Array.from(box.querySelectorAll('img')).filter(img =>
+    img.src && img.src.includes('githubusercontent.com')
+  );
+
+  const conversions = imgs.map(img =>
+    urlToBase64(img.src).then(b64 => ({ img, b64 }))
+  );
+
+  Promise.all(conversions).then(results => {
+    // Temporarily swap src to base64
+    results.forEach(({ img, b64 }) => { img.setAttribute('data-orig', img.src); img.src = b64; });
+
+    // Now select and copy
+    const range = document.createRange();
+    range.selectNodeContents(box);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    box.classList.add('copy-selected');
+
     try {
       const blob = new Blob([box.innerHTML], { type: 'text/html' });
       const plainBlob = new Blob([box.innerText], { type: 'text/plain' });
       const item = new ClipboardItem({ 'text/html': blob, 'text/plain': plainBlob });
       navigator.clipboard.write([item]).then(() => {
-        btn.classList.add('copied');
-        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-        setTimeout(() => {
-          btn.classList.remove('copied');
-          btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-          box.classList.remove('copy-selected');
-          sel.removeAllRanges();
-        }, 2500);
+        showCopied();
+      }).catch(() => {
+        document.execCommand('copy');
+        showCopied();
       });
-    } catch(e2) {
-      // Last resort: signature is already selected, prompt manual copy
-      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Selected! Press Ctrl+C to copy';
-      setTimeout(() => {
-        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-        box.classList.remove('copy-selected');
-      }, 4000);
+    } catch(e) {
+      document.execCommand('copy');
+      showCopied();
     }
+
+    // Restore original src
+    results.forEach(({ img }) => { img.src = img.getAttribute('data-orig'); img.removeAttribute('data-orig'); });
+    sel.removeAllRanges();
+    box.classList.remove('copy-selected');
+    btn.disabled = false;
+  });
+
+  function showCopied() {
+    btn.disabled = false;
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+    }, 2500);
   }
 }
+
+
 
 function copyHTML() { copyRich(); }
 
 function clearAll() {
-  ['f-name','f-title','f-company-name','f-office-phone','f-direct','f-ext','f-cell','f-fax','f-nmls','f-apply-link','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-testimonials','f-other','f-other-link','f-photo','f-banner','f-bannerlink']
+  ['f-name','f-title','f-company-name','f-office-phone','f-direct','f-ext','f-cell','f-fax','f-nmls','f-apply-link','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-testimonials','f-other','f-other-link','f-photo','f-banner','f-bannerlink','f-bs-direct','f-bs-fax','f-bs-nmls','f-bs-apply-link','f-bs-addr']
     .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
   document.getElementById('f-company').value = '';
   document.getElementById('office-location-section').style.display = 'none';
-  document.getElementById('f-team').value = '';
-  const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
-  const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
   document.getElementById('f-office-select').value = '';
   document.getElementById('office-badge').style.display = 'none';
   document.getElementById('office-folder-hint').textContent = 'office';
   document.getElementById('photo-auto-badge').style.display = 'none';
-  const noPhotoCheck = document.getElementById('f-no-photo');
-  if (noPhotoCheck) { noPhotoCheck.checked = false; togglePhoto(); }
+  const noPhotoCheck = document.getElementById('f-no-photo'); if (noPhotoCheck) { noPhotoCheck.checked = false; togglePhoto(); }
+  const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
+  const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
+  const bsHideBannerCb = document.getElementById('f-bs-hide-banner'); if (bsHideBannerCb) bsHideBannerCb.checked = false;
+  const bsHideDiscCb = document.getElementById('f-bs-hide-disclosure'); if (bsHideDiscCb) bsHideDiscCb.checked = false;
+  const mancusoSepCb = document.getElementById('f-mancuso-separator'); if (mancusoSepCb) mancusoSepCb.checked = true;
+  ['emp-allentown','emp-bethlehem','emp-collegeville','emp-doylestown','emp-easton','emp-frenchtown','emp-hellertown','emp-huntingdonvalley','emp-lahaska','emp-macungie','emp-newtown','emp-ottsville','emp-pocono','emp-windgap','emp-addisonwolfe'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
+  const tm = document.getElementById('f-team'); if (tm) tm.value = '';
+  const tmpl = document.getElementById('f-template'); if (tmpl) tmpl.value = 'classic';
+  const bs = document.getElementById('f-banner-size'); if (bs) { bs.value = 350; const bsv = document.getElementById('banner-size-value'); if (bsv) bsv.textContent = 350; }
+  const mancusoOptions = document.getElementById('mancuso-options'); if (mancusoOptions) mancusoOptions.style.display = 'none';
+  const employeeOptions = document.getElementById('employee-options'); if (employeeOptions) employeeOptions.style.display = 'none';
+  const blueskyLoSection = document.getElementById('bluesky-lo-section'); if (blueskyLoSection) blueskyLoSection.style.display = 'none';
+  onCompanyChange();
   render();
 }
 
@@ -1581,8 +1778,8 @@ function downloadSig() {
   URL.revokeObjectURL(url);
 }
 
-
 render();
+
 </script>
 </body>
 </html>
