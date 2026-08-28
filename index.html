@@ -1480,7 +1480,7 @@ return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"></head>
 <body>
-${isMancuso ? `<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${mancusoBg}" style="background-color:${mancusoBg};border-collapse:collapse;"><tr><td style="padding:16px;">` : ""}<div style="min-width:600px;width:100%;">
+<div style="min-width:600px;width:100%;${isMancuso ? `background:${mancusoBg};padding:16px;` : ``}">
 <table cellpadding="0" cellspacing="0" border="0" style="font-family:${font};font-size:90%;color:#000000;border-collapse:collapse;" face="${font}">
 <tr valign="top" style="vertical-align:top;">
   ${photoCell}
@@ -1555,7 +1555,7 @@ ${disclosureSection}
 </div>
 
 </div>
-${isMancuso ? "</td></tr></table>" : ""}
+
 </body>
 </html>`;
 }
