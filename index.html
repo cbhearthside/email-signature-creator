@@ -690,7 +690,7 @@
       <div class="copy-rich-header">
         <div>
           <div class="copy-rich-title">Your signature — ready to copy</div>
-          <div class="copy-rich-subtitle">Click the button to copy, then paste directly into Gmail, Outlook, or iOS Mail settings. If prompted, press Ctrl+C to copy.</div>
+          <div class="copy-rich-subtitle">Click the button to open your signature in a new tab. Then press <strong>Ctrl+A</strong> to select all, <strong>Ctrl+C</strong> to copy, then paste into Outlook or Gmail.</div>
         </div>
         <button class="copy-rich-btn" id="copy-rich-btn" onclick="copyRich()">
           <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -1656,45 +1656,31 @@ function copyRich() {
   const sig = buildSig();
   if (!sig) return;
 
-  // Open signature in a new window so user can Ctrl+A, Ctrl+C
-  const win = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
-  win.document.open();
-  win.document.write(`<!DOCTYPE html><html><head>
-    <meta charset="UTF-8">
-    <style>
-      body { margin: 20px; font-family: Arial, sans-serif; }
-      .instructions {
-        background: #012169; color: white; padding: 12px 20px;
-        border-radius: 6px; margin-bottom: 20px; font-size: 14px;
-      }
-      .instructions strong { font-size: 16px; display: block; margin-bottom: 4px; }
-      .copy-btn {
-        background: #012169; color: white; border: none; padding: 10px 20px;
-        border-radius: 4px; font-size: 14px; cursor: pointer; margin-bottom: 16px;
-      }
-      .copy-btn:hover { background: #01307a; }
-      #sig-content { border: 1px solid #ddd; padding: 20px; background: white; }
-    </style>
-  </head><body>
-    <div class="instructions">
-      <strong>How to copy your signature:</strong>
-      1. Click the button below, OR press Ctrl+A to select all, then Ctrl+C to copy<br>
-      2. Go to Outlook → File → Options → Mail → Signatures<br>
-      3. Click in the signature box and press Ctrl+V to paste
-    </div>
-    <button class="copy-btn" onclick="
-      const r = document.createRange();
-      r.selectNodeContents(document.getElementById('sig-content'));
-      const s = window.getSelection();
-      s.removeAllRanges();
-      s.addRange(r);
-      document.execCommand('copy');
-      this.textContent = 'Copied! Now paste into Outlook';
-      this.style.background = '#1a7a1a';
-    ">Click to Select &amp; Copy Signature</button>
-    <div id="sig-content">${sig.replace(/`/g, '\`')}</div>
-  </body></html>`);
-  win.document.close();
+  // Write to a temp file and open it - user selects all and copies
+  const blob = new Blob([sig], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+
+  // Open the file directly in the browser
+  const win = window.open(url, '_blank');
+  if (!win) {
+    // Popup blocked - fall back to download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'signature-copy-me.html';
+    a.click();
+    alert('File downloaded. Open it in your browser, press Ctrl+A to select all, Ctrl+C to copy, then paste into Outlook.');
+    return;
+  }
+
+  // Show instructions on button
+  const btn = document.getElementById('copy-rich-btn');
+  btn.classList.add('copied');
+  btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Opened! Ctrl+A then Ctrl+C';
+  setTimeout(() => {
+    btn.classList.remove('copied');
+    btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+    URL.revokeObjectURL(url);
+  }, 5000);
 }
 
 
