@@ -1654,35 +1654,70 @@ function showInstructions(platform) {
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-function copyRich() {
-  const sig = buildSig();
-  if (!sig) return;
+async function imageToBase64(url) {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  } catch(e) {
+    return url; // fall back to URL if fetch fails
+  }
+}
 
-  // Write to a temp file and open it - user selects all and copies
-  const blob = new Blob([sig], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
+async function buildSigWithBase64() {
+  let sig = buildSig();
+  if (!sig) return sig;
 
-  // Open the file directly in the browser
-  const win = window.open(url, '_blank');
-  if (!win) {
-    // Popup blocked - fall back to download
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'signature-copy-me.html';
-    a.click();
-    alert('File downloaded. Open it in your browser, press Ctrl+A to select all, Ctrl+C to copy, then paste into Outlook.');
-    return;
+  // Find all img src URLs from githubusercontent
+  const imgRegex = /src="(https:\/\/raw\.githubusercontent\.com[^"]+)"/g;
+  const urls = [];
+  let match;
+  while ((match = imgRegex.exec(sig)) !== null) {
+    if (!urls.includes(match[1])) urls.push(match[1]);
   }
 
-  // Show instructions on button
+  // Convert each URL to base64
+  for (const url of urls) {
+    const b64 = await imageToBase64(url);
+    sig = sig.split(`src="${url}"`).join(`src="${b64}"`);
+  }
+
+  return sig;
+}
+
+function copyRich() {
   const btn = document.getElementById('copy-rich-btn');
-  btn.classList.add('copied');
-  btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Opened! Ctrl+A then Ctrl+C';
-  setTimeout(() => {
-    btn.classList.remove('copied');
-    btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
-    URL.revokeObjectURL(url);
-  }, 5000);
+  btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Preparing...';
+  btn.disabled = true;
+
+  buildSigWithBase64().then(sig => {
+    if (!sig) { btn.disabled = false; btn.innerHTML = 'Select & Copy'; return; }
+
+    const blob = new Blob([sig], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
+
+    if (!win) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'signature-copy-me.html';
+      a.click();
+      alert('File downloaded. Open it in your browser, press Ctrl+A, Ctrl+C, then paste into Outlook.');
+    }
+
+    btn.disabled = false;
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Opened! Ctrl+A then Ctrl+C';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Select & Copy';
+      URL.revokeObjectURL(url);
+    }, 5000);
+  });
 }
 
 
