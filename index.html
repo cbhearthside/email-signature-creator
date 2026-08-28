@@ -1707,3 +1707,59 @@ function copyRich() {
     }
   }
 }
+
+
+
+function copyHTML() { copyRich(); }
+
+function clearAll() {
+  ['f-name','f-title','f-company-name','f-office-phone','f-direct','f-ext','f-cell','f-fax','f-nmls','f-apply-link','f-email','f-web','f-addr','f-fb','f-li','f-x','f-ig','f-yt','f-testimonials','f-other','f-other-link','f-photo','f-banner','f-bannerlink','f-bs-direct','f-bs-fax','f-bs-nmls','f-bs-apply-link','f-bs-addr']
+    .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.readOnly = false; el.style.background = ''; el.style.color = ''; } });
+  document.getElementById('f-company').value = '';
+  document.getElementById('office-location-section').style.display = 'none';
+  document.getElementById('f-office-select').value = '';
+  document.getElementById('office-badge').style.display = 'none';
+  document.getElementById('office-folder-hint').textContent = 'office';
+  document.getElementById('photo-auto-badge').style.display = 'none';
+  const noPhotoCheck = document.getElementById('f-no-photo'); if (noPhotoCheck) { noPhotoCheck.checked = false; togglePhoto(); }
+  const awRed = document.getElementById('f-aw-no-red'); if (awRed) awRed.checked = false;
+  const bsLO = document.getElementById('f-bluesky-lo'); if (bsLO) { bsLO.checked = false; toggleBlueSkyLO(); }
+  const bsHideBannerCb = document.getElementById('f-bs-hide-banner'); if (bsHideBannerCb) bsHideBannerCb.checked = false;
+  const bsHideDiscCb = document.getElementById('f-bs-hide-disclosure'); if (bsHideDiscCb) bsHideDiscCb.checked = false;
+  const mancusoSepCb = document.getElementById('f-mancuso-separator'); if (mancusoSepCb) mancusoSepCb.checked = true;
+  ['emp-allentown','emp-bethlehem','emp-collegeville','emp-doylestown','emp-easton','emp-frenchtown','emp-hellertown','emp-huntingdonvalley','emp-lahaska','emp-macungie','emp-newtown','emp-ottsville','emp-pocono','emp-windgap','emp-addisonwolfe'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
+  const tm = document.getElementById('f-team'); if (tm) tm.value = '';
+  const tmpl = document.getElementById('f-template'); if (tmpl) tmpl.value = 'classic';
+  const bs = document.getElementById('f-banner-size'); if (bs) { bs.value = 350; const bsv = document.getElementById('banner-size-value'); if (bsv) bsv.textContent = 350; }
+  const mancusoOptions = document.getElementById('mancuso-options'); if (mancusoOptions) mancusoOptions.style.display = 'none';
+  const employeeOptions = document.getElementById('employee-options'); if (employeeOptions) employeeOptions.style.display = 'none';
+  const blueskyLoSection = document.getElementById('bluesky-lo-section'); if (blueskyLoSection) blueskyLoSection.style.display = 'none';
+  onCompanyChange();
+  render();
+}
+
+onCompanyChange();
+
+function getFileName() {
+  const name = v('f-name').trim();
+  const slug = name ? name.toLowerCase().replace(/\s+/g, '-') : 'signature';
+  return slug + '-signature.html';
+}
+
+function downloadSig() {
+  const html = buildSig();
+  if (!html) { alert('Please fill in your details first.'); return; }
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = getFileName();
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+render();
+
+</script>
+</body>
+</html>
