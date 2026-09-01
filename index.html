@@ -692,6 +692,10 @@
           <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Select &amp; Copy
         </button>
+        <button class="copy-rich-btn" id="copy-iphone-btn" onclick="copyForiPhone()" style="background:#555;margin-top:8px;">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
+          Copy for iPhone
+        </button>
       </div>
       <div class="copy-rich-box" id="copy-rich-box"></div>
     </div>
@@ -1577,6 +1581,62 @@ function showInstructions(platform) {
   list.innerHTML = info.steps.map(s => '<li>' + s + '</li>').join('');
   box.style.display = 'block';
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function copyForiPhone() {
+  const box = document.getElementById('copy-rich-box');
+  const btn = document.getElementById('copy-iphone-btn');
+  if (!box.innerHTML.trim()) return;
+
+  // Clone the box and fix image sizes for iOS
+  const clone = box.cloneNode(true);
+  const imgs = clone.querySelectorAll('img');
+  imgs.forEach(img => {
+    // Force explicit width/height on all images so iOS doesn't stretch them
+    const w = img.getAttribute('width') || img.width || 100;
+    img.setAttribute('width', w);
+    img.setAttribute('height', w);
+    img.style.width = w + 'px';
+    img.style.height = w + 'px';
+    img.style.maxWidth = w + 'px';
+    img.style.maxHeight = w + 'px';
+  });
+
+  // Also fix any circle divs
+  const divs = clone.querySelectorAll('div[style*="border-radius:50%"]');
+  divs.forEach(div => {
+    const w = parseInt(div.style.width) || 100;
+    div.style.maxWidth = w + 'px';
+    div.style.maxHeight = w + 'px';
+  });
+
+  // Temporarily add clone to document to copy from it
+  clone.style.position = 'fixed';
+  clone.style.left = '-9999px';
+  clone.style.top = '0';
+  document.body.appendChild(clone);
+
+  const range = document.createRange();
+  range.selectNodeContents(clone);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+
+  try {
+    document.execCommand('copy');
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied for iPhone!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg> Copy for iPhone';
+    }, 2500);
+  } catch(e) {
+    btn.innerHTML = 'Press Ctrl+C to copy';
+    setTimeout(() => { btn.innerHTML = 'Copy for iPhone'; }, 3000);
+  }
+
+  sel.removeAllRanges();
+  document.body.removeChild(clone);
 }
 
 function copyRich() {
