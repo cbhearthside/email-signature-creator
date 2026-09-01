@@ -688,14 +688,16 @@
           <div class="copy-rich-title">Your signature — ready to copy</div>
           <div class="copy-rich-subtitle">Click the button to copy, then paste directly into Gmail, Outlook, or iOS Mail settings. If prompted, press Ctrl+C to copy.</div>
         </div>
-        <button class="copy-rich-btn" id="copy-rich-btn" onclick="copyRich()">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Select &amp; Copy
-        </button>
-        <button class="copy-rich-btn" id="copy-iphone-btn" onclick="copyForiPhone()" style="background:#555;margin-top:8px;">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
-          Copy for iPhone
-        </button>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="copy-rich-btn" id="copy-rich-btn" onclick="copyRich()">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Select &amp; Copy
+          </button>
+          <button class="copy-rich-btn" id="copy-iphone-btn" onclick="copyForiPhone()" style="background:#555;">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
+            Copy for iPhone
+          </button>
+        </div>
       </div>
       <div class="copy-rich-box" id="copy-rich-box"></div>
     </div>
