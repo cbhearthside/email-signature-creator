@@ -1420,8 +1420,8 @@ ${isMancuso ? `<table cellpadding="16" cellspacing="0" border="0" bgcolor="${man
   ${photoCell}
   <td style="vertical-align:top;color:#444444;font-family:${font};font-size:90%;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
     <div style="color:${isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};letter-spacing:${isMancuso ? '2px' : 'normal'};">${name || 'Your Name'}</div>
-    ${(() => { if (!title) return ''; const tc = isMancuso ? mancusoTitleColor : '#000000'; const ts2 = isMancuso ? '1.5px' : 'normal'; return '<span style="color:' + tc + ';font-size:' + fsSmall + ';font-family:' + font + ';letter-spacing:' + ts2 + ';">' + title + '</span> '; })()}
-    ${isBlueSkyLO ? `<div style="color:#000000;font-size:${fsSmall};font-family:${font};margin-top:2px;">${bsIntroText || 'Mortgage Loan Officer'}</div>` : ''}
+    ${(() => { if (!title) return ''; const tc = isMancuso ? mancusoTitleColor : '#000000'; const ts2 = isMancuso ? '1.5px' : 'normal'; return '<div style="color:' + tc + ';font-size:' + fsSmall + ';font-family:' + font + ';letter-spacing:' + ts2 + ';">' + title + '</div>'; })()}
+    ${isBlueSkyLO ? `<div style="color:#000000;font-size:${fsSmall};font-family:${font};">${bsIntroText || 'Mortgage Loan Officer'}</div>` : ''}
     ${company ? (() => {
       const dividerLine = isMancuso ? '<div style="width:40px;height:1px;background:#B8962E;margin:4px 0;"></div>' : '';
       const compColor = isMancuso ? mancusoNameColor : ((COMPANY_SETTINGS[companySelect] || {}).companyColor || '#012169');
@@ -1464,20 +1464,17 @@ ${isMancuso ? `<table cellpadding="16" cellspacing="0" border="0" bgcolor="${man
 </tr>
 </table>
 
-${isBlueSkyLO ? `<table cellpadding="0" cellspacing="0" style="margin-top:10px;border-collapse:collapse;max-width:550px;width:100%;">
-<tr><td style="border-top:2px solid #cccccc;padding-top:10px;">
+${isBlueSkyLO ? `<table cellpadding="0" cellspacing="0" style="margin-top:6px;border-collapse:collapse;width:100%;">
+<tr><td style="border-top:1px solid #cccccc;padding-top:6px;">
   <div style="color:#012169;font-size:${fsLarge};font-weight:bold;font-family:${font};">BLUE SKY HOME FINANCE</div>
   <div style="color:#012169;font-size:${fsSmall};font-family:${font};">A division of Northeast Equitable Mortgage, LLC</div>
-  <div style="white-space:nowrap !important;margin-top:3px;"><span style="color:#000000;font-size:${fs};font-family:${font};">${bsNmls ? `NMLS # ${bsNmls}, ` : ''}Company NMLS # 894392</span></div>
-  ${bsAddr ? `<div style="margin-top:4px;"><span style="color:#000000;font-size:${fs};font-family:${font};">${bsAddr}</span></div>` : ''}
-  <div style="font-size:8px;line-height:8px;">&nbsp;</div>
+  <div style="white-space:nowrap !important;"><span style="color:#000000;font-size:${fs};font-family:${font};">${bsNmls ? `NMLS # ${bsNmls}, ` : ''}Company NMLS # 894392</span></div>
+  ${bsAddr ? `<div style="white-space:nowrap !important;"><span style="color:#000000;font-size:${fs};font-family:${font};">Address: ${bsAddr}</span></div>` : ''}
   ${(bsDirect || bsFax) ? `<div style="white-space:nowrap !important;">
     ${bsDirect ? `<span style="color:#444444;font-size:${fs};font-weight:bold;font-family:${font};">Direct: </span><span style="color:#000000;font-size:${fs};font-family:${font};">${bsDirect}</span>` : ''}
     ${bsDirect && bsFax ? `<span style="color:#444444;font-size:${fs};"> | </span>` : ''}
     ${bsFax ? `<span style="color:#444444;font-size:${fs};font-weight:bold;font-family:${font};">Fax: </span><span style="color:#000000;font-size:${fs};font-family:${font};">${bsFax}</span>` : ''}
   </div>` : ''}
-
-
 </td></tr>
 </table>` : ''}
 
