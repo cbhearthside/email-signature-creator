@@ -1465,10 +1465,11 @@ ${isMancuso ? `<table cellpadding="16" cellspacing="0" border="0" bgcolor="${man
 
 ${isBlueSkyLO ? `<table cellpadding="0" cellspacing="0" style="margin-top:6px;border-collapse:collapse;width:100%;">
 <tr><td style="border-top:1px solid #cccccc;padding-top:6px;">
-  <div style="color:#012169;font-size:${fsLarge};font-weight:bold;font-family:${font};">BLUE SKY HOME FINANCE</div>
-  <div style="color:#012169;font-size:${fsSmall};font-family:${font};">A division of Northeast Equitable Mortgage, LLC</div>
+  <div style="color:#012169;font-size:${fs};font-weight:bold;font-family:${font};">BLUE SKY HOME FINANCE</div>
+  <div style="color:#012169;font-size:${fs};font-family:${font};">A division of Northeast Equitable Mortgage, LLC</div>
+  <div style="color:#000000;font-size:${fs};font-family:${font};">${bsIntroText || 'Mortgage Loan Officer'}</div>
   <div style="white-space:nowrap !important;"><span style="color:#000000;font-size:${fs};font-family:${font};">${bsNmls ? `NMLS # ${bsNmls}, ` : ''}Company NMLS # 894392</span></div>
-  ${bsAddr ? `<div style="white-space:nowrap !important;"><span style="color:#000000;font-size:${fs};font-family:${font};">Address: ${bsAddr}</span></div>` : ''}
+  ${bsAddr ? `<div style="white-space:nowrap !important;"><span style="color:#000000;font-size:${fs};font-family:${font};">${bsAddr}</span></div>` : ''}
   ${(bsDirect || bsFax) ? `<div style="white-space:nowrap !important;">
     ${bsDirect ? `<span style="color:#444444;font-size:${fs};font-weight:bold;font-family:${font};">Direct: </span><span style="color:#000000;font-size:${fs};font-family:${font};">${bsDirect}</span>` : ''}
     ${bsDirect && bsFax ? `<span style="color:#444444;font-size:${fs};"> | </span>` : ''}
@@ -1479,6 +1480,7 @@ ${isBlueSkyLO ? `<table cellpadding="0" cellspacing="0" style="margin-top:6px;bo
 
 ${testimonials ? `<div style="margin:8px 0;font-family:${font};font-size:.9em;"><a href="${testimonials}" target="_blank" style="color:#012169;text-decoration:none;font-weight:bold;">⭐ Client Testimonials</a></div>` : ''}
 ${other ? `<div style="margin:8px 0;font-family:${font};font-size:${fs};">${otherLink ? `<a href="${otherLink}" target="_blank" style="color:#012169;text-decoration:none;font-weight:bold;font-family:${font};font-size:${fs};">${other}</a>` : `<span style="color:#000000;font-family:${font};font-size:${fs};">${other}</span>`}</div>` : ''}
+<div style="font-size:10px;line-height:10px;">&nbsp;</div>
 ${isMancuso ? '' : bannerSection}
 ${bsApply ? `<div style="margin-top:8px;"><a href="${bsApply}" target="_blank" style="background:#012169;color:#ffffff;padding:6px 14px;text-decoration:none;font-size:${fs};font-weight:bold;font-family:${font};border-radius:3px;display:inline-block;">CLICK HERE TO APPLY NOW</a></div>` : ''}
 
