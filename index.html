@@ -957,7 +957,7 @@ function toggleBlueSkyLO() {
   const section = document.getElementById('bluesky-lo-section');
   if (section) section.style.display = checked ? 'block' : 'none';
   if (!checked) {
-    ['f-bs-direct','f-bs-fax','f-bs-nmls','f-bs-apply-link','f-bs-addr'].forEach(id => {
+    ['f-bs-direct','f-bs-fax','f-bs-nmls','f-bs-apply-link','f-bs-addr','f-bs-intro-text'].forEach(id => {
       const el = document.getElementById(id); if (el) el.value = '';
     });
     document.getElementById('f-bluesky-lo-office').value = '';
@@ -1227,6 +1227,7 @@ function buildSig() {
   const bsNmls     = isBlueSkyLO ? ((document.getElementById('f-bs-nmls') || {}).value || '') : '';
   const bsApply    = isBlueSkyLO ? ((document.getElementById('f-bs-apply-link') || {}).value || '') : '';
   const bsAddr          = isBlueSkyLO ? ((document.getElementById('f-bs-addr') || {}).value || '') : '';
+  const bsIntroText     = isBlueSkyLO ? ((document.getElementById('f-bs-intro-text') || {}).value || '') : '';
   const bsHideBanner    = isBlueSkyLO && document.getElementById('f-bs-hide-banner') && document.getElementById('f-bs-hide-banner').checked;
   const bsHideDisclosure = isBlueSkyLO && document.getElementById('f-bs-hide-disclosure') && document.getElementById('f-bs-hide-disclosure').checked;
   const email      = v('f-email');
@@ -1464,6 +1465,7 @@ ${isMancuso ? `<table cellpadding="16" cellspacing="0" border="0" bgcolor="${man
 
 ${isBlueSkyLO ? `<table cellpadding="0" cellspacing="0" style="margin-top:10px;border-collapse:collapse;max-width:550px;width:100%;">
 <tr><td style="border-top:2px solid #cccccc;padding-top:10px;">
+  ${bsIntroText ? `<div style="color:#000000;font-size:${fs};font-family:${font};margin-bottom:6px;">${bsIntroText}</div>` : ''}
   <div style="color:#012169;font-size:${fsLarge};font-weight:bold;font-family:${font};">BLUE SKY HOME FINANCE</div>
   <div style="color:#012169;font-size:${fsSmall};font-family:${font};">A division of Northeast Equitable Mortgage, LLC</div>
   <div style="white-space:nowrap !important;margin-top:3px;"><span style="color:#000000;font-size:${fs};font-family:${font};">${bsNmls ? `NMLS # ${bsNmls}, ` : ''}Company NMLS # 894392</span></div>
