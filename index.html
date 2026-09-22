@@ -1421,7 +1421,6 @@ ${isMancuso ? `<table cellpadding="16" cellspacing="0" border="0" bgcolor="${man
   <td style="vertical-align:top;color:#444444;font-family:${font};font-size:90%;border-left:3px solid ${isMancuso ? '#B8962E' : isAW && !awNoRed ? '#CC0000' : '#444444'};padding:0 0 5px 8px">
     <div style="color:${isMancuso ? mancusoNameColor : (COMPANY_SETTINGS[companySelect] || {}).nameColor || '#012169'};font-size:${fsXLarge};font-weight:bold;font-family:${font};letter-spacing:${isMancuso ? '2px' : 'normal'};">${name || 'Your Name'}</div>
     ${(() => { if (!title) return ''; const tc = isMancuso ? mancusoTitleColor : '#000000'; const ts2 = isMancuso ? '1.5px' : 'normal'; return '<div style="color:' + tc + ';font-size:' + fsSmall + ';font-family:' + font + ';letter-spacing:' + ts2 + ';">' + title + '</div>'; })()}
-    ${isBlueSkyLO ? `<div style="color:#000000;font-size:${fsSmall};font-family:${font};">${bsIntroText || 'Mortgage Loan Officer'}</div>` : ''}
     ${company ? (() => {
       const dividerLine = isMancuso ? '<div style="width:40px;height:1px;background:#B8962E;margin:4px 0;"></div>' : '';
       const compColor = isMancuso ? mancusoNameColor : ((COMPANY_SETTINGS[companySelect] || {}).companyColor || '#012169');
